@@ -1,224 +1,328 @@
-import { useState } from 'react'
-import { motion } from 'framer-motion'
-import { useI18n } from '../contexts/I18nContext'
-import { useLogger } from '../hooks/useLogger'
-import { FiUploadCloud, FiCheckCircle, FiXCircle, FiInfo, FiRefreshCw, FiMapPin, FiUser, FiHome } from 'react-icons/fi'
-import Card from '../components/ui/Card'
-import Button from '../components/ui/Button'
-import LocationSelector from '../components/detection/LocationSelector'
-import { apiRequest } from '../utils/api'
-import { getDistrictCoordinates } from '../services/rwandaLocations'
+import { useState } from 'react';
+import { motion } from 'framer-motion';
+import { useI18n } from '../contexts/I18nContext';
+import { useLogger } from '../hooks/useLogger';
+import { FiUploadCloud, FiCheckCircle, FiXCircle, FiInfo, FiRefreshCw, FiMapPin, FiUser, FiClock, FiImage, FiDatabase, FiBarChart } from 'react-icons/fi';
+import Card from '../components/ui/Card';
+import Button from '../components/ui/Button';
+import LocationSelector from '../components/detection/LocationSelector';
 
 export default function MalariaDetection() {
-  const { t } = useI18n()
-  const { logDetection, logInteraction, logError, logPerformance } = useLogger()
-  
-  const [selectedImage, setSelectedImage] = useState(null)
-  const [previewUrl, setPreviewUrl] = useState(null)
-  const [selectedLocation, setSelectedLocation] = useState(null)
-  const [isAnalyzing, setIsAnalyzing] = useState(false)
-  const [result, setResult] = useState(null)
-  const [error, setError] = useState(null)
-  const [locationError, setLocationError] = useState(false)
-  
+  const { t } = useI18n();
+  const { logDetection, logInteraction, logError, logPerformance } = useLogger();
+
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState(null);
+  const [selectedLocation, setSelectedLocation] = useState(null);
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [result, setResult] = useState(null);
+  const [error, setError] = useState(null);
+  const [locationError, setLocationError] = useState(false);
+  const [combinedData, setCombinedData] = useState(null);
+
   // Handle image selection
   const handleImageChange = (e) => {
-    const file = e.target.files[0]
-    if (!file) return
-    
-    // Log interaction
+    const file = e.target.files[0];
+    if (!file) return;
+
     logInteraction('upload', 'image-file', {
       fileName: file.name,
       fileSize: file.size,
-      fileType: file.type
-    })
-    
-    // Reset states
-    setResult(null)
-    setError(null)
-    
-    // Validate file type
-    const validTypes = ['image/jpeg', 'image/png', 'image/jpg']
-    if (!validTypes.includes(file.type)) {
-      const errorMsg = 'Please select a valid image file (JPEG or PNG)'
-      setError(errorMsg)
-      logError(new Error(errorMsg), 'Image validation', {
-        fileName: file.name,
-        fileType: file.type
-      })
-      return
-    }
-    
-    // Validate file size (max 5MB)
-    if (file.size > 5 * 1024 * 1024) {
-      const errorMsg = 'File size exceeds 5MB limit'
-      setError(errorMsg)
-      logError(new Error(errorMsg), 'Image validation', {
-        fileName: file.name,
-        fileSize: file.size
-      })
-      return
-    }
-    
-    setSelectedImage(file)
-    setPreviewUrl(URL.createObjectURL(file))
-  }
+      fileType: file.type,
+    });
 
-  // Handle location selection
-  const handleLocationChange = (location) => {
-    setSelectedLocation(location)
-    setLocationError(false)
-  }
-  
-  // Handle image upload and analysis
-  const handleAnalyze = async () => {
-    if (!selectedImage) return
-    
-    // Validate location is selected
-    if (!selectedLocation) {
-      setLocationError(true)
-      setError('Please complete all location fields before analyzing the image')
-      return
+    setResult(null);
+    setError(null);
+    setCombinedData(null);
+
+    const validTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+    if (!validTypes.includes(file.type)) {
+      const errorMsg = 'Please select a valid image file (JPEG or PNG)';
+      setError(errorMsg);
+      logError(new Error(errorMsg), 'Image validation', {
+        fileName: file.name,
+        fileType: file.type,
+      });
+      return;
     }
-    
-    const startTime = Date.now()
-    setIsAnalyzing(true)
-    setError(null)
-    setLocationError(false)
-    
+
+    if (file.size > 5 * 1024 * 1024) {
+      const errorMsg = 'File size exceeds 5MB limit';
+      setError(errorMsg);
+      logError(new Error(errorMsg), 'Image validation', {
+        fileName: file.name,
+        fileSize: file.size,
+      });
+      return;
+    }
+
+    setSelectedImage(file);
+    setPreviewUrl(URL.createObjectURL(file));
+  };
+
+  // Fixed handleLocationChange function to prevent unwanted resets
+  const handleLocationChange = (location) => {
+    // Only proceed if we have a valid location object with all required fields
+    if (!location || typeof location !== 'object') {
+      return;
+    }
+
+    // Extract string values from location object (in case they're nested objects)
+    const getLocationValue = (value) => {
+      if (typeof value === 'string') return value;
+      if (value && typeof value === 'object' && value.name) return value.name;
+      if (value && typeof value === 'object' && value.value) return value.value;
+      return null;
+    };
+
+    const newProvince = getLocationValue(location.province);
+    const newDistrict = getLocationValue(location.district);
+    const newSector = getLocationValue(location.sector);
+
+    // Only update if all required fields are present and valid
+    if (!newProvince || !newDistrict || !newSector) {
+      // Don't reset existing location if new data is incomplete
+      // Only log if we have some data but it's incomplete
+      if (newProvince || newDistrict || newSector) {
+        console.warn('Incomplete location data received, keeping existing location:', {
+          received: { province: newProvince, district: newDistrict, sector: newSector },
+          current: selectedLocation
+        });
+      }
+      return;
+    }
+
+    // Create normalized location object
+    const normalizedLocation = {
+      province: newProvince,
+      district: newDistrict,
+      sector: newSector
+    };
+
+    // Prevent unnecessary updates if the location hasn't actually changed
+    if (selectedLocation) {
+      const currentProvince = getLocationValue(selectedLocation.province);
+      const currentDistrict = getLocationValue(selectedLocation.district);
+      const currentSector = getLocationValue(selectedLocation.sector);
+
+      if (
+        currentProvince === newProvince &&
+        currentDistrict === newDistrict &&
+        currentSector === newSector
+      ) {
+        return; // No change, skip update
+      }
+    }
+
+    // Update state
+    setSelectedLocation(normalizedLocation);
+    setLocationError(false);
+
+    // Log the interaction only when the location actually changes
+    logInteraction('select', 'complete-location', {
+      userId: '1750600866432',
+      province: newProvince,
+      district: newDistrict,
+      sector: newSector,
+    });
+  };
+
+  // Enhanced handleAnalyze function with better error handling and combined data creation
+  const handleAnalyze = async () => {
+    if (!selectedImage) {
+      setError('Please select an image first');
+      return;
+    }
+
+    if (!selectedLocation) {
+      setLocationError(true);
+      setError('Please complete all location fields before analyzing the image');
+      return;
+    }
+
+    const startTime = Date.now();
+    setIsAnalyzing(true);
+    setError(null);
+    setLocationError(false);
+
     logInteraction('click', 'analyze-button', {
       fileName: selectedImage.name,
       fileSize: selectedImage.size,
       location: selectedLocation,
-      hasPatientName: !!selectedLocation.patientName
-    })
-    
+    });
+
     try {
-      // Get coordinates for the selected district (more accurate than province)
-      const coordinates = getDistrictCoordinates(
-        selectedLocation.province.id,
-        selectedLocation.district.id
-      )
+      // Create FormData and append the file with the exact field name expected by backend
+      const formData = new FormData();
+      formData.append('file', selectedImage, selectedImage.name);
       
-      // Call detection API with complete location data
-      const response = await apiRequest('/api/detection', {
+      // Log what we're sending
+      console.log('Sending request with:', {
+        fileName: selectedImage.name,
+        fileSize: selectedImage.size,
+        fileType: selectedImage.type,
+        location: selectedLocation
+      });
+
+      // Verify FormData content
+      for (let [key, value] of formData.entries()) {
+        console.log('FormData entry:', key, value);
+      }
+
+      const response = await fetch('http://127.0.0.1:8000/predict/', {
         method: 'POST',
-        body: { 
-          image: previewUrl,
-          location: {
-            ...selectedLocation,
-            coordinates
+        body: formData,
+        // Don't set Content-Type header - let browser set it automatically with boundary
+      });
+
+      console.log('Response status:', response.status);
+      console.log('Response headers:', Object.fromEntries(response.headers.entries()));
+
+      if (!response.ok) {
+        // Get more detailed error information
+        let errorMessage = 'Failed to analyze the image';
+        try {
+          const errorData = await response.json();
+          console.error('Backend error details:', errorData);
+          
+          // Handle FastAPI validation errors specifically
+          if (errorData.detail && Array.isArray(errorData.detail)) {
+            const fieldErrors = errorData.detail.map(err => 
+              `${err.loc.join('.')}: ${err.msg}`
+            ).join(', ');
+            errorMessage = `Validation error: ${fieldErrors}`;
+          } else if (errorData.detail) {
+            errorMessage = errorData.detail;
+          } else if (errorData.message) {
+            errorMessage = errorData.message;
           }
+        } catch (e) {
+          const errorText = await response.text();
+          console.error('Backend error text:', errorText);
+          errorMessage = errorText || errorMessage;
         }
-      })
+        throw new Error(`${errorMessage} (Status: ${response.status})`);
+      }
+
+      const data = await response.json();
+      console.log('Success response:', data);
       
-      const processingTime = Date.now() - startTime
-      
-      // Log successful detection with complete location data
-      logDetection(response, {
+      const processingTime = Date.now() - startTime;
+
+      // Transform backend response to match frontend expectations
+      const transformedResult = {
+        result: data.result === 'Parasitized' ? 'positive' : 'negative',
+        confidenceLevel: Math.round(data.confidence * 100), // Convert to percentage
+        rawResult: data.result, // Keep original for debugging
+        rawConfidence: data.confidence
+      };
+
+      // Create combined data object as requested
+      const combinedResult = {
+        element: "complete-location",
+        province: selectedLocation.province,
+        district: selectedLocation.district,
+        sector: selectedLocation.sector,
+        userId: "1750600866432",
+        predictionResults: {
+          result: transformedResult.result,
+          confidenceLevel: transformedResult.confidenceLevel,
+          rawResult: transformedResult.rawResult,
+          rawConfidence: transformedResult.rawConfidence,
+          processingTime: processingTime,
+          imageInfo: {
+            fileName: selectedImage.name,
+            fileSize: selectedImage.size,
+            fileType: selectedImage.type
+          },
+          timestamp: new Date().toISOString()
+        }
+      };
+
+      logDetection(transformedResult, {
         processingTime,
         imageSize: selectedImage.size,
         fileName: selectedImage.name,
         location: selectedLocation,
-        coordinates,
-        patientName: selectedLocation.patientName,
-        facility: selectedLocation.facility
-      })
-      
-      // Log performance metric
+      });
+
       logPerformance('detection_processing_time', processingTime, {
         unit: 'ms',
         imageSize: selectedImage.size,
         location: selectedLocation,
-        facility: selectedLocation.facility
-      })
+      });
+
+      setResult(transformedResult);
+      setCombinedData(combinedResult);
       
-      setResult(response)
+      // Log the combined data for debugging
+      console.log('Combined Detection Data:', combinedResult);
+
     } catch (err) {
-      const errorMsg = err.message || 'An error occurred during analysis'
-      setError(errorMsg)
+      console.error('Analysis error:', err);
+      const errorMsg = err.message || 'An error occurred during analysis';
+      setError(errorMsg);
       logError(err, 'Detection analysis', {
         fileName: selectedImage.name,
         fileSize: selectedImage.size,
-        processingTime: Date.now() - startTime,
-        location: selectedLocation
-      })
+        location: selectedLocation,
+      });
     } finally {
-      setIsAnalyzing(false)
+      setIsAnalyzing(false);
     }
-  }
-  
+  };
+
   // Reset the form
   const handleReset = () => {
-    logInteraction('click', 'reset-button')
+    logInteraction('click', 'reset-button');
+    setSelectedImage(null);
+    setPreviewUrl(null);
+    setSelectedLocation(null); // Reset location when explicitly resetting
+    setResult(null);
+    setError(null);
+    setLocationError(false);
+    setCombinedData(null);
     
-    setSelectedImage(null)
-    setPreviewUrl(null)
-    setResult(null)
-    setError(null)
-    setLocationError(false)
-    // Keep location selected for convenience
-  }
-  
+    // Reset file input
+    const fileInput = document.getElementById('image-upload');
+    if (fileInput) {
+      fileInput.value = '';
+    }
+  };
+
+  // Helper function to format file size
+  const formatFileSize = (bytes) => {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+  };
+
+  // Helper function to format timestamp
+  const formatTimestamp = (timestamp) => {
+    return new Date(timestamp).toLocaleString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit'
+    });
+  };
+
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
-      transition: { staggerChildren: 0.1 }
-    }
-  }
-  
+      transition: { staggerChildren: 0.1 },
+    },
+  };
+
   const itemVariants = {
     hidden: { y: 20, opacity: 0 },
-    visible: { y: 0, opacity: 1, transition: { duration: 0.4 } }
-  }
-
-  // Healthcare-themed blood cell samples
-  const bloodCellSamples = [
-    {
-      url: "/C100P61ThinF_IMG_20150918_144104_cell_128.png",
-      title: "Uninfected Blood Cell",
-      description: "Normal red blood cell - no malaria parasites detected",
-      status: "negative",
-      confidence: 94,
-      medicalNote: "Healthy erythrocyte with normal morphology"
-    },
-    {
-      url: "/C100P61ThinF_IMG_20150918_144104_cell_163.png", 
-      title: "Infected Blood Cell",
-      description: "Red blood cell with malaria parasite (Plasmodium)",
-      status: "positive",
-      confidence: 89,
-      medicalNote: "Parasitemia detected - requires immediate treatment"
-    },
-    {
-      url: "https://images.pexels.com/photos/3825527/pexels-photo-3825527.jpeg?auto=compress&cs=tinysrgb&w=800",
-      title: "Learn how to do it", 
-      description: "Microscopic blood analysis for comparison",
-      status: "negative",
-      confidence: 92,
-      medicalNote: "Normal blood smear examination"
-    },
-  
-  ]
-
-  const handleSampleSelect = (sample, index) => {
-    logInteraction('click', 'sample-image', {
-      sampleIndex: index,
-      imageUrl: sample.url,
-      sampleTitle: sample.title,
-      expectedStatus: sample.status
-    })
-    
-    setPreviewUrl(sample.url)
-    setSelectedImage({
-      type: 'image/png', 
-      size: 500000, 
-      name: `blood-cell-sample-${index + 1}.png`
-    }) // mock file object
-    setResult(null)
-    setError(null)
-  }
+    visible: { y: 0, opacity: 1, transition: { duration: 0.4 } },
+  };
 
   return (
     <motion.div
@@ -236,19 +340,11 @@ export default function MalariaDetection() {
           <p className="mt-2 text-medical-100 dark:text-medical-200">
             AI-powered malaria detection system for healthcare professionals
           </p>
-          <p className="text-sm text-medical-200 dark:text-medical-300 mt-1">
-            Complete location and facility information required for accurate regional health surveillance
-          </p>
         </div>
       </motion.div>
-      
+
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Left column - Location and Upload */}
-        <motion.div 
-          variants={itemVariants}
-          className="lg:col-span-1 space-y-6"
-        >
-          {/* Location selector */}
+        <motion.div variants={itemVariants} className="lg:col-span-1 space-y-6">
           <LocationSelector
             selectedLocation={selectedLocation}
             onLocationChange={handleLocationChange}
@@ -256,24 +352,20 @@ export default function MalariaDetection() {
             required={true}
           />
 
-          {/* Upload card */}
           <Card className="p-6 border-l-4 border-l-medical-500">
             <h3 className="text-lg font-medium mb-4 text-medical-800 dark:text-medical-200 flex items-center">
               <FiUploadCloud className="mr-2" />
               {previewUrl ? 'Selected Image' : 'Upload Blood Smear Image'}
             </h3>
-            
+
             {!previewUrl ? (
-              <div 
+              <div
                 className="border-2 border-dashed border-medical-300 dark:border-medical-700 rounded-lg p-8 text-center cursor-pointer hover:border-medical-500 dark:hover:border-medical-400 transition-colors bg-medical-50 dark:bg-medical-900/20"
-                onClick={() => {
-                  logInteraction('click', 'upload-zone')
-                  document.getElementById('image-upload').click()
-                }}
+                onClick={() => document.getElementById('image-upload').click()}
               >
                 <FiUploadCloud size={48} className="mx-auto text-medical-400 dark:text-medical-500" />
                 <p className="mt-4 text-medical-600 dark:text-medical-400 font-medium">
-                  {t('detection.dropzone')}
+                  {t('detection.dropzone') || 'Click to upload or drag and drop'}
                 </p>
                 <p className="text-sm text-medical-500 dark:text-medical-500 mt-2">
                   Supported formats: JPEG, PNG (Max 5MB)
@@ -282,21 +374,21 @@ export default function MalariaDetection() {
                   type="file"
                   id="image-upload"
                   className="hidden"
-                  accept="image/*"
+                  accept="image/jpeg,image/png,image/jpg"
                   onChange={handleImageChange}
                 />
-                <Button 
+                <Button
                   variant="primary"
                   className="mt-4 bg-medical-600 hover:bg-medical-700"
                   icon={<FiUploadCloud />}
                 >
-                  {t('detection.uploadButton')}
+                  {t('detection.uploadButton') || 'Upload Image'}
                 </Button>
               </div>
             ) : (
               <div>
                 <div className="relative aspect-video rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-800 border-2 border-medical-200 dark:border-medical-700">
-                  <img 
+                  <img
                     src={previewUrl}
                     alt="Selected blood smear"
                     className="w-full h-full object-cover"
@@ -306,247 +398,237 @@ export default function MalariaDetection() {
                   </div>
                 </div>
                 <div className="mt-4 flex flex-wrap gap-2">
-                  <Button 
-                    variant="primary" 
+                  <Button
+                    variant="primary"
                     onClick={handleAnalyze}
-                    disabled={isAnalyzing || !selectedLocation}
+                    disabled={isAnalyzing || !selectedLocation || !selectedImage}
                     icon={isAnalyzing ? <FiRefreshCw className="animate-spin" /> : <FiMapPin />}
-                    className="bg-medical-600 hover:bg-medical-700"
+                    className="bg-medical-600 hover:bg-medical-700 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    {isAnalyzing ? t('detection.analyzing') : 'Analyze Blood Smear'}
+                    {isAnalyzing ? (t('detection.analyzing') || 'Analyzing...') : 'Analyze Blood Smear'}
                   </Button>
-                  <Button variant="outline" onClick={handleReset}>
+                  <Button variant="outline" onClick={handleReset} disabled={isAnalyzing}>
                     Reset
                   </Button>
                 </div>
                 {error && (
                   <div className="mt-3 text-error-600 dark:text-error-400 text-sm bg-error-50 dark:bg-error-900/20 p-3 rounded-md border border-error-200 dark:border-error-800">
-                    {error}
+                    <div className="flex items-start">
+                      <FiXCircle className="mr-2 mt-0.5 flex-shrink-0" />
+                      <span>{error}</span>
+                    </div>
                   </div>
                 )}
               </div>
             )}
           </Card>
-          
-          {/* Instructions card */}
-          <Card className="p-6 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800">
-            <h3 className="text-lg font-medium mb-4 flex items-center text-blue-800 dark:text-blue-200">
-              <FiInfo className="mr-2" /> Clinical Guidelines
-            </h3>
-            <ol className="space-y-3 text-blue-700 dark:text-blue-300 list-decimal pl-5">
-              <li>Complete all location and facility information</li>
-              <li>Upload a clear, high-quality blood smear image</li>
-              <li>Ensure proper lighting and focus in the microscopic image</li>
-              <li>Wait for AI analysis to complete</li>
-              <li>Review results and take appropriate clinical action</li>
-            </ol>
-            
-            <div className="mt-4 p-3 bg-blue-100 dark:bg-blue-800/30 rounded-md">
-              <p className="text-sm text-blue-800 dark:text-blue-200">
-                <strong>Important:</strong> This AI system is designed to assist healthcare professionals in malaria diagnosis. Always confirm results with standard laboratory procedures and clinical judgment.
-              </p>
-            </div>
-          </Card>
         </motion.div>
-        
-        {/* Right column - Results or Sample Images */}
-        <motion.div 
-          variants={itemVariants}
-          className="lg:col-span-2"
-        >
+
+        <motion.div variants={itemVariants} className="lg:col-span-2">
           {result ? (
-            // Detection results with complete location and patient info
-            <Card className="p-6 border-l-4 border-l-medical-500">
-              <h2 className="text-xl font-semibold mb-4 text-medical-800 dark:text-medical-200 flex items-center">
-                <FiCheckCircle className="mr-2" />
-                Malaria Detection Results
-              </h2>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="aspect-video rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-800 border-2 border-medical-200 dark:border-medical-700">
-                  <img 
-                    src={previewUrl}
-                    alt="Analyzed blood smear"
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                
-                <div className="flex flex-col justify-between">
+            <div className="space-y-6">
+              <Card className="p-6 border-l-4 border-l-medical-500">
+                <h2 className="text-xl font-semibold mb-4 text-medical-800 dark:text-medical-200 flex items-center">
+                  <FiCheckCircle className="mr-2" />
+                  Malaria Detection Results
+                </h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="aspect-video rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-800 border-2 border-medical-200 dark:border-medical-700">
+                    <img
+                      src={previewUrl}
+                      alt="Analyzed blood smear"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
                   <div>
-                    {/* Diagnosis Result */}
-                    <div className={`rounded-md p-4 ${
-                      result.result === 'detected' 
-                        ? 'bg-error-100 dark:bg-error-900/20 border border-error-300 dark:border-error-800' 
-                        : 'bg-success-100 dark:bg-success-900/20 border border-success-300 dark:border-success-800'
+                    <div className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium mb-3 ${
+                      result.result === 'positive' 
+                        ? 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400' 
+                        : 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400'
                     }`}>
-                      <div className="flex items-center">
-                        {result.result === 'detected' ? (
-                          <FiXCircle size={24} className="text-error-600 dark:text-error-400" />
-                        ) : (
-                          <FiCheckCircle size={24} className="text-success-600 dark:text-success-400" />
-                        )}
-                        <h3 className="ml-2 text-lg font-medium">
-                          {result.result === 'detected' 
-                            ? 'POSITIVE - Malaria Detected'
-                            : 'NEGATIVE - No Malaria Detected'
-                          }
-                        </h3>
-                      </div>
-                      {result.result === 'detected' && (
-                        <p className="mt-2 text-sm text-error-700 dark:text-error-300">
-                          <strong>Clinical Action Required:</strong> Malaria parasites detected. Initiate appropriate antimalarial treatment immediately.
-                        </p>
-                      )}
+                      {result.result === 'positive' ? <FiXCircle className="mr-1" /> : <FiCheckCircle className="mr-1" />}
+                      {result.result === 'positive'
+                        ? 'POSITIVE - Malaria Detected'
+                        : 'NEGATIVE - No Malaria Detected'}
                     </div>
-                    
-                    {/* Confidence Level */}
-                    <div className="mt-4">
-                      <h4 className="text-md font-medium">AI Confidence Level</h4>
-                      <div className="mt-2 relative pt-1">
-                        <div className="overflow-hidden h-3 text-xs flex rounded-full bg-gray-200 dark:bg-gray-700">
-                          <div 
-                            style={{ width: `${result.confidenceLevel}%` }}
-                            className={`shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center transition-all duration-500 ${
-                              result.result === 'detected'
-                                ? 'bg-error-500'
-                                : 'bg-success-500'
-                            }`}
-                          />
-                        </div>
-                        <div className="mt-1 text-right font-bold text-lg">
-                          {result.confidenceLevel}%
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Patient Information */}
-                    {result.location?.patientName && (
-                      <div className="mt-4 p-3 bg-medical-50 dark:bg-medical-900/20 rounded-md border border-medical-200 dark:border-medical-800">
-                        <div className="flex items-center mb-2">
-                          <FiUser className="text-medical-500 mr-2" size={16} />
-                          <h5 className="text-sm font-medium text-medical-700 dark:text-medical-300">
-                            Patient Information
-                          </h5>
-                        </div>
-                        <p className="text-sm text-medical-600 dark:text-medical-400">
-                          <strong>Patient:</strong> {result.location.patientName}
-                        </p>
-                      </div>
-                    )}
-
-                    {/* Location and Facility Information */}
-                    {result.location && (
-                      <div className="mt-4 p-3 bg-gray-50 dark:bg-gray-800 rounded-md border border-gray-200 dark:border-gray-700">
-                        <div className="flex items-center mb-2">
-                          <FiMapPin className="text-gray-500 mr-2" size={16} />
-                          <h5 className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                            Diagnosis Location & Facility
-                          </h5>
-                        </div>
-                        <div className="space-y-1 text-sm text-gray-600 dark:text-gray-400">
-                          <p><strong>Location:</strong> {result.location.sector.name}, {result.location.district.name}, {result.location.province.name}</p>
-                          {result.location.facility && (
-                            <p><strong>Healthcare Facility:</strong> {result.location.facility.name}</p>
-                          )}
-                          <p><strong>Diagnosis ID:</strong> {result.id}</p>
-                          <p><strong>Date:</strong> {new Date(result.timestamp).toLocaleString()}</p>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                  
-                  <div className="mt-4 flex space-x-2">
-                    <Button variant="outline" icon={<FiRefreshCw />} onClick={handleReset}>
-                      New Analysis
-                    </Button>
-                    <Button 
-                      variant="primary"
-                      className="bg-medical-600 hover:bg-medical-700"
-                      onClick={() => logInteraction('click', 'view-details-button', {
-                        detectionId: result.id,
-                        result: result.result,
-                        location: result.location
-                      })}
-                    >
-                      Save to Records
-                    </Button>
-                  </div>
-                </div>
-              </div>
-            </Card>
-          ) : (
-            // Sample blood cell images with healthcare context
-            <Card className="p-6">
-              <h2 className="text-xl font-semibold mb-4 text-medical-800 dark:text-medical-200 flex items-center">
-                <FiInfo className="mr-2" />
-                Clinical Sample Blood Cell Images
-              </h2>
-              <p className="mb-6 text-gray-600 dark:text-gray-400">
-                Upload your own blood smear image or select one of these clinical sample images to test the malaria detection system. 
-                These samples represent actual microscopic blood examinations used in malaria diagnosis.
-              </p>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {bloodCellSamples.map((sample, index) => (
-                  <div 
-                    key={index}
-                    className="relative rounded-lg overflow-hidden cursor-pointer group bg-white dark:bg-gray-800 shadow-md hover:shadow-lg transition-all duration-300 border-2 border-gray-200 dark:border-gray-700 hover:border-medical-400"
-                    onClick={() => handleSampleSelect(sample, index)}
-                  >
-                    <div className="aspect-square relative">
-                      <img 
-                        src={sample.url}
-                        alt={sample.title}
-                        className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                      />
-                      <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all duration-300 flex items-center justify-center">
-                        <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                          <Button variant="primary" size="sm" className="bg-medical-600 hover:bg-medical-700">
-                            Analyze Sample
-                          </Button>
-                        </div>
-                      </div>
-                      {/* Status indicator */}
-                      <div className={`absolute top-2 right-2 px-2 py-1 rounded-full text-xs font-medium ${
-                        sample.status === 'positive' 
-                          ? 'bg-error-100 text-error-800 dark:bg-error-900/50 dark:text-error-200'
-                          : 'bg-success-100 text-success-800 dark:bg-success-900/50 dark:text-success-200'
-                      }`}>
-                        {sample.status === 'positive' ? 'Positive' : 'Negative'}
-                      </div>
-                    </div>
-                    <div className="p-4">
-                      <h3 className="font-medium text-sm text-medical-800 dark:text-medical-200">{sample.title}</h3>
-                      <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
-                        {sample.description}
-                      </p>
-                      <p className="text-xs text-medical-600 dark:text-medical-400 mt-2 font-medium">
-                        {sample.medicalNote}
-                      </p>
-                      <div className="mt-2 flex items-center justify-between">
-                        <span className="text-xs text-gray-500">Expected confidence:</span>
-                        <span className="text-xs font-medium text-medical-600 dark:text-medical-400">{sample.confidence}%</span>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-              
-              <div className="mt-6 p-4 bg-amber-50 dark:bg-amber-900/20 rounded-lg border border-amber-200 dark:border-amber-800">
-                <div className="flex items-start">
-                  <FiInfo className="text-amber-600 dark:text-amber-400 mt-0.5 mr-2 flex-shrink-0" />
-                  <div>
-                    <h4 className="font-medium text-amber-800 dark:text-amber-200">Clinical Sample Information</h4>
-                    <p className="text-sm text-amber-700 dark:text-amber-300 mt-1">
-                      These samples represent actual blood cell images used in clinical malaria diagnosis. The first two samples show the difference between infected and uninfected red blood cells, demonstrating the visual markers our AI system uses for detection.
+                    <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
+                      <strong>Confidence Level:</strong> {result.confidenceLevel}%
                     </p>
+                    <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
+                      <strong>Location:</strong> {selectedLocation.sector}, {selectedLocation.district}, {selectedLocation.province}
+                    </p>
+                    <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
+                      <strong>Image:</strong> {selectedImage.name}
+                    </p>
+                    <p className="text-xs text-gray-500 dark:text-gray-500">
+                      <strong>Raw Result:</strong> {result.rawResult} (Confidence: {(result.rawConfidence * 100).toFixed(2)}%)
+                    </p>
+                    
+                    {result.result === 'positive' && (
+                      <div className="mt-4 p-3 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-md">
+                        <div className="flex items-start">
+                          <FiInfo className="text-yellow-600 dark:text-yellow-400 mt-0.5 mr-2 flex-shrink-0" />
+                          <div className="text-sm text-yellow-800 dark:text-yellow-200">
+                            <strong>Recommendation:</strong> Please consult with a healthcare professional immediately for proper diagnosis and treatment.
+                          </div>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
+              </Card>
+
+              {/* Enhanced Combined Data Display */}
+              {combinedData && (
+                <Card className="p-6 border-l-4 border-l-blue-500">
+                  <h3 className="text-lg font-semibold mb-6 text-blue-800 dark:text-blue-200 flex items-center">
+                    <FiDatabase className="mr-2" />
+                    Detection Summary & Details
+                  </h3>
+                  
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    {/* Location Information */}
+                    <div className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-lg p-4 border border-blue-200 dark:border-blue-800">
+                      <h4 className="font-semibold text-blue-800 dark:text-blue-200 mb-3 flex items-center">
+                        <FiMapPin className="mr-2" />
+                        Location Details
+                      </h4>
+                      <div className="space-y-2 text-sm">
+                        <div className="flex justify-between">
+                          <span className="text-gray-600 dark:text-gray-400">Province:</span>
+                          <span className="font-medium text-gray-900 dark:text-gray-100">{combinedData.province}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-gray-600 dark:text-gray-400">District:</span>
+                          <span className="font-medium text-gray-900 dark:text-gray-100">{combinedData.district}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-gray-600 dark:text-gray-400">Sector:</span>
+                          <span className="font-medium text-gray-900 dark:text-gray-100">{combinedData.sector}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-gray-600 dark:text-gray-400">User ID:</span>
+                          <span className="font-mono text-xs bg-gray-200 dark:bg-gray-700 px-2 py-1 rounded">{combinedData.userId}</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Prediction Results */}
+                    <div className="bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded-lg p-4 border border-green-200 dark:border-green-800">
+                      <h4 className="font-semibold text-green-800 dark:text-green-200 mb-3 flex items-center">
+                        <FiBarChart className="mr-2" />
+                        Analysis Results
+                      </h4>
+                      <div className="space-y-2 text-sm">
+                        <div className="flex justify-between items-center">
+                          <span className="text-gray-600 dark:text-gray-400">Result:</span>
+                          <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                            combinedData.predictionResults.result === 'positive'
+                              ? 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300'
+                              : 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300'
+                          }`}>
+                            {combinedData.predictionResults.result.toUpperCase()}
+                          </span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-gray-600 dark:text-gray-400">Confidence:</span>
+                          <span className="font-medium text-gray-900 dark:text-gray-100">{combinedData.predictionResults.confidenceLevel}%</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-gray-600 dark:text-gray-400">Processing Time:</span>
+                          <span className="font-medium text-gray-900 dark:text-gray-100">{combinedData.predictionResults.processingTime}ms</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-gray-600 dark:text-gray-400">Raw Result:</span>
+                          <span className="font-medium text-gray-900 dark:text-gray-100">{combinedData.predictionResults.rawResult}</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Image Information */}
+                    <div className="bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 rounded-lg p-4 border border-purple-200 dark:border-purple-800">
+                      <h4 className="font-semibold text-purple-800 dark:text-purple-200 mb-3 flex items-center">
+                        <FiImage className="mr-2" />
+                        Image Information
+                      </h4>
+                      <div className="space-y-2 text-sm">
+                        <div className="flex justify-between">
+                          <span className="text-gray-600 dark:text-gray-400">File Name:</span>
+                          <span className="font-medium text-gray-900 dark:text-gray-100 truncate max-w-32" title={combinedData.predictionResults.imageInfo.fileName}>
+                            {combinedData.predictionResults.imageInfo.fileName}
+                          </span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-gray-600 dark:text-gray-400">File Size:</span>
+                          <span className="font-medium text-gray-900 dark:text-gray-100">
+                            {formatFileSize(combinedData.predictionResults.imageInfo.fileSize)}
+                          </span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-gray-600 dark:text-gray-400">File Type:</span>
+                          <span className="font-medium text-gray-900 dark:text-gray-100">{combinedData.predictionResults.imageInfo.fileType}</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Timestamp */}
+                    <div className="bg-gradient-to-br from-orange-50 to-red-50 dark:from-orange-900/20 dark:to-red-900/20 rounded-lg p-4 border border-orange-200 dark:border-orange-800">
+                      <h4 className="font-semibold text-orange-800 dark:text-orange-200 mb-3 flex items-center">
+                        <FiClock className="mr-2" />
+                        Timestamp Information
+                      </h4>
+                      <div className="space-y-2 text-sm">
+                        <div className="flex flex-col">
+                          <span className="text-gray-600 dark:text-gray-400 mb-1">Analysis Completed:</span>
+                          <span className="font-medium text-gray-900 dark:text-gray-100">
+                            {formatTimestamp(combinedData.predictionResults.timestamp)}
+                          </span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-gray-600 dark:text-gray-400">Element Type:</span>
+                          <span className="font-mono text-xs bg-gray-200 dark:bg-gray-700 px-2 py-1 rounded">{combinedData.element}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Technical Details Toggle */}
+                  <div className="mt-6">
+                    <details className="group">
+                      <summary className="flex items-center justify-between cursor-pointer p-3 bg-gray-50 dark:bg-gray-800 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                        <span className="font-medium text-gray-700 dark:text-gray-300 flex items-center">
+                          <FiInfo className="mr-2" />
+                          Technical Details (JSON)
+                        </span>
+                        <svg className="w-5 h-5 text-gray-500 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                        </svg>
+                      </summary>
+                      <div className="mt-3 bg-gray-900 dark:bg-gray-950 rounded-lg p-4 font-mono text-sm overflow-x-auto border">
+                        <pre className="text-green-400 whitespace-pre-wrap">
+                          {JSON.stringify(combinedData, null, 2)}
+                        </pre>
+                      </div>
+                    </details>
+                  </div>
+                </Card>
+              )}
+            </div>
+          ) : (
+            <Card className="p-6 border-l-4 border-l-gray-300 dark:border-l-gray-600">
+              <div className="text-center py-12">
+                <FiUploadCloud size={48} className="mx-auto text-gray-400 dark:text-gray-500 mb-4" />
+                <h3 className="text-lg font-medium text-gray-600 dark:text-gray-400 mb-2">
+                  Ready for Analysis
+                </h3>
+                <p className="text-gray-500 dark:text-gray-500">
+                  Upload a blood smear image and select your location to begin malaria detection analysis.
+                </p>
               </div>
             </Card>
           )}
         </motion.div>
       </div>
     </motion.div>
-  )
+  );
 }

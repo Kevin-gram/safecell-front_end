@@ -31,7 +31,12 @@ export const translationEN = {
     loginError: "Invalid email or password",
     forgotPassword: "Forgot password?",
     emailRequired: "Email is required",
-    passwordRequired: "Password is required"
+    passwordRequired: "Password is required",
+       confirmPassword: "Confirm Password",
+        signup: "Sign Up", 
+    signupButton: "Sign Up",
+    signupError: "Failed to sign up",
+    passwordMismatch: "Passwords do not match",
   },
   nav: {
     home: "Home",
