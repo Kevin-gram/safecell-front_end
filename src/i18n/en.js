@@ -52,6 +52,7 @@ export const translationEN = {
     updateSuccess: "Settings updated successfully",
     updateError: "Failed to update settings"
   },
+  home:{recentDetections:"Recent Detections",getStarted:"Get started"},
   statistics: {
     title: "Statistics",
     subtitle: "Detection trends and insights",

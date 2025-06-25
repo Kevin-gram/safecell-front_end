@@ -60,237 +60,287 @@ export default function MalariaDetection() {
     setPreviewUrl(URL.createObjectURL(file));
   };
 
-  // Fixed handleLocationChange function to prevent unwanted resets
-  const handleLocationChange = (location) => {
-    // Only proceed if we have a valid location object with all required fields
-    if (!location || typeof location !== 'object') {
-      return;
-    }
 
-    // Extract string values from location object (in case they're nested objects)
-    const getLocationValue = (value) => {
-      if (typeof value === 'string') return value;
-      if (value && typeof value === 'object' && value.name) return value.name;
-      if (value && typeof value === 'object' && value.value) return value.value;
-      return null;
-    };
+const handleLocationChange = (location) => {
+  // Only proceed if we have a valid location object with all required fields
+  if (!location || typeof location !== 'object') {
+    return;
+  }
 
-    const newProvince = getLocationValue(location.province);
-    const newDistrict = getLocationValue(location.district);
-    const newSector = getLocationValue(location.sector);
+ 
+  console.log('Location received in handleLocationChange:', location);
 
-    // Only update if all required fields are present and valid
-    if (!newProvince || !newDistrict || !newSector) {
-      // Don't reset existing location if new data is incomplete
-      // Only log if we have some data but it's incomplete
-      if (newProvince || newDistrict || newSector) {
-        console.warn('Incomplete location data received, keeping existing location:', {
-          received: { province: newProvince, district: newDistrict, sector: newSector },
-          current: selectedLocation
-        });
-      }
-      return;
-    }
-
-    // Create normalized location object
-    const normalizedLocation = {
-      province: newProvince,
-      district: newDistrict,
-      sector: newSector
-    };
-
-    // Prevent unnecessary updates if the location hasn't actually changed
-    if (selectedLocation) {
-      const currentProvince = getLocationValue(selectedLocation.province);
-      const currentDistrict = getLocationValue(selectedLocation.district);
-      const currentSector = getLocationValue(selectedLocation.sector);
-
-      if (
-        currentProvince === newProvince &&
-        currentDistrict === newDistrict &&
-        currentSector === newSector
-      ) {
-        return; // No change, skip update
-      }
-    }
-
-    // Update state
-    setSelectedLocation(normalizedLocation);
-    setLocationError(false);
-
-    // Log the interaction only when the location actually changes
-    logInteraction('select', 'complete-location', {
-      userId: '1750600866432',
-      province: newProvince,
-      district: newDistrict,
-      sector: newSector,
-    });
+ 
+  const getLocationValue = (value) => {
+    if (typeof value === 'string') return value;
+    if (value && typeof value === 'object' && value.name) return value.name;
+    if (value && typeof value === 'object' && value.value) return value.value;
+    return null;
   };
 
-  // Enhanced handleAnalyze function with better error handling and combined data creation
-  const handleAnalyze = async () => {
-    if (!selectedImage) {
-      setError('Please select an image first');
-      return;
+  const newProvince = getLocationValue(location.province);
+  const newDistrict = getLocationValue(location.district);
+  const newSector = getLocationValue(location.sector);
+  // Handle both 'hospital' and 'facility' fields
+  const newHospital = getLocationValue(location.hospital) || getLocationValue(location.facility);
+
+  // Debug what we extracted
+  console.log('Extracted values:', {
+    province: newProvince,
+    district: newDistrict,
+    sector: newSector,
+    hospital: newHospital,
+    originalFacility: location.facility,
+    originalHospital: location.hospital
+  });
+
+  // All fields including hospital/facility are required
+  if (!newProvince || !newDistrict || !newSector || !newHospital) {
+    // Don't reset existing location if new data is incomplete
+    // Only log if we have some data but it's incomplete
+    if (newProvince || newDistrict || newSector || newHospital) {
+      console.warn('Incomplete location data received, keeping existing location:', {
+        received: { province: newProvince, district: newDistrict, sector: newSector, hospital: newHospital },
+        current: selectedLocation,
+        missingFields: {
+          province: !newProvince,
+          district: !newDistrict,
+          sector: !newSector,
+          hospital: !newHospital
+        }
+      });
+    }
+    return;
+  }
+
+  // Create normalized location object - all fields are required
+  const normalizedLocation = {
+    province: newProvince,
+    district: newDistrict,
+    sector: newSector,
+    hospital: newHospital // Hospital is now required, no fallback to null
+  };
+
+  // Prevent unnecessary updates if the location hasn't actually changed
+  if (selectedLocation) {
+    const currentProvince = getLocationValue(selectedLocation.province);
+    const currentDistrict = getLocationValue(selectedLocation.district);
+    const currentSector = getLocationValue(selectedLocation.sector);
+    const currentHospital = getLocationValue(selectedLocation.hospital);
+
+    if (
+      currentProvince === newProvince &&
+      currentDistrict === newDistrict &&
+      currentSector === newSector &&
+      currentHospital === newHospital
+    ) {
+      return; 
+    }
+  }
+
+ 
+  setSelectedLocation(normalizedLocation);
+  setLocationError(false);
+
+  
+  logInteraction('select', 'complete-location', {
+    userId: '1750600866432',
+    province: newProvince,
+    district: newDistrict,
+    sector: newSector,
+    hospital: newHospital, 
+  });
+};
+
+const handleAnalyze = async () => {
+  if (!selectedImage) {
+    setError('Please select an image first');
+    return;
+  }
+
+  if (!selectedLocation) {
+    setLocationError(true);
+    setError('Please complete all location fields before analyzing the image');
+    return;
+  }
+
+  const startTime = Date.now();
+  setIsAnalyzing(true);
+  setError(null);
+  setLocationError(false);
+
+  logInteraction('click', 'analyze-button', {
+    fileName: selectedImage.name,
+    fileSize: selectedImage.size,
+    location: selectedLocation,
+  });
+
+  try {
+    // Create FormData and append the file with the exact field name expected by backend
+    const formData = new FormData();
+    formData.append('file', selectedImage, selectedImage.name);
+    
+    // Log what we're sending
+    console.log('Sending request with:', {
+      fileName: selectedImage.name,
+      fileSize: selectedImage.size,
+      fileType: selectedImage.type,
+      location: selectedLocation
+    });
+
+    // Verify FormData content
+    for (let [key, value] of formData.entries()) {
+      console.log('FormData entry:', key, value);
     }
 
-    if (!selectedLocation) {
-      setLocationError(true);
-      setError('Please complete all location fields before analyzing the image');
-      return;
+    const response = await fetch('http://127.0.0.1:8000/predict/', {
+      method: 'POST',
+      body: formData,
+      // Don't set Content-Type header - let browser set it automatically with boundary
+    });
+
+    console.log('Response status:', response.status);
+    console.log('Response headers:', Object.fromEntries(response.headers.entries()));
+
+    if (!response.ok) {
+    
+      let errorMessage = 'Failed to analyze the image';
+      try {
+        const errorData = await response.json();
+        console.error('Backend error details:', errorData);
+        
+      
+        if (errorData.detail && Array.isArray(errorData.detail)) {
+          const fieldErrors = errorData.detail.map(err => 
+            `${err.loc.join('.')}: ${err.msg}`
+          ).join(', ');
+          errorMessage = `Validation error: ${fieldErrors}`;
+        } else if (errorData.detail) {
+          errorMessage = errorData.detail;
+        } else if (errorData.message) {
+          errorMessage = errorData.message;
+        }
+      } catch (e) {
+        const errorText = await response.text();
+        console.error('Backend error text:', errorText);
+        errorMessage = errorText || errorMessage;
+      }
+      throw new Error(`${errorMessage} (Status: ${response.status})`);
     }
 
-    const startTime = Date.now();
-    setIsAnalyzing(true);
-    setError(null);
-    setLocationError(false);
+    const data = await response.json();
+    console.log('Success response:', data);
+    
+    const processingTime = Date.now() - startTime;
 
-    logInteraction('click', 'analyze-button', {
+    // Transform backend response to match frontend expectations
+    const transformedResult = {
+      result: data.result === 'Parasitized' ? 'positive' : 'negative',
+      confidenceLevel: Math.round(data.confidence * 100), // Convert to percentage
+      rawResult: data.result, // Keep original for debugging
+      rawConfidence: data.confidence
+    };
+
+    // Create combined data object as requested
+    const combinedResult = {
+      element: "complete-location",
+      province: selectedLocation.province,
+      district: selectedLocation.district,
+      sector: selectedLocation.sector,
+      hospital: selectedLocation.hospital, 
+      userId: "1750600866432",
+      predictionResults: {
+        result: transformedResult.result,
+        confidenceLevel: transformedResult.confidenceLevel,
+        rawResult: transformedResult.rawResult,
+        rawConfidence: transformedResult.rawConfidence,
+        processingTime: processingTime,
+        imageInfo: {
+          fileName: selectedImage.name,
+          fileSize: selectedImage.size,
+          fileType: selectedImage.type
+        },
+        timestamp: new Date().toISOString()
+      }
+    };
+
+    logDetection(transformedResult, {
+      processingTime,
+      imageSize: selectedImage.size,
+      fileName: selectedImage.name,
+      location: selectedLocation,
+    });
+
+    logPerformance('detection_processing_time', processingTime, {
+      unit: 'ms',
+      imageSize: selectedImage.size,
+      location: selectedLocation,
+    });
+
+    setResult(transformedResult);
+    setCombinedData(combinedResult);
+    
+    // Log the combined data for debugging
+    console.log('Combined Detection Data:', combinedResult);
+
+    // Send combined data to database
+    try {
+      const saveResponse = await fetch('http://localhost:8000/detection-data/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(combinedResult),
+      });
+
+      if (!saveResponse.ok) {
+        console.error('Failed to save detection data:', saveResponse.status);
+        const errorText = await saveResponse.text();
+        console.error('Save error details:', errorText);
+       
+      } else {
+        console.log('Detection data saved successfully to database');
+        const saveResult = await saveResponse.json();
+        console.log('Save response:', saveResult);
+      }
+    } catch (saveError) {
+      console.error('Error saving detection data to database:', saveError);
+      
+    }
+
+  } catch (err) {
+    console.error('Analysis error:', err);
+    const errorMsg = err.message || 'An error occurred during analysis';
+    setError(errorMsg);
+    logError(err, 'Detection analysis', {
       fileName: selectedImage.name,
       fileSize: selectedImage.size,
       location: selectedLocation,
     });
+  } finally {
+    setIsAnalyzing(false);
+  }
+};
 
-    try {
-      // Create FormData and append the file with the exact field name expected by backend
-      const formData = new FormData();
-      formData.append('file', selectedImage, selectedImage.name);
-      
-      // Log what we're sending
-      console.log('Sending request with:', {
-        fileName: selectedImage.name,
-        fileSize: selectedImage.size,
-        fileType: selectedImage.type,
-        location: selectedLocation
-      });
-
-      // Verify FormData content
-      for (let [key, value] of formData.entries()) {
-        console.log('FormData entry:', key, value);
-      }
-
-      const response = await fetch('http://127.0.0.1:8000/predict/', {
-        method: 'POST',
-        body: formData,
-        // Don't set Content-Type header - let browser set it automatically with boundary
-      });
-
-      console.log('Response status:', response.status);
-      console.log('Response headers:', Object.fromEntries(response.headers.entries()));
-
-      if (!response.ok) {
-        // Get more detailed error information
-        let errorMessage = 'Failed to analyze the image';
-        try {
-          const errorData = await response.json();
-          console.error('Backend error details:', errorData);
-          
-          // Handle FastAPI validation errors specifically
-          if (errorData.detail && Array.isArray(errorData.detail)) {
-            const fieldErrors = errorData.detail.map(err => 
-              `${err.loc.join('.')}: ${err.msg}`
-            ).join(', ');
-            errorMessage = `Validation error: ${fieldErrors}`;
-          } else if (errorData.detail) {
-            errorMessage = errorData.detail;
-          } else if (errorData.message) {
-            errorMessage = errorData.message;
-          }
-        } catch (e) {
-          const errorText = await response.text();
-          console.error('Backend error text:', errorText);
-          errorMessage = errorText || errorMessage;
-        }
-        throw new Error(`${errorMessage} (Status: ${response.status})`);
-      }
-
-      const data = await response.json();
-      console.log('Success response:', data);
-      
-      const processingTime = Date.now() - startTime;
-
-      // Transform backend response to match frontend expectations
-      const transformedResult = {
-        result: data.result === 'Parasitized' ? 'positive' : 'negative',
-        confidenceLevel: Math.round(data.confidence * 100), // Convert to percentage
-        rawResult: data.result, // Keep original for debugging
-        rawConfidence: data.confidence
-      };
-
-      // Create combined data object as requested
-      const combinedResult = {
-        element: "complete-location",
-        province: selectedLocation.province,
-        district: selectedLocation.district,
-        sector: selectedLocation.sector,
-        userId: "1750600866432",
-        predictionResults: {
-          result: transformedResult.result,
-          confidenceLevel: transformedResult.confidenceLevel,
-          rawResult: transformedResult.rawResult,
-          rawConfidence: transformedResult.rawConfidence,
-          processingTime: processingTime,
-          imageInfo: {
-            fileName: selectedImage.name,
-            fileSize: selectedImage.size,
-            fileType: selectedImage.type
-          },
-          timestamp: new Date().toISOString()
-        }
-      };
-
-      logDetection(transformedResult, {
-        processingTime,
-        imageSize: selectedImage.size,
-        fileName: selectedImage.name,
-        location: selectedLocation,
-      });
-
-      logPerformance('detection_processing_time', processingTime, {
-        unit: 'ms',
-        imageSize: selectedImage.size,
-        location: selectedLocation,
-      });
-
-      setResult(transformedResult);
-      setCombinedData(combinedResult);
-      
-      // Log the combined data for debugging
-      console.log('Combined Detection Data:', combinedResult);
-
-    } catch (err) {
-      console.error('Analysis error:', err);
-      const errorMsg = err.message || 'An error occurred during analysis';
-      setError(errorMsg);
-      logError(err, 'Detection analysis', {
-        fileName: selectedImage.name,
-        fileSize: selectedImage.size,
-        location: selectedLocation,
-      });
-    } finally {
-      setIsAnalyzing(false);
-    }
-  };
-
-  // Reset the form
+ 
   const handleReset = () => {
     logInteraction('click', 'reset-button');
     setSelectedImage(null);
     setPreviewUrl(null);
-    setSelectedLocation(null); // Reset location when explicitly resetting
+    setSelectedLocation(null); 
     setResult(null);
     setError(null);
     setLocationError(false);
     setCombinedData(null);
     
-    // Reset file input
+   
     const fileInput = document.getElementById('image-upload');
     if (fileInput) {
       fileInput.value = '';
     }
   };
 
-  // Helper function to format file size
+
   const formatFileSize = (bytes) => {
     if (bytes === 0) return '0 Bytes';
     const k = 1024;
@@ -299,7 +349,7 @@ export default function MalariaDetection() {
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
   };
 
-  // Helper function to format timestamp
+ 
   const formatTimestamp = (timestamp) => {
     return new Date(timestamp).toLocaleString('en-US', {
       year: 'numeric',
