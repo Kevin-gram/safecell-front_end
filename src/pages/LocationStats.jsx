@@ -652,80 +652,69 @@ const fetchLocationData = async (showRefreshLoader = false) => {
                 />
 
                 {/* District-level circles */}
-                {districtData.map((district, index) => (
-                  <Circle
-                    key={`district-${index}`}
-                    center={district.coordinates}
-                    radius={getCircleSize(district.totalCases)}
-                    pathOptions={{
-                      color: getCircleColor(district.intensity),
-                      fillColor: getCircleColor(district.intensity),
-                      fillOpacity: 0.6,
-                      weight: 3,
-                    }}
-                  >
-                    <Popup>
-                      <div className="p-3 min-w-[250px]">
-                        <h3 className="font-bold text-lg text-medical-800">
-                          {district.name} District
-                        </h3>
-                        <p className="text-sm text-gray-600 mb-2">
-                          {district.province}
-                        </p>
-                        <div className="space-y-1 text-sm">
-                          <p>
-                            <strong>Total Tests:</strong> {district.totalCases}
-                          </p>
-                          <p>
-                            <strong>Positive Cases:</strong>{" "}
-                            {district.positiveCases}
-                          </p>
-                          <p>
-                            <strong>Positive Rate:</strong>{" "}
-                            {district.positiveRate}%
-                          </p>
-                          <p>
-                            <strong>Risk Level:</strong>
-                            <span
-                              className={`ml-1 px-2 py-1 rounded text-xs ${
-                                district.riskLevel === "critical"
-                                  ? "bg-error-100 text-error-800"
-                                  : district.riskLevel === "high"
-                                  ? "bg-warning-100 text-warning-800"
-                                  : district.riskLevel === "moderate"
-                                  ? "bg-accent-100 text-accent-800"
-                                  : "bg-success-100 text-success-800"
-                              }`}
-                            >
-                              {district.riskLevel.toUpperCase()}
-                            </span>
-                          </p>
-                          <p>
-                            <strong>Healthcare Facilities:</strong>
-                          </p>
-                          <ul className="text-xs ml-2">
-                            {district.facilities
-                              .slice(0, 3)
-                              .map((facility, i) => (
-                                <li key={i}>• {facility}</li>
-                              ))}
-                            {district.facilities.length > 3 && (
-                              <li>• +{district.facilities.length - 3} more</li>
-                            )}
-                          </ul>
-                        </div>
-                      </div>
-                    </Popup>
-                  </Circle>
-                ))}
+{districtData.map((district, index) => (
+  <Circle
+    key={`district-${index}`}
+    center={district.coordinates}
+    radius={getCircleSize(district.totalCases)}
+    pathOptions={{
+      color: getCircleColor(district.intensity),
+      fillColor: getCircleColor(district.intensity),
+      fillOpacity: 0.6,
+      weight: 3,
+    }}
+  >
+    <Popup>
+      <div className="p-2 min-w-[200px] text-xs">
+        <h3 className="font-bold text-sm text-medical-800">{district.name} District</h3>
+        <p className="text-gray-600 mb-1">{district.province}</p>
+        <div className="space-y-1">
+          <p>
+            <strong>Total Tests:</strong> {district.totalCases}
+          </p>
+          <p>
+            <strong>Positive Cases:</strong> {district.positiveCases}
+          </p>
+          <p>
+            <strong>Positive Rate:</strong> {district.positiveRate}%
+          </p>
+          <p>
+            <strong>Risk Level:</strong>
+            <span
+              className={`ml-1 px-1 py-0.5 rounded text-xs ${
+                district.riskLevel === "critical"
+                  ? "bg-error-100 text-error-800"
+                  : district.riskLevel === "high"
+                  ? "bg-warning-100 text-warning-800"
+                  : district.riskLevel === "moderate"
+                  ? "bg-accent-100 text-accent-800"
+                  : "bg-success-100 text-success-800"
+              }`}
+            >
+              {district.riskLevel.toUpperCase()}
+            </span>
+          </p>
+          <p>
+            <strong>Healthcare Facilities:</strong>
+          </p>
+          <ul className="text-xs ml-2">
+            {district.facilities.slice(0, 2).map((facility, i) => (
+              <li key={i}>• {facility}</li>
+            ))}
+            {district.facilities.length > 2 && (
+              <li>• +{district.facilities.length - 2} more</li>
+            )}
+          </ul>
+        </div>
+      </div>
+    </Popup>
+  </Circle>
+))}
 
                 {/* FIXED: Individual detection markers for recent cases */}
 {detectionData.slice(-50).map((detection, index) => {
-  // Get actual district coordinates instead of random ones
   const districtCoords = getDistrictCoordinates(detection.district);
-  
-  // Add small random offset within the district area (much smaller than before)
-  const offset = 0.02; // Smaller offset to stay within district boundaries
+  const offset = 0.02;
   const randomLat = districtCoords[0] + (Math.random() - 0.5) * offset;
   const randomLng = districtCoords[1] + (Math.random() - 0.5) * offset;
 
@@ -735,15 +724,13 @@ const fetchLocationData = async (showRefreshLoader = false) => {
       position={[randomLat, randomLng]}
     >
       <Popup>
-        <div className="p-2">
-          <h4 className="font-medium text-medical-800">
-            Recent Diagnosis
-          </h4>
-          <div className="text-sm mt-1 space-y-1">
+        <div className="p-2 min-w-[200px] text-xs">
+          <h4 className="font-medium text-sm text-medical-800">Recent Diagnosis</h4>
+          <div className="mt-1 space-y-1">
             <p>
               <strong>Result:</strong>
               <span
-                className={`ml-1 px-2 py-1 rounded text-xs ${
+                className={`ml-1 px-1 py-0.5 rounded text-xs ${
                   detection.predictionResults?.result === "positive"
                     ? "bg-error-100 text-error-800"
                     : "bg-success-100 text-success-800"
@@ -755,8 +742,7 @@ const fetchLocationData = async (showRefreshLoader = false) => {
               </span>
             </p>
             <p>
-              <strong>Confidence:</strong>{" "}
-              {detection.predictionResults?.confidenceLevel || "N/A"}%
+              <strong>Confidence:</strong> {detection.predictionResults?.confidenceLevel || "N/A"}%
             </p>
             <p>
               <strong>District:</strong> {detection.district || "Unknown"}
@@ -771,21 +757,18 @@ const fetchLocationData = async (showRefreshLoader = false) => {
               <strong>Hospital:</strong> {detection.hospital || "Unknown"}
             </p>
             <p>
-              <strong>Processing Time:</strong>{" "}
-              {detection.predictionResults?.processingTime || "N/A"}ms
+              <strong>Processing Time:</strong> {detection.predictionResults?.processingTime || "N/A"}ms
             </p>
           </div>
         </div>
       </Popup>
     </Marker>
   );
-})}
-              </MapContainer>
+})}        </MapContainer>
             )}
           </div>
         </Card>
       </div>
-      // Replace the district details table section with this corrected version:
       {/* FIXED: Enhanced District Details Table */}
       {!loading && !error && districtData.length > 0 && (
         <Card className="overflow-hidden border-l-4 border-l-medical-500">

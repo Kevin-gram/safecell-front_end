@@ -448,15 +448,15 @@ const handleAnalyze = async () => {
                   </div>
                 </div>
                 <div className="mt-4 flex flex-wrap gap-2">
-                  <Button
-                    variant="primary"
-                    onClick={handleAnalyze}
-                    disabled={isAnalyzing || !selectedLocation || !selectedImage}
-                    icon={isAnalyzing ? <FiRefreshCw className="animate-spin" /> : <FiMapPin />}
-                    className="bg-medical-600 hover:bg-medical-700 disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    {isAnalyzing ? (t('detection.analyzing') || 'Analyzing...') : 'Analyze Blood Smear'}
-                  </Button>
+<Button
+  variant="primary"
+  onClick={handleAnalyze}
+  disabled={isAnalyzing || !selectedLocation || !selectedImage || result !== null}
+  icon={isAnalyzing ? <FiRefreshCw className="animate-spin" /> : <FiMapPin />}
+  className={`bg-medical-600 hover:bg-medical-700 disabled:bg-green-50 disabled:text-green-800 disabled:cursor-not-allowed`}
+>
+  {isAnalyzing ? (t('detection.analyzing') || 'Analyzing...') : 'Analyze Blood Smear'}
+</Button>
                   <Button variant="outline" onClick={handleReset} disabled={isAnalyzing}>
                     Reset
                   </Button>
