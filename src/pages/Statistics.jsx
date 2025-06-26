@@ -16,7 +16,7 @@ import {
   ArcElement,
 } from 'chart.js';
 import { Line, Bar, Doughnut } from 'react-chartjs-2';
-import { FiBarChart2, FiPieChart, FiRefreshCw, FiTrendingUp } from 'react-icons/fi';
+import { FiBarChart2, FiPieChart, FiRefreshCw, FiTrendingUp, FiDownload, FiCalendar } from 'react-icons/fi';
 
 // Register ChartJS components
 ChartJS.register(
@@ -34,10 +34,219 @@ ChartJS.register(
 export default function Statistics() {
   const { t } = useI18n();
 
-  const [timeRange, setTimeRange] = useState('week');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [stats, setStats] = useState(null);
+  const [rawData, setRawData] = useState([]);
+  const [selectedPeriod, setSelectedPeriod] = useState('alldata');
+  const [showExportDropdown, setShowExportDropdown] = useState(false);
+  const [showPeriodDropdown, setShowPeriodDropdown] = useState(false);
+
+  const periodOptions = [
+    { value: 'day', label: 'Last Day' },
+    { value: 'month', label: 'Last Month' },
+    { value: '6months', label: 'Last 6 Months' },
+    { value: 'year', label: 'Last Year' },
+    { value: 'alldata', label: 'All Data' }
+  ];
+
+  const exportOptions = [
+    { value: 'csv', label: 'Export as CSV', icon: 'csv' },
+    { value: 'excel', label: 'Export as Excel', icon: 'excel' }
+  ];
+
+  const filterDataByPeriod = (data, period) => {
+    if (period === 'alldata') return data;
+
+    const now = new Date();
+    const cutoffDate = new Date();
+
+    switch (period) {
+      case 'day':
+        cutoffDate.setDate(now.getDate() - 1);
+        break;
+      case 'month':
+        cutoffDate.setMonth(now.getMonth() - 1);
+        break;
+      case '6months':
+        cutoffDate.setMonth(now.getMonth() - 6);
+        break;
+      case 'year':
+        cutoffDate.setFullYear(now.getFullYear() - 1);
+        break;
+      default:
+        return data;
+    }
+
+    return data.filter(item => {
+      const itemDate = new Date(item.timestamp || item.createdAt || item.date);
+      return itemDate >= cutoffDate;
+    });
+  };
+
+  const exportToCSV = (period) => {
+    if (!rawData || rawData.length === 0) {
+      alert('No data available to export');
+      return;
+    }
+
+    const filteredData = filterDataByPeriod(rawData, period);
+    
+    // Prepare CSV headers
+    const headers = [
+      'Date',
+      'Timestamp',
+      'Prediction Result',
+      'Confidence Level',
+      'Image Path',
+      'User ID'
+    ];
+
+    // Prepare CSV rows
+    const csvRows = filteredData.map(item => [
+      new Date(item.timestamp || item.createdAt || item.date).toLocaleDateString(),
+      item.timestamp || item.createdAt || item.date || '',
+      item.predictionResults?.result || 'N/A',
+      item.predictionResults?.confidenceLevel || 0,
+      item.imagePath || item.image || 'N/A',
+      item.userId || item.user_id || 'N/A'
+    ]);
+
+    // Create CSV content
+    const csvContent = [
+      headers.join(','),
+      ...csvRows.map(row => row.map(field => `"${field}"`).join(','))
+    ].join('\n');
+
+    // Create and download the file
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', `statistics_${period}_${new Date().toISOString().split('T')[0]}.csv`);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  const exportToExcel = (period) => {
+    if (!rawData || rawData.length === 0) {
+      alert('No data available to export');
+      return;
+    }
+
+    const filteredData = filterDataByPeriod(rawData, period);
+    
+    // Prepare Excel data
+    const headers = [
+      'Date',
+      'Timestamp',
+      'Prediction Result',
+      'Confidence Level',
+      'Image Path',
+      'User ID'
+    ];
+
+    const excelData = filteredData.map(item => [
+      new Date(item.timestamp || item.createdAt || item.date).toLocaleDateString(),
+      item.timestamp || item.createdAt || item.date || '',
+      item.predictionResults?.result || 'N/A',
+      item.predictionResults?.confidenceLevel || 0,
+      item.imagePath || item.image || 'N/A',
+      item.userId || item.user_id || 'N/A'
+    ]);
+
+    // Create Excel content (simple HTML table format that Excel can read)
+    const excelContent = `
+      <html>
+        <head>
+          <meta charset="UTF-8">
+        </head>
+        <body>
+          <table>
+            <thead>
+              <tr>
+                ${headers.map(header => `<th>${header}</th>`).join('')}
+              </tr>
+            </thead>
+            <tbody>
+              ${excelData.map(row => 
+                `<tr>${row.map(cell => `<td>${cell}</td>`).join('')}</tr>`
+              ).join('')}
+            </tbody>
+          </table>
+        </body>
+      </html>
+    `;
+
+    // Create and download the file
+    const blob = new Blob([excelContent], { type: 'application/vnd.ms-excel' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', `statistics_${period}_${new Date().toISOString().split('T')[0]}.xls`);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  const handleExport = (exportType, period) => {
+    if (exportType === 'csv') {
+      exportToCSV(period);
+    } else if (exportType === 'excel') {
+      exportToExcel(period);
+    }
+    setShowExportDropdown(false);
+    setShowPeriodDropdown(false);
+  };
+
+  const processStatistics = (data) => {
+    // Always process all data for display
+    return {
+      summary: {
+        total: data.length,
+        totalPositive: data.filter((d) => d.predictionResults?.result === 'positive').length,
+        totalNegative: data.filter((d) => d.predictionResults?.result === 'negative').length,
+        positiveRate: data.length > 0 ? (
+          (data.filter((d) => d.predictionResults?.result === 'positive').length / data.length) *
+          100
+        ).toFixed(1) : '0.0',
+      },
+      labels: data.map((d) => new Date(d.timestamp || d.createdAt || d.date).toLocaleDateString()),
+      datasets: {
+        positive: data
+          .filter((d) => d.predictionResults?.result === 'positive')
+          .map((d) => d.predictionResults?.confidenceLevel || 0),
+        negative: data
+          .filter((d) => d.predictionResults?.result === 'negative')
+          .map((d) => d.predictionResults?.confidenceLevel || 0),
+      },
+      confidenceDistribution: {
+        labels: ['0-20%', '21-40%', '41-60%', '61-80%', '81-100%'],
+        data: [
+          data.filter((d) => d.predictionResults?.confidenceLevel <= 20).length,
+          data.filter(
+            (d) =>
+              d.predictionResults?.confidenceLevel > 20 &&
+              d.predictionResults?.confidenceLevel <= 40
+          ).length,
+          data.filter(
+            (d) =>
+              d.predictionResults?.confidenceLevel > 40 &&
+              d.predictionResults?.confidenceLevel <= 60
+          ).length,
+          data.filter(
+            (d) =>
+              d.predictionResults?.confidenceLevel > 60 &&
+              d.predictionResults?.confidenceLevel <= 80
+          ).length,
+          data.filter((d) => d.predictionResults?.confidenceLevel > 80).length,
+        ],
+      },
+    };
+  };
 
   const fetchStatistics = async () => {
     setLoading(true);
@@ -50,55 +259,13 @@ export default function Statistics() {
       }
 
       const apiResponse = await response.json();
-      console.log('API Response:', apiResponse); // Log the response to inspect its structure
-
-      // Adjust this based on the actual structure of the API response
       const data = Array.isArray(apiResponse) ? apiResponse : apiResponse.data || [];
 
-      // Process the API data to match the expected structure
-      const processedData = {
-        summary: {
-          total: data.length,
-          totalPositive: data.filter((d) => d.predictionResults?.result === 'positive').length,
-          totalNegative: data.filter((d) => d.predictionResults?.result === 'negative').length,
-          positiveRate: (
-            (data.filter((d) => d.predictionResults?.result === 'positive').length / data.length) *
-            100
-          ).toFixed(1),
-        },
-        labels: data.map((d) => new Date(d.timestamp || d.createdAt || d.date).toLocaleDateString()),
-        datasets: {
-          positive: data
-            .filter((d) => d.predictionResults?.result === 'positive')
-            .map((d) => d.predictionResults?.confidenceLevel || 0),
-          negative: data
-            .filter((d) => d.predictionResults?.result === 'negative')
-            .map((d) => d.predictionResults?.confidenceLevel || 0),
-        },
-        confidenceDistribution: {
-          labels: ['0-20%', '21-40%', '41-60%', '61-80%', '81-100%'],
-          data: [
-            data.filter((d) => d.predictionResults?.confidenceLevel <= 20).length,
-            data.filter(
-              (d) =>
-                d.predictionResults?.confidenceLevel > 20 &&
-                d.predictionResults?.confidenceLevel <= 40
-            ).length,
-            data.filter(
-              (d) =>
-                d.predictionResults?.confidenceLevel > 40 &&
-                d.predictionResults?.confidenceLevel <= 60
-            ).length,
-            data.filter(
-              (d) =>
-                d.predictionResults?.confidenceLevel > 60 &&
-                d.predictionResults?.confidenceLevel <= 80
-            ).length,
-            data.filter((d) => d.predictionResults?.confidenceLevel > 80).length,
-          ],
-        },
-      };
+      // Store raw data for filtering and CSV export
+      setRawData(data);
 
+      // Process the data based on selected period
+      const processedData = processStatistics(data);
       setStats(processedData);
     } catch (err) {
       console.error('Error fetching statistics:', err);
@@ -110,27 +277,9 @@ export default function Statistics() {
 
   useEffect(() => {
     fetchStatistics();
-  }, [timeRange]);
+  }, []);
 
-  const timeRangeOptions = [
-    { value: 'today', label: t('statistics.today') },
-    { value: 'week', label: t('statistics.week') },
-    { value: 'month', label: t('statistics.month') },
-    { value: 'year', label: t('statistics.year') },
-  ];
-
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: { staggerChildren: 0.1 },
-    },
-  };
-
-  const itemVariants = {
-    hidden: { y: 20, opacity: 0 },
-    visible: { y: 0, opacity: 1, transition: { duration: 0.4 } },
-  };
+  // Remove the selectedPeriod dependency since we always show all data
 
   const getChartColors = (isDarkMode = false) => {
     return {
@@ -204,72 +353,95 @@ export default function Statistics() {
 
   return (
     <motion.div
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
       className="space-y-8"
     >
-      <motion.div
-        variants={itemVariants}
-        className="flex flex-col md:flex-row md:items-center md:justify-between"
-      >
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between">
         <div>
           <h1 className="text-2xl md:text-3xl font-bold">{t('statistics.title')}</h1>
           <p className="text-gray-600 dark:text-gray-400 mt-2">{t('statistics.subtitle')}</p>
         </div>
-
-        <div className="mt-4 md:mt-0">
-          <div className="inline-flex rounded-md shadow-sm">
-            {timeRangeOptions.map((option) => (
-              <button
-                key={option.value}
-                onClick={() => setTimeRange(option.value)}
-                className={`px-4 py-2 text-sm font-medium ${
-                  timeRange === option.value
-                    ? 'bg-primary-600 text-white'
-                    : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
-                } ${option.value === 'today' ? 'rounded-l-md' : ''} ${
-                  option.value === 'year' ? 'rounded-r-md' : ''
-                } border border-gray-300 dark:border-gray-600 focus:z-10 focus:outline-none focus:ring-1 focus:ring-primary-500`}
-              >
-                {option.label}
-              </button>
-            ))}
+        <div className="flex items-center space-x-2 mt-4 md:mt-0">
+          {/* Export Button with Dropdown */}
+          <div className="relative">
+            <Button
+              variant="outline"
+              size="sm"
+              icon={<FiDownload />}
+              onClick={() => setShowExportDropdown(!showExportDropdown)}
+              disabled={!stats || stats.summary.total === 0}
+            >
+              Export Data
+            </Button>
+            {showExportDropdown && (
+              <div className="absolute right-0 mt-2 w-56 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg z-20">
+                <div className="p-2">
+                  <div className="text-sm font-medium text-gray-700 dark:text-gray-300 px-2 py-1 mb-2">
+                    Select Period:
+                  </div>
+                  {periodOptions.map((period) => (
+                    <div key={period.value} className="mb-2">
+                      <div className="text-xs text-gray-500 dark:text-gray-400 px-2 py-1">
+                        {period.label}
+                      </div>
+                      <div className="flex space-x-1">
+                        <button
+                          onClick={() => handleExport('csv', period.value)}
+                          className="flex-1 text-left px-3 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md text-gray-700 dark:text-gray-300"
+                        >
+                          📄 CSV
+                        </button>
+                        <button
+                          onClick={() => handleExport('excel', period.value)}
+                          className="flex-1 text-left px-3 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md text-gray-700 dark:text-gray-300"
+                        >
+                          📊 Excel
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
+
+          {/* Refresh Button */}
           <Button
             variant="outline"
             size="sm"
             icon={<FiRefreshCw className={loading ? 'animate-spin' : ''} />}
             onClick={fetchStatistics}
-            className="ml-2"
             disabled={loading}
           >
             Refresh
           </Button>
         </div>
-      </motion.div>
+      </div>
+
+      {/* Close dropdown when clicking outside */}
+      {showExportDropdown && (
+        <div
+          className="fixed inset-0 z-10"
+          onClick={() => setShowExportDropdown(false)}
+        />
+      )}
 
       {error ? (
-        <motion.div
-          variants={itemVariants}
-          className="p-4 bg-error-100 dark:bg-error-900/20 text-error-700 dark:text-error-400 rounded-md"
-        >
+        <div className="p-4 bg-error-100 dark:bg-error-900/20 text-error-700 dark:text-error-400 rounded-md">
           {error}
-        </motion.div>
+        </div>
       ) : loading ? (
-        <motion.div variants={itemVariants} className="flex justify-center p-12">
+        <div className="flex justify-center p-12">
           <div className="animate-pulse text-center">
             <FiRefreshCw className="animate-spin mx-auto h-8 w-8 text-primary-600 dark:text-primary-400" />
             <p className="mt-2 text-gray-600 dark:text-gray-400">{t('common.loading')}</p>
           </div>
-        </motion.div>
+        </div>
       ) : stats ? (
         <>
-          {/* Summary stats */}
-          <motion.div
-            variants={itemVariants}
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"
-          >
+          {/* Summary Stats */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <Card className="p-4">
               <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Total Scans</p>
               <p className="mt-1 text-2xl font-semibold">{stats.summary.total}</p>
@@ -290,61 +462,53 @@ export default function Statistics() {
               <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Positive Rate</p>
               <p className="mt-1 text-2xl font-semibold">{stats.summary.positiveRate}%</p>
             </Card>
-          </motion.div>
+          </div>
 
-          {/* Detection rate chart */}
-          <motion.div variants={itemVariants}>
-            <Card className="p-6">
-              <div className="flex items-center mb-4">
-                <FiTrendingUp
-                  size={20}
-                  className="text-primary-600 dark:text-primary-400 mr-2"
-                />
-                <h2 className="text-xl font-semibold">{t('statistics.detectionRate')}</h2>
-              </div>
-              <div className="h-80">
-                <Line
-                  data={getDetectionRateData()}
-                  options={{
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                      legend: {
-                        position: 'top',
+          {/* Detection Rate Chart */}
+          <Card className="p-6">
+            <div className="flex items-center mb-4">
+              <FiTrendingUp size={20} className="text-primary-600 dark:text-primary-400 mr-2" />
+              <h2 className="text-xl font-semibold">{t('statistics.detectionRate')}</h2>
+            </div>
+            <div className="h-80">
+              <Line
+                data={getDetectionRateData()}
+                options={{
+                  responsive: true,
+                  maintainAspectRatio: false,
+                  plugins: {
+                    legend: {
+                      position: 'top',
+                    },
+                  },
+                  scales: {
+                    y: {
+                      beginAtZero: true,
+                      grid: {
+                        color: document.documentElement.classList.contains('dark')
+                          ? 'rgba(255, 255, 255, 0.1)'
+                          : 'rgba(0, 0, 0, 0.1)',
                       },
                     },
-                    scales: {
-                      y: {
-                        beginAtZero: true,
-                        grid: {
-                          color: document.documentElement.classList.contains('dark')
-                            ? 'rgba(255, 255, 255, 0.1)'
-                            : 'rgba(0, 0, 0, 0.1)',
-                        },
-                      },
-                      x: {
-                        grid: {
-                          color: document.documentElement.classList.contains('dark')
-                            ? 'rgba(255, 255, 255, 0.05)'
-                            : 'rgba(0, 0, 0, 0.05)',
-                        },
+                    x: {
+                      grid: {
+                        color: document.documentElement.classList.contains('dark')
+                          ? 'rgba(255, 255, 255, 0.05)'
+                          : 'rgba(0, 0, 0, 0.05)',
                       },
                     },
-                  }}
-                />
-              </div>
-            </Card>
-          </motion.div>
+                  },
+                }}
+              />
+            </div>
+          </Card>
 
-          {/* Additional charts */}
-          <motion.div variants={itemVariants} className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* Positive/Negative distribution */}
+          {/* Additional Charts */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Positive/Negative Distribution */}
             <Card className="p-6">
               <div className="flex items-center mb-4">
-                <FiBarChart2
-                  size={20}
-                  className="text-secondary-600 dark:text-secondary-400 mr-2"
-                />
+                <FiBarChart2 size={20} className="text-secondary-600 dark:text-secondary-400 mr-2" />
                 <h2 className="text-xl font-semibold">Positive/Negative Distribution</h2>
               </div>
               <div className="h-64">
@@ -374,16 +538,11 @@ export default function Statistics() {
               </div>
             </Card>
 
-            {/* Confidence distribution */}
+            {/* Confidence Distribution */}
             <Card className="p-6">
               <div className="flex items-center mb-4">
-                <FiPieChart
-                  size={20}
-                  className="text-accent-600 dark:text-accent-400 mr-2"
-                />
-                <h2 className="text-xl font-semibold">
-                  {t('statistics.confidenceDistribution')}
-                </h2>
+                <FiPieChart size={20} className="text-accent-600 dark:text-accent-400 mr-2" />
+                <h2 className="text-xl font-semibold">Confidence Distribution</h2>
               </div>
               <div className="h-64">
                 <Doughnut
@@ -400,12 +559,12 @@ export default function Statistics() {
                 />
               </div>
             </Card>
-          </motion.div>
+          </div>
         </>
       ) : (
-        <motion.div variants={itemVariants} className="text-center p-12">
+        <div className="text-center p-12">
           <p>{t('statistics.noData')}</p>
-        </motion.div>
+        </div>
       )}
     </motion.div>
   );
