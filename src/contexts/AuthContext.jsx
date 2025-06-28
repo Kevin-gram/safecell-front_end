@@ -3,6 +3,32 @@ import logger from '../utils/logger'
 
 const AuthContext = createContext(null)
 
+// Mock user database
+const MOCK_USERS = [
+  {
+    id: '1',
+    email: 'admin@safecell.com',
+    password: 'admin123',
+    name: 'Admin User',
+    role: 'admin',
+    location: {
+      district: 'Kigali',
+      province: 'Kigali City'
+    }
+  },
+  {
+    id: '2',
+    email: 'clinician@safecell.com',
+    password: 'clinician123',
+    name: 'Dr. Jane Smith',
+    role: 'clinician',
+    location: {
+      district: 'Gasabo',
+      province: 'Kigali City'
+    }
+  }
+]
+
 export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [user, setUser] = useState(null)
@@ -32,20 +58,19 @@ export const AuthProvider = ({ children }) => {
       // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 1000))
       
-      // For demo purposes, accept any non-empty credentials
-      if (!email || !password) {
-        throw new Error('Email and password are required')
+      // Check credentials against mock database
+      const foundUser = MOCK_USERS.find(u => u.email === email && u.password === password)
+      
+      if (!foundUser) {
+        throw new Error('Invalid email or password')
       }
       
       const userData = {
-        id: '1',
-        email,
-        name: email.split('@')[0],
-        role: 'clinician',
-        location: {
-          district: 'Kigali',
-          province: 'Kigali City'
-        }
+        id: foundUser.id,
+        email: foundUser.email,
+        name: foundUser.name,
+        role: foundUser.role,
+        location: foundUser.location
       }
       
       setUser(userData)
@@ -60,7 +85,7 @@ export const AuthProvider = ({ children }) => {
         loginMethod: 'email_password'
       })
       
-      return { success: true }
+      return { success: true, user: userData }
     } catch (error) {
       // Log failed login
       logger.logAuth('login_failed', {
@@ -72,6 +97,56 @@ export const AuthProvider = ({ children }) => {
       return { 
         success: false, 
         error: error.message || 'Login failed'
+      }
+    }
+  }
+
+  // Mock signup function
+  const signup = async (email, password, name = '') => {
+    try {
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 1000))
+      
+      // Check if user already exists
+      const existingUser = MOCK_USERS.find(u => u.email === email)
+      if (existingUser) {
+        throw new Error('User with this email already exists')
+      }
+      
+      // Create new user
+      const newUser = {
+        id: `${Date.now()}`,
+        email,
+        password,
+        name: name || email.split('@')[0],
+        role: 'clinician', // Default role
+        location: {
+          district: '',
+          province: ''
+        }
+      }
+      
+      // Add to mock database
+      MOCK_USERS.push(newUser)
+      
+      // Log successful signup
+      logger.logAuth('signup_success', {
+        userId: newUser.id,
+        email: newUser.email,
+        role: newUser.role
+      })
+      
+      return { success: true, user: newUser }
+    } catch (error) {
+      // Log failed signup
+      logger.logAuth('signup_failed', {
+        email,
+        error: error.message
+      })
+      
+      return { 
+        success: false, 
+        error: error.message || 'Signup failed'
       }
     }
   }
@@ -126,6 +201,7 @@ export const AuthProvider = ({ children }) => {
     isAuthenticated,
     loading,
     login,
+    signup,
     logout,
     updateUser
   }

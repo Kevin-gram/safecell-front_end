@@ -40,19 +40,13 @@ export default function Statistics() {
   const [rawData, setRawData] = useState([]);
   const [selectedPeriod, setSelectedPeriod] = useState('alldata');
   const [showExportDropdown, setShowExportDropdown] = useState(false);
-  const [showPeriodDropdown, setShowPeriodDropdown] = useState(false);
 
   const periodOptions = [
-    { value: 'day', label: 'Last Day' },
-    { value: 'month', label: 'Last Month' },
-    { value: '6months', label: 'Last 6 Months' },
-    { value: 'year', label: 'Last Year' },
+    { value: 'day', label: t('statistics.today') },
+    { value: 'week', label: t('statistics.week') },
+    { value: 'month', label: t('statistics.month') },
+    { value: 'year', label: t('statistics.year') },
     { value: 'alldata', label: 'All Data' }
-  ];
-
-  const exportOptions = [
-    { value: 'csv', label: 'Export as CSV', icon: 'csv' },
-    { value: 'excel', label: 'Export as Excel', icon: 'excel' }
   ];
 
   const filterDataByPeriod = (data, period) => {
@@ -65,11 +59,11 @@ export default function Statistics() {
       case 'day':
         cutoffDate.setDate(now.getDate() - 1);
         break;
+      case 'week':
+        cutoffDate.setDate(now.getDate() - 7);
+        break;
       case 'month':
         cutoffDate.setMonth(now.getMonth() - 1);
-        break;
-      case '6months':
-        cutoffDate.setMonth(now.getMonth() - 6);
         break;
       case 'year':
         cutoffDate.setFullYear(now.getFullYear() - 1);
@@ -86,7 +80,7 @@ export default function Statistics() {
 
   const exportToCSV = (period) => {
     if (!rawData || rawData.length === 0) {
-      alert('No data available to export');
+      alert(t('statistics.noDataToExport'));
       return;
     }
 
@@ -98,7 +92,10 @@ export default function Statistics() {
       'Timestamp',
       'Prediction Result',
       'Confidence Level',
-      'Image Path',
+      'Province',
+      'District',
+      'Sector',
+      'Hospital',
       'User ID'
     ];
 
@@ -108,7 +105,10 @@ export default function Statistics() {
       item.timestamp || item.createdAt || item.date || '',
       item.predictionResults?.result || 'N/A',
       item.predictionResults?.confidenceLevel || 0,
-      item.imagePath || item.image || 'N/A',
+      item.province || 'N/A',
+      item.district || 'N/A',
+      item.sector || 'N/A',
+      item.hospital || 'N/A',
       item.userId || item.user_id || 'N/A'
     ]);
 
@@ -128,11 +128,12 @@ export default function Statistics() {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+    URL.revokeObjectURL(url);
   };
 
   const exportToExcel = (period) => {
     if (!rawData || rawData.length === 0) {
-      alert('No data available to export');
+      alert(t('statistics.noDataToExport'));
       return;
     }
 
@@ -144,7 +145,10 @@ export default function Statistics() {
       'Timestamp',
       'Prediction Result',
       'Confidence Level',
-      'Image Path',
+      'Province',
+      'District',
+      'Sector',
+      'Hospital',
       'User ID'
     ];
 
@@ -153,7 +157,10 @@ export default function Statistics() {
       item.timestamp || item.createdAt || item.date || '',
       item.predictionResults?.result || 'N/A',
       item.predictionResults?.confidenceLevel || 0,
-      item.imagePath || item.image || 'N/A',
+      item.province || 'N/A',
+      item.district || 'N/A',
+      item.sector || 'N/A',
+      item.hospital || 'N/A',
       item.userId || item.user_id || 'N/A'
     ]);
 
@@ -190,6 +197,7 @@ export default function Statistics() {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+    URL.revokeObjectURL(url);
   };
 
   const handleExport = (exportType, period) => {
@@ -199,11 +207,9 @@ export default function Statistics() {
       exportToExcel(period);
     }
     setShowExportDropdown(false);
-    setShowPeriodDropdown(false);
   };
 
   const processStatistics = (data) => {
-    // Always process all data for display
     return {
       summary: {
         total: data.length,
@@ -214,7 +220,7 @@ export default function Statistics() {
           100
         ).toFixed(1) : '0.0',
       },
-      labels: data.map((d) => new Date(d.timestamp || d.createdAt || d.date).toLocaleDateString()),
+      labels: data.map((d, index) => `Test ${index + 1}`),
       datasets: {
         positive: data
           .filter((d) => d.predictionResults?.result === 'positive')
@@ -261,10 +267,10 @@ export default function Statistics() {
       const apiResponse = await response.json();
       const data = Array.isArray(apiResponse) ? apiResponse : apiResponse.data || [];
 
-      // Store raw data for filtering and CSV export
+      // Store raw data for filtering and export
       setRawData(data);
 
-      // Process the data based on selected period
+      // Process the data
       const processedData = processStatistics(data);
       setStats(processedData);
     } catch (err) {
@@ -278,8 +284,6 @@ export default function Statistics() {
   useEffect(() => {
     fetchStatistics();
   }, []);
-
-  // Remove the selectedPeriod dependency since we always show all data
 
   const getChartColors = (isDarkMode = false) => {
     return {
@@ -372,13 +376,13 @@ export default function Statistics() {
               onClick={() => setShowExportDropdown(!showExportDropdown)}
               disabled={!stats || stats.summary.total === 0}
             >
-              Export Data
+              {t('statistics.exportData')}
             </Button>
             {showExportDropdown && (
               <div className="absolute right-0 mt-2 w-56 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg z-20">
                 <div className="p-2">
                   <div className="text-sm font-medium text-gray-700 dark:text-gray-300 px-2 py-1 mb-2">
-                    Select Period:
+                    {t('statistics.selectPeriod')}:
                   </div>
                   {periodOptions.map((period) => (
                     <div key={period.value} className="mb-2">
@@ -414,7 +418,7 @@ export default function Statistics() {
             onClick={fetchStatistics}
             disabled={loading}
           >
-            Refresh
+            {t('common.refresh')}
           </Button>
         </div>
       </div>
@@ -443,23 +447,23 @@ export default function Statistics() {
           {/* Summary Stats */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <Card className="p-4">
-              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Total Scans</p>
+              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">{t('statistics.totalScans')}</p>
               <p className="mt-1 text-2xl font-semibold">{stats.summary.total}</p>
             </Card>
             <Card className="p-4">
-              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Positive Cases</p>
+              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">{t('statistics.positiveCases')}</p>
               <p className="mt-1 text-2xl font-semibold text-error-600 dark:text-error-400">
                 {stats.summary.totalPositive}
               </p>
             </Card>
             <Card className="p-4">
-              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Negative Cases</p>
+              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">{t('statistics.negativeCases')}</p>
               <p className="mt-1 text-2xl font-semibold text-success-600 dark:text-success-400">
                 {stats.summary.totalNegative}
               </p>
             </Card>
             <Card className="p-4">
-              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Positive Rate</p>
+              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">{t('statistics.positiveRate')}</p>
               <p className="mt-1 text-2xl font-semibold">{stats.summary.positiveRate}%</p>
             </Card>
           </div>
@@ -509,12 +513,12 @@ export default function Statistics() {
             <Card className="p-6">
               <div className="flex items-center mb-4">
                 <FiBarChart2 size={20} className="text-secondary-600 dark:text-secondary-400 mr-2" />
-                <h2 className="text-xl font-semibold">Positive/Negative Distribution</h2>
+                <h2 className="text-xl font-semibold">{t('statistics.distributionChart')}</h2>
               </div>
               <div className="h-64">
                 <Bar
                   data={{
-                    labels: ['Positive', 'Negative'],
+                    labels: [t('statistics.positiveDetections'), t('statistics.negativeDetections')],
                     datasets: [
                       {
                         label: 'Count',
@@ -542,7 +546,7 @@ export default function Statistics() {
             <Card className="p-6">
               <div className="flex items-center mb-4">
                 <FiPieChart size={20} className="text-accent-600 dark:text-accent-400 mr-2" />
-                <h2 className="text-xl font-semibold">Confidence Distribution</h2>
+                <h2 className="text-xl font-semibold">{t('statistics.confidenceDistribution')}</h2>
               </div>
               <div className="h-64">
                 <Doughnut

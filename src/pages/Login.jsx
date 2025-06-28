@@ -16,12 +16,13 @@ export default function Login() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState(location.state?.email || '');
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [showLangMenu, setShowLangMenu] = useState(false);
+  const [successMessage, setSuccessMessage] = useState(location.state?.message || '');
 
   const validateForm = () => {
     const newErrors = {};
@@ -39,17 +40,12 @@ export default function Login() {
 
     setIsLoading(true);
     setErrorMessage('');
+    setSuccessMessage('');
 
     try {
       const result = await login(email, password);
 
       if (result.success) {
-        // Check if the password matches the database
-        if (result.user.password !== password) {
-          setErrorMessage(t('auth.invalidCredentials'));
-          return;
-        }
-
         const from = location.state?.from?.pathname || '/';
         navigate(from, { replace: true });
       } else {
@@ -87,9 +83,7 @@ export default function Login() {
 
           {/* Language dropdown */}
           {showLangMenu && (
-            <div
-              className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg py-1 z-50 border dark:border-gray-700"
-            >
+            <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg py-1 z-50 border dark:border-gray-700">
               <button
                 onClick={() => {
                   changeLanguage('en');
@@ -107,6 +101,15 @@ export default function Login() {
                 className="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
               >
                 Français
+              </button>
+              <button
+                onClick={() => {
+                  changeLanguage('rw');
+                  setShowLangMenu(false);
+                }}
+                className="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+              >
+                Kinyarwanda
               </button>
             </div>
           )}
@@ -134,6 +137,15 @@ export default function Login() {
         className="mt-8 sm:mx-auto sm:w-full sm:max-w-md"
       >
         <div className="bg-white dark:bg-gray-800 py-8 px-4 shadow sm:rounded-lg sm:px-10">
+          {successMessage && (
+            <Alert
+              type="success"
+              message={successMessage}
+              onClose={() => setSuccessMessage('')}
+              className="mb-4"
+            />
+          )}
+
           {errorMessage && (
             <Alert
               type="error"
@@ -142,6 +154,17 @@ export default function Login() {
               className="mb-4"
             />
           )}
+
+          {/* Demo credentials info */}
+          <div className="mb-6 p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-md">
+            <h3 className="text-sm font-medium text-blue-800 dark:text-blue-200 mb-2">
+              {t('auth.demoCredentials')}
+            </h3>
+            <div className="text-xs text-blue-600 dark:text-blue-300 space-y-1">
+              <div><strong>{t('auth.admin')}:</strong> admin@safecell.com / admin123</div>
+              <div><strong>{t('auth.clinician')}:</strong> clinician@safecell.com / clinician123</div>
+            </div>
+          </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <Input

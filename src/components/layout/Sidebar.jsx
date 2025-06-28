@@ -1,9 +1,11 @@
 import { NavLink } from 'react-router-dom'
+import { useAuth } from '../../contexts/AuthContext'
 import { useI18n } from '../../contexts/I18nContext'
-import { FiHome, FiSearch, FiBarChart2, FiMessageSquare, FiSettings, FiMapPin } from 'react-icons/fi'
+import { FiHome, FiSearch, FiBarChart2, FiMessageSquare, FiSettings, FiMapPin, FiShield } from 'react-icons/fi'
 
 export default function Sidebar({ closeSidebar }) {
   const { t } = useI18n()
+  const { user } = useAuth()
 
   const navItems = [
     { 
@@ -39,10 +41,25 @@ export default function Sidebar({ closeSidebar }) {
     }
   ]
 
+  // Add admin dashboard for admin users
+  if (user?.role === 'admin') {
+    navItems.push({
+      to: '/admin',
+      icon: <FiShield size={20} />,
+      label: t('nav.admin')
+    })
+  }
+
   return (
     <div className="w-64 h-full bg-white dark:bg-gray-800 border-r dark:border-gray-700 shadow-sm flex flex-col">
       <div className="p-4 border-b dark:border-gray-700">
         <h1 className="text-xl font-bold text-primary-600 dark:text-primary-400">{t('common.appName')}</h1>
+        {user && (
+          <div className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+            <p>{user.name}</p>
+            <p className="text-xs capitalize">{user.role}</p>
+          </div>
+        )}
       </div>
       
       <nav className="flex-1 overflow-y-auto py-4">
