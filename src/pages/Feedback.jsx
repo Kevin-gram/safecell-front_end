@@ -8,7 +8,6 @@ import Input from '../components/ui/Input'
 import Textarea from '../components/ui/Textarea'
 import Select from '../components/ui/Select'
 import Alert from '../components/ui/Alert'
-import { apiRequest } from '../utils/api'
 import { FiSend, FiRefreshCw } from 'react-icons/fi'
 
 export default function Feedback() {
@@ -74,10 +73,22 @@ export default function Feedback() {
     })
     
     try {
-      await apiRequest('/api/feedback', {
-        method: 'POST',
-        body: formData
-      })
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 1000))
+      
+      // Create feedback object
+      const feedback = {
+        id: `feedback_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+        ...formData,
+        timestamp: new Date().toISOString(),
+        status: 'pending',
+        priority: 'medium'
+      }
+      
+      // Store in localStorage (simulating database)
+      const existingFeedback = JSON.parse(localStorage.getItem('safecell_feedback') || '[]')
+      existingFeedback.push(feedback)
+      localStorage.setItem('safecell_feedback', JSON.stringify(existingFeedback))
       
       // Log successful feedback submission
       logFeedback(formData.type, {
@@ -95,7 +106,7 @@ export default function Feedback() {
         message: ''
       })
     } catch (error) {
-      const errorMsg = error.message || 'Failed to submit feedback'
+      const errorMsg = error.message || t('feedback.submitError')
       setErrorMessage(errorMsg)
       
       // Log feedback submission error
@@ -156,13 +167,13 @@ export default function Feedback() {
               </motion.div>
               <h3 className="text-xl font-medium">{t('feedback.thankYou')}</h3>
               <p className="text-gray-600 dark:text-gray-400 mt-2 mb-6">
-                Your feedback helps us improve the malaria detection system.
+                {t('feedback.thankYouMessage')}
               </p>
               <Button 
                 variant="primary" 
                 onClick={resetForm}
               >
-                Submit Another Feedback
+                {t('feedback.submitAnother')}
               </Button>
             </div>
           ) : (
@@ -181,7 +192,7 @@ export default function Feedback() {
                   name="name"
                   value={formData.name}
                   onChange={handleChange}
-                  placeholder="John Doe"
+                  placeholder={t('feedback.namePlaceholder')}
                 />
                 
                 <Input
@@ -208,7 +219,7 @@ export default function Feedback() {
                 name="message"
                 value={formData.message}
                 onChange={handleChange}
-                placeholder="Please share your thoughts..."
+                placeholder={t('feedback.messagePlaceholder')}
                 required
                 error={errors.message}
                 rows={6}

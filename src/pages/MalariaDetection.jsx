@@ -193,7 +193,7 @@ const handleAnalyze = async () => {
       console.log('FormData entry:', key, value);
     }
 
-    const response = await fetch('http://127.0.0.1:8000/predict/', {
+    const response = await fetch('https://safecell-3.onrender.com/predict/', {
       method: 'POST',
       body: formData,
       // Don't set Content-Type header - let browser set it automatically with boundary
@@ -203,13 +203,11 @@ const handleAnalyze = async () => {
     console.log('Response headers:', Object.fromEntries(response.headers.entries()));
 
     if (!response.ok) {
-    
       let errorMessage = 'Failed to analyze the image';
       try {
         const errorData = await response.json();
         console.error('Backend error details:', errorData);
         
-      
         if (errorData.detail && Array.isArray(errorData.detail)) {
           const fieldErrors = errorData.detail.map(err => 
             `${err.loc.join('.')}: ${err.msg}`
@@ -241,28 +239,163 @@ const handleAnalyze = async () => {
       rawConfidence: data.confidence
     };
 
-    // Create combined data object as requested
+    // ENHANCED: Create comprehensive date/time data for backend processing
+    const currentDate = new Date();
+    const utcDate = new Date(currentDate.getTime() + (currentDate.getTimezoneOffset() * 60000));
+    
     const combinedResult = {
+      // Basic identification
       element: "complete-location",
+      userId: "1750600866432",
+      
+      // Location data
       province: selectedLocation.province,
       district: selectedLocation.district,
       sector: selectedLocation.sector,
-      hospital: selectedLocation.hospital, 
-      userId: "1750600866432",
+      hospital: selectedLocation.hospital,
+      
+      // COMPREHENSIVE DATE/TIME FIELDS FOR BACKEND PROCESSING
+      
+      // Primary timestamps (ISO format for database storage)
+      timestamp: currentDate.toISOString(), // 2025-06-28T14:30:45.123Z
+      timestampUTC: utcDate.toISOString(), // UTC equivalent
+      dateCreated: currentDate.toISOString(), // Explicit creation timestamp
+      
+      // Date components (for easy querying and filtering)
+      predictionDate: currentDate.toISOString().split('T')[0], // 2025-06-28
+      predictionTime: currentDate.toTimeString().split(' ')[0], // 14:30:45
+      predictionDateTime: currentDate.toLocaleString('en-US', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false
+      }).replace(',', ''), // 06/28/2025 14:30:45
+      
+      // Numeric timestamps (for calculations and comparisons)
+      unixTimestamp: currentDate.getTime(), // 1719584245123
+      unixTimestampSeconds: Math.floor(currentDate.getTime() / 1000), // 1719584245
+      
+      // Timezone information
+      timezone: Intl.DateTimeFormat().resolvedOptions().timeZone, // America/New_York
+      timezoneOffset: currentDate.getTimezoneOffset(), // -240 (minutes)
+      timezoneOffsetHours: currentDate.getTimezoneOffset() / -60, // 4
+      
+      // Formatted date strings for different use cases
+      dateFormatted: {
+        // Various common formats for reporting/display
+        iso: currentDate.toISOString().split('T')[0], // 2025-06-28
+        us: currentDate.toLocaleDateString('en-US'), // 6/28/2025
+        european: currentDate.toLocaleDateString('en-GB'), // 28/06/2025
+        long: currentDate.toLocaleDateString('en-US', { 
+          weekday: 'long', 
+          year: 'numeric', 
+          month: 'long', 
+          day: 'numeric' 
+        }), // Friday, June 28, 2025
+        short: currentDate.toLocaleDateString('en-US', { 
+          month: 'short', 
+          day: 'numeric', 
+          year: 'numeric' 
+        }), // Jun 28, 2025
+        compact: currentDate.toISOString().split('T')[0].replace(/-/g, ''), // 20250628
+        yearMonth: currentDate.toISOString().substring(0, 7), // 2025-06
+        timeOnly: currentDate.toLocaleTimeString('en-US', { hour12: false }), // 14:30:45
+        time12h: currentDate.toLocaleTimeString('en-US', { hour12: true }), // 2:30:45 PM
+      },
+      
+      // Calendar components (useful for analytics and reporting)
+      calendar: {
+        year: currentDate.getFullYear(), // 2025
+        month: currentDate.getMonth() + 1, // 6 (June)
+        monthName: currentDate.toLocaleDateString('en-US', { month: 'long' }), // June
+        monthNameShort: currentDate.toLocaleDateString('en-US', { month: 'short' }), // Jun
+        day: currentDate.getDate(), // 28
+        dayOfWeek: currentDate.getDay(), // 5 (Friday, 0=Sunday)
+        dayOfWeekName: currentDate.toLocaleDateString('en-US', { weekday: 'long' }), // Friday
+        dayOfWeekNameShort: currentDate.toLocaleDateString('en-US', { weekday: 'short' }), // Fri
+        quarter: Math.floor((currentDate.getMonth() + 3) / 3), // 2 (Q2)
+        weekOfYear: Math.ceil((currentDate.getDate() + new Date(currentDate.getFullYear(), 0, 1).getDay()) / 7), // Approximate week number
+        dayOfYear: Math.floor((currentDate - new Date(currentDate.getFullYear(), 0, 0)) / 86400000), // Day number in year
+        hour: currentDate.getHours(), // 14
+        minute: currentDate.getMinutes(), // 30
+        second: currentDate.getSeconds(), // 45
+        millisecond: currentDate.getMilliseconds(), // 123
+      },
+      
+      // Session and processing metadata
+      sessionData: {
+        processingStartTime: startTime,
+        processingEndTime: Date.now(),
+        processingDuration: processingTime,
+        sessionId: `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+        requestId: `req_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+      },
+      
+      // Prediction results with embedded timestamps
       predictionResults: {
         result: transformedResult.result,
         confidenceLevel: transformedResult.confidenceLevel,
         rawResult: transformedResult.rawResult,
         rawConfidence: transformedResult.rawConfidence,
         processingTime: processingTime,
+        
+        // Image metadata
         imageInfo: {
           fileName: selectedImage.name,
           fileSize: selectedImage.size,
-          fileType: selectedImage.type
+          fileType: selectedImage.type,
+          uploadTimestamp: currentDate.toISOString(),
         },
-        timestamp: new Date().toISOString()
+        
+        // Analysis metadata
+        analysisMetadata: {
+          analysisTimestamp: currentDate.toISOString(),
+          analysisDate: currentDate.toISOString().split('T')[0],
+          analysisTime: currentDate.toTimeString().split(' ')[0],
+          backendResponseTime: processingTime,
+          frontendProcessingTime: Date.now() - startTime,
+        }
+      },
+      
+      // Additional fields for future analytics and reporting
+      analytics: {
+        // Useful for time-based analysis
+        isWeekend: currentDate.getDay() === 0 || currentDate.getDay() === 6,
+        isBusinessHours: currentDate.getHours() >= 9 && currentDate.getHours() < 17,
+        timeOfDayCategory: (() => {
+          const hour = currentDate.getHours();
+          if (hour >= 6 && hour < 12) return 'morning';
+          if (hour >= 12 && hour < 17) return 'afternoon';
+          if (hour >= 17 && hour < 21) return 'evening';
+          return 'night';
+        })(),
+        
+        // Data versioning
+        dataVersion: '1.0',
+        schemaVersion: '2025.1',
+        
+        // Processing environment
+        userAgent: navigator.userAgent,
+        platform: navigator.platform,
+        language: navigator.language,
+        
+        // Location metadata
+        locationString: `${selectedLocation.sector}, ${selectedLocation.district}, ${selectedLocation.province}`,
+        locationHash: btoa(`${selectedLocation.province}-${selectedLocation.district}-${selectedLocation.sector}-${selectedLocation.hospital}`),
       }
     };
+
+    // Log the comprehensive data structure
+    console.log('Comprehensive Detection Data with Enhanced Date Fields:', combinedResult);
+    console.log('Date fields summary:', {
+      primaryTimestamp: combinedResult.timestamp,
+      processingTime: combinedResult.sessionData.processingDuration,
+      calendar: combinedResult.calendar,
+      timezone: combinedResult.timezone
+    });
 
     logDetection(transformedResult, {
       processingTime,
@@ -279,33 +412,30 @@ const handleAnalyze = async () => {
 
     setResult(transformedResult);
     setCombinedData(combinedResult);
-    
-    // Log the combined data for debugging
-    console.log('Combined Detection Data:', combinedResult);
 
-    // Send combined data to database
+    // Send comprehensive data to database - NOW WITH ALL ENHANCED DATE FIELDS
     try {
-      const saveResponse = await fetch('http://localhost:8000/detection-data/', {
+      const saveResponse = await fetch('https://safecell-3.onrender.com/detection-data/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(combinedResult),
+        body: JSON.stringify(combinedResult), // Now includes comprehensive date/time data
       });
 
       if (!saveResponse.ok) {
         console.error('Failed to save detection data:', saveResponse.status);
         const errorText = await saveResponse.text();
         console.error('Save error details:', errorText);
-       
+        // Don't throw error here - we still want to show results even if save fails
       } else {
-        console.log('Detection data saved successfully to database');
+        console.log('Detection data with comprehensive timestamps saved successfully to database');
         const saveResult = await saveResponse.json();
         console.log('Save response:', saveResult);
       }
     } catch (saveError) {
       console.error('Error saving detection data to database:', saveError);
-      
+      // Don't throw error here - we still want to show results even if save fails
     }
 
   } catch (err) {
@@ -321,8 +451,6 @@ const handleAnalyze = async () => {
     setIsAnalyzing(false);
   }
 };
-
- 
   const handleReset = () => {
     logInteraction('click', 'reset-button');
     setSelectedImage(null);

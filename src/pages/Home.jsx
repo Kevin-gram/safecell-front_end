@@ -35,7 +35,7 @@ export default function Home() {
     setError(null);
   
     try {
-      const response = await fetch('http://localhost:8000/detection-data/');
+      const response = await fetch('https://safecell-3.onrender.com/detection-data/');
       if (!response.ok) {
         throw new Error(`Failed to fetch data: ${response.status} ${response.statusText}`);
       }

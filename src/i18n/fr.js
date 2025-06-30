@@ -20,33 +20,61 @@ export const translationFR = {
     darkMode: "Mode Sombre",
     lightMode: "Mode Clair",
     language: "Langue",
+    settings: "Paramètres",
+    refresh: "Actualiser"
   },
   auth: {
     login: "Connexion",
     logout: "Déconnexion",
+    signup: "S'inscrire",
     email: "Email",
     password: "Mot de passe",
+    confirmPassword: "Confirmer le mot de passe",
+    name: "Nom complet",
     loginButton: "Se connecter",
+    signupButton: "Créer un compte",
     loginError: "Email ou mot de passe invalide",
+    signupError: "Échec de la création du compte",
+    signupSuccess: "Compte créé avec succès ! Veuillez vous connecter.",
     forgotPassword: "Mot de passe oublié ?",
     emailRequired: "L'email est requis",
-    passwordRequired: "Le mot de passe est requis"
+    passwordRequired: "Le mot de passe est requis",
+    nameRequired: "Le nom est requis",
+    passwordMismatch: "Les mots de passe ne correspondent pas",
+    passwordTooShort: "Le mot de passe doit contenir au moins 6 caractères",
+    emailInvalid: "Veuillez entrer une adresse email valide",
+    noAccount: "Pas de compte ? Inscrivez-vous",
+    hasAccount: "Déjà un compte ? Connectez-vous",
+    demoCredentials: "Identifiants de démonstration",
+    admin: "Administrateur",
+    clinician: "Clinicien",
+    namePlaceholder: "Entrez votre nom complet"
   },
   nav: {
     home: "Accueil",
     detection: "Détection de Malaria",
     statistics: "Statistiques",
+    locationStats: "Carte des Lieux",
     settings: "Paramètres",
-    feedback: "Commentaires"
+    feedback: "Commentaires",
+    admin: "Tableau de Bord Admin"
+  },
+  settings: {
+    title: "Paramètres",
+    profile: "Paramètres du profil",
+    updateSuccess: "Paramètres mis à jour avec succès",
+    updateError: "Échec de la mise à jour des paramètres"
   },
   home: {
     welcome: "Bienvenue sur SafeCell",
     subtitle: "Système de détection de paludisme assisté par IA",
     description: "Cette plateforme aide le personnel clinique à détecter les parasites du paludisme dans les images de frottis sanguins avec une grande précision grâce à la technologie IA avancée.",
+    recentDetections: "Détections Récentes",
     getStarted: "Commencer",
     quickAccess: "Accès Rapide",
     recentActivity: "Activité Récente",
-    noActivity: "Aucune activité récente"
+    noActivity: "Aucune activité récente",
+    noDetections: "Aucune détection récente"
   },
   detection: {
     title: "Détection de Malaria",
@@ -84,13 +112,15 @@ export const translationFR = {
     district: "District",
     sector: "Secteur",
     highRiskAreas: "Zones à haut risque",
-    casesPerRegion: "Cas par région"
-  },
-  settings: {
-    title: "Paramètres",
-    profile: "Paramètres du profil",
-    updateSuccess: "Paramètres mis à jour avec succès",
-    updateError: "Échec de la mise à jour des paramètres"
+    casesPerRegion: "Cas par région",
+    intensityLevels: {
+      title: "Niveaux d'Intensité",
+      level1: "Niveau 1 - Faible",
+      level2: "Niveau 2 - Léger",
+      level3: "Niveau 3 - Modéré",
+      level4: "Niveau 4 - Élevé",
+      level5: "Niveau 5 - Sévère"
+    }
   },
   feedback: {
     title: "Commentaires",
@@ -105,7 +135,46 @@ export const translationFR = {
     message: "Votre Commentaire",
     submit: "Soumettre",
     thankYou: "Merci pour votre commentaire !",
-    messageRequired: "Le message est requis"
+    thankYouMessage: "Vos commentaires nous aident à améliorer le système de détection du paludisme.",
+    messageRequired: "Le message de commentaire est requis",
+    submitError: "Échec de l'envoi du commentaire",
+    submitAnother: "Soumettre un Autre Commentaire",
+    namePlaceholder: "Entrez votre nom (optionnel)",
+    messagePlaceholder: "Veuillez partager vos pensées, suggestions ou signaler des problèmes..."
+  },
+  admin: {
+    dashboard: "Tableau de Bord Admin",
+    dashboardSubtitle: "Gérer les commentaires et l'administration du système",
+    accessDenied: "Accès Refusé",
+    adminOnly: "Cette page n'est accessible qu'aux administrateurs",
+    totalFeedback: "Total des Commentaires",
+    recentFeedback: "Récents (7 jours)",
+    suggestions: "Suggestions",
+    bugReports: "Rapports de Bugs",
+    filters: "Filtres",
+    filterByType: "Filtrer par Type",
+    filterByDate: "Filtrer par Date",
+    allTypes: "Tous les Types",
+    allTime: "Tout le Temps",
+    today: "Aujourd'hui",
+    thisWeek: "Cette Semaine",
+    thisMonth: "Ce Mois",
+    search: "Rechercher",
+    searchPlaceholder: "Rechercher par nom, email ou message...",
+    feedbackList: "Liste des Commentaires",
+    feedbackDetails: "Détails du Commentaire",
+    noFeedback: "Aucun commentaire trouvé",
+    selectFeedback: "Sélectionnez un commentaire pour voir les détails",
+    submittedBy: "Soumis par",
+    type: "Type",
+    status: "Statut",
+    priority: "Priorité",
+    submittedOn: "Soumis le",
+    message: "Message",
+    markResolved: "Marquer comme Résolu",
+    confirmDelete: "Êtes-vous sûr de vouloir supprimer ce commentaire ?",
+    exportFeedback: "Exporter les Commentaires",
+    loadError: "Échec du chargement des données de commentaires"
   },
   notFound: {
     title: "Page Non Trouvée",

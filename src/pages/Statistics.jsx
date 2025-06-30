@@ -40,20 +40,50 @@ export default function Statistics() {
   const [rawData, setRawData] = useState([]);
   const [selectedPeriod, setSelectedPeriod] = useState('alldata');
   const [showExportDropdown, setShowExportDropdown] = useState(false);
-  const [showPeriodDropdown, setShowPeriodDropdown] = useState(false);
 
   const periodOptions = [
-    { value: 'day', label: 'Last Day' },
-    { value: 'month', label: 'Last Month' },
-    { value: '6months', label: 'Last 6 Months' },
-    { value: 'year', label: 'Last Year' },
+    { value: 'day', label: t('statistics.today') },
+    { value: 'week', label: t('statistics.week') },
+    { value: 'month', label: t('statistics.month') },
+    { value: 'year', label: t('statistics.year') },
     { value: 'alldata', label: 'All Data' }
   ];
 
-  const exportOptions = [
-    { value: 'csv', label: 'Export as CSV', icon: 'csv' },
-    { value: 'excel', label: 'Export as Excel', icon: 'excel' }
-  ];
+  // Helper function to safely extract nested values
+  const safeGet = (obj, path, defaultValue = 'N/A') => {
+    const keys = path.split('.');
+    let result = obj;
+    
+    for (const key of keys) {
+      if (result === null || result === undefined || typeof result !== 'object') {
+        return defaultValue;
+      }
+      result = result[key];
+    }
+    
+    return result !== null && result !== undefined ? result : defaultValue;
+  };
+
+  // Helper function to get date from various possible fields (UPDATED)
+  const getDateFromItem = (item) => {
+    const possibleDateFields = [
+      'createdAt', 'timestamp', 'created_at', 'date', 
+      'detection_date', 'scan_date', 'dateCreated'
+    ];
+    
+    for (const field of possibleDateFields) {
+      const dateValue = safeGet(item, field, null);
+      if (dateValue) {
+        const date = new Date(dateValue);
+        if (!isNaN(date.getTime())) {
+          return date;
+        }
+      }
+    }
+    
+    // If no valid date found, return current date
+    return new Date();
+  };
 
   const filterDataByPeriod = (data, period) => {
     if (period === 'alldata') return data;
@@ -65,11 +95,11 @@ export default function Statistics() {
       case 'day':
         cutoffDate.setDate(now.getDate() - 1);
         break;
+      case 'week':
+        cutoffDate.setDate(now.getDate() - 7);
+        break;
       case 'month':
         cutoffDate.setMonth(now.getMonth() - 1);
-        break;
-      case '6months':
-        cutoffDate.setMonth(now.getMonth() - 6);
         break;
       case 'year':
         cutoffDate.setFullYear(now.getFullYear() - 1);
@@ -79,43 +109,125 @@ export default function Statistics() {
     }
 
     return data.filter(item => {
-      const itemDate = new Date(item.timestamp || item.createdAt || item.date);
+      const itemDate = getDateFromItem(item);
       return itemDate >= cutoffDate;
     });
   };
 
+  // Enhanced data extraction function (UPDATED)
+  const extractDataForExport = (item) => {
+    // Use createdAt as primary date field
+    const itemDate = new Date(item.createdAt || item.timestamp || new Date());
+    
+    // Try multiple possible field names for each data point
+    const predictionResult = safeGet(item, 'predictionResults.result', 
+      safeGet(item, 'prediction_result', 
+        safeGet(item, 'result', 
+          safeGet(item, 'detection_result', 'N/A'))));
+    
+    const confidenceLevel = safeGet(item, 'predictionResults.confidenceLevel', 
+      safeGet(item, 'confidence_level', 
+        safeGet(item, 'confidence', 
+          safeGet(item, 'predictionResults.confidence', 0))));
+    
+    const province = safeGet(item, 'province', 
+      safeGet(item, 'location.province', 
+        safeGet(item, 'user.province', 'N/A')));
+    
+    const district = safeGet(item, 'district', 
+      safeGet(item, 'location.district', 
+        safeGet(item, 'user.district', 'N/A')));
+    
+    const sector = safeGet(item, 'sector', 
+      safeGet(item, 'location.sector', 
+        safeGet(item, 'user.sector', 'N/A')));
+    
+    const hospital = safeGet(item, 'hospital', 
+      safeGet(item, 'location.hospital', 
+        safeGet(item, 'facility', 
+          safeGet(item, 'healthcare_facility', 'N/A'))));
+    
+    const userId = safeGet(item, 'userId', 
+      safeGet(item, 'user_id', 
+        safeGet(item, 'user.id', 
+          safeGet(item, 'id', 'N/A'))));
+
+    return {
+      date: itemDate.toLocaleDateString(),
+      timestamp: itemDate.toISOString(),
+      createdAt: item.createdAt || 'N/A',
+      predictionResult,
+      confidenceLevel: typeof confidenceLevel === 'number' ? confidenceLevel : parseFloat(confidenceLevel) || 0,
+      province,
+      district,
+      sector,
+      hospital,
+      userId,
+      rawItem: item // Keep original for debugging
+    };
+  };
+
   const exportToCSV = (period) => {
     if (!rawData || rawData.length === 0) {
-      alert('No data available to export');
+      alert(t('statistics.noDataToExport') || 'No data available to export');
       return;
     }
 
     const filteredData = filterDataByPeriod(rawData, period);
     
+    if (filteredData.length === 0) {
+      alert(`No data available for the selected period: ${periodOptions.find(p => p.value === period)?.label || period}`);
+      return;
+    }
+
+    // Extract and sort data by createdAt date (newest first)
+    const extractedData = filteredData
+      .map(extractDataForExport)
+      .sort((a, b) => {
+        const dateA = new Date(a.createdAt);
+        const dateB = new Date(b.createdAt);
+        return dateB - dateA; // Sort descending (newest first)
+      });
+    
     // Prepare CSV headers
     const headers = [
       'Date',
-      'Timestamp',
+      'Created At',
+      'Full Timestamp',
       'Prediction Result',
-      'Confidence Level',
-      'Image Path',
+      'Confidence Level (%)',
+      'Province',
+      'District',
+      'Sector',
+      'Hospital/Facility',
       'User ID'
     ];
 
     // Prepare CSV rows
-    const csvRows = filteredData.map(item => [
-      new Date(item.timestamp || item.createdAt || item.date).toLocaleDateString(),
-      item.timestamp || item.createdAt || item.date || '',
-      item.predictionResults?.result || 'N/A',
-      item.predictionResults?.confidenceLevel || 0,
-      item.imagePath || item.image || 'N/A',
-      item.userId || item.user_id || 'N/A'
+    const csvRows = extractedData.map(item => [
+      item.date,
+      item.createdAt,
+      item.timestamp,
+      item.predictionResult,
+      item.confidenceLevel,
+      item.province,
+      item.district,
+      item.sector,
+      item.hospital,
+      item.userId
     ]);
 
     // Create CSV content
     const csvContent = [
       headers.join(','),
-      ...csvRows.map(row => row.map(field => `"${field}"`).join(','))
+      ...csvRows.map(row => row.map(field => {
+        // Escape quotes and wrap in quotes if contains comma, quote, or newline
+        const stringField = String(field);
+        if (stringField.includes(',') || stringField.includes('"') || stringField.includes('\n')) {
+          return `"${stringField.replace(/"/g, '""')}"`;
+        }
+        return stringField;
+      }).join(','))
     ].join('\n');
 
     // Create and download the file
@@ -123,41 +235,53 @@ export default function Statistics() {
     const link = document.createElement('a');
     const url = URL.createObjectURL(blob);
     link.setAttribute('href', url);
-    link.setAttribute('download', `statistics_${period}_${new Date().toISOString().split('T')[0]}.csv`);
+    link.setAttribute('download', `malaria_statistics_${period}_${new Date().toISOString().split('T')[0]}.csv`);
     link.style.visibility = 'hidden';
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+
+    console.log(`Exported ${extractedData.length} records for period: ${period}`);
   };
 
   const exportToExcel = (period) => {
     if (!rawData || rawData.length === 0) {
-      alert('No data available to export');
+      alert(t('statistics.noDataToExport') || 'No data available to export');
       return;
     }
 
     const filteredData = filterDataByPeriod(rawData, period);
     
+    if (filteredData.length === 0) {
+      alert(`No data available for the selected period: ${periodOptions.find(p => p.value === period)?.label || period}`);
+      return;
+    }
+
+    // Extract and sort data by createdAt date (newest first)
+    const extractedData = filteredData
+      .map(extractDataForExport)
+      .sort((a, b) => {
+        const dateA = new Date(a.createdAt);
+        const dateB = new Date(b.createdAt);
+        return dateB - dateA; // Sort descending (newest first)
+      });
+    
     // Prepare Excel data
     const headers = [
       'Date',
-      'Timestamp',
+      'Created At',
+      'Full Timestamp',
       'Prediction Result',
-      'Confidence Level',
-      'Image Path',
+      'Confidence Level (%)',
+      'Province',
+      'District',
+      'Sector',
+      'Hospital/Facility',
       'User ID'
     ];
 
-    const excelData = filteredData.map(item => [
-      new Date(item.timestamp || item.createdAt || item.date).toLocaleDateString(),
-      item.timestamp || item.createdAt || item.date || '',
-      item.predictionResults?.result || 'N/A',
-      item.predictionResults?.confidenceLevel || 0,
-      item.imagePath || item.image || 'N/A',
-      item.userId || item.user_id || 'N/A'
-    ]);
-
-    // Create Excel content (simple HTML table format that Excel can read)
+    // Create Excel content (simple HTML table format)
     const excelContent = `
       <html>
         <head>
@@ -171,8 +295,19 @@ export default function Statistics() {
               </tr>
             </thead>
             <tbody>
-              ${excelData.map(row => 
-                `<tr>${row.map(cell => `<td>${cell}</td>`).join('')}</tr>`
+              ${extractedData.map(item => 
+                `<tr>
+                  <td>${item.date}</td>
+                  <td>${item.createdAt}</td>
+                  <td>${item.timestamp}</td>
+                  <td>${item.predictionResult}</td>
+                  <td>${item.confidenceLevel}</td>
+                  <td>${item.province}</td>
+                  <td>${item.district}</td>
+                  <td>${item.sector}</td>
+                  <td>${item.hospital}</td>
+                  <td>${item.userId}</td>
+                </tr>`
               ).join('')}
             </tbody>
           </table>
@@ -185,11 +320,14 @@ export default function Statistics() {
     const link = document.createElement('a');
     const url = URL.createObjectURL(blob);
     link.setAttribute('href', url);
-    link.setAttribute('download', `statistics_${period}_${new Date().toISOString().split('T')[0]}.xls`);
+    link.setAttribute('download', `malaria_statistics_${period}_${new Date().toISOString().split('T')[0]}.xls`);
     link.style.visibility = 'hidden';
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+
+    console.log(`Exported ${extractedData.length} records to Excel for period: ${period}`);
   };
 
   const handleExport = (exportType, period) => {
@@ -199,50 +337,58 @@ export default function Statistics() {
       exportToExcel(period);
     }
     setShowExportDropdown(false);
-    setShowPeriodDropdown(false);
   };
 
   const processStatistics = (data) => {
-    // Always process all data for display
+    // Extract prediction results using the same safe method
+    const extractedData = data.map(item => {
+      const predictionResult = safeGet(item, 'predictionResults.result', 
+        safeGet(item, 'prediction_result', 
+          safeGet(item, 'result', 
+            safeGet(item, 'detection_result', null))));
+      
+      const confidenceLevel = safeGet(item, 'predictionResults.confidenceLevel', 
+        safeGet(item, 'confidence_level', 
+          safeGet(item, 'confidence', 
+            safeGet(item, 'predictionResults.confidence', 0))));
+
+      return {
+        ...item,
+        extractedResult: predictionResult,
+        extractedConfidence: typeof confidenceLevel === 'number' ? confidenceLevel : parseFloat(confidenceLevel) || 0
+      };
+    });
+
+    const positiveResults = extractedData.filter(d => 
+      d.extractedResult && d.extractedResult.toLowerCase().includes('positive')
+    );
+    
+    const negativeResults = extractedData.filter(d => 
+      d.extractedResult && d.extractedResult.toLowerCase().includes('negative')
+    );
+
     return {
       summary: {
         total: data.length,
-        totalPositive: data.filter((d) => d.predictionResults?.result === 'positive').length,
-        totalNegative: data.filter((d) => d.predictionResults?.result === 'negative').length,
+        totalPositive: positiveResults.length,
+        totalNegative: negativeResults.length,
         positiveRate: data.length > 0 ? (
-          (data.filter((d) => d.predictionResults?.result === 'positive').length / data.length) *
-          100
+          (positiveResults.length / data.length) * 100
         ).toFixed(1) : '0.0',
       },
-      labels: data.map((d) => new Date(d.timestamp || d.createdAt || d.date).toLocaleDateString()),
+      labels: data.map((d, index) => `Test ${index + 1}`),
       datasets: {
-        positive: data
-          .filter((d) => d.predictionResults?.result === 'positive')
-          .map((d) => d.predictionResults?.confidenceLevel || 0),
-        negative: data
-          .filter((d) => d.predictionResults?.result === 'negative')
-          .map((d) => d.predictionResults?.confidenceLevel || 0),
+        positive: positiveResults.map(d => d.extractedConfidence),
+        negative: negativeResults.map(d => d.extractedConfidence),
       },
       confidenceDistribution: {
         labels: ['0-20%', '21-40%', '41-60%', '61-80%', '81-100%'],
         data: [
-          data.filter((d) => d.predictionResults?.confidenceLevel <= 20).length,
-          data.filter(
-            (d) =>
-              d.predictionResults?.confidenceLevel > 20 &&
-              d.predictionResults?.confidenceLevel <= 40
-          ).length,
-          data.filter(
-            (d) =>
-              d.predictionResults?.confidenceLevel > 40 &&
-              d.predictionResults?.confidenceLevel <= 60
-          ).length,
-          data.filter(
-            (d) =>
-              d.predictionResults?.confidenceLevel > 60 &&
-              d.predictionResults?.confidenceLevel <= 80
-          ).length,
-          data.filter((d) => d.predictionResults?.confidenceLevel > 80).length,
+          extractedData.filter(d => d.extractedConfidence <= 20).length,
+          extractedData.filter(d => d.extractedConfidence > 20 && d.extractedConfidence <= 40).length,
+          extractedData.filter(d => d.extractedConfidence > 40 && d.extractedConfidence <= 60).length,
+          extractedData.filter(d => d.extractedConfidence > 60 && d.extractedConfidence <= 80).length,
+          extractedData.filter(d => d.extractedConfidence > 80).length,
         ],
       },
     };
@@ -253,20 +399,32 @@ export default function Statistics() {
     setError(null);
 
     try {
-      const response = await fetch('http://localhost:8000/detection-data/');
+      console.log('Fetching statistics from API...');
+      const response = await fetch('https://safecell-3.onrender.com/predict/');
+      
       if (!response.ok) {
         throw new Error(`Failed to fetch data: ${response.status} ${response.statusText}`);
       }
-
+console.log("backend resposne",response)
       const apiResponse = await response.json();
+      console.log('API Response:', apiResponse);
+      
       const data = Array.isArray(apiResponse) ? apiResponse : apiResponse.data || [];
+      console.log('Processed data length:', data.length);
+      
+      if (data.length > 0) {
+        console.log('Sample data item:', data[0]);
+        console.log('Available fields in first item:', Object.keys(data[0]));
+      }
 
-      // Store raw data for filtering and CSV export
+      // Store raw data for filtering and export
       setRawData(data);
 
-      // Process the data based on selected period
+      // Process the data
       const processedData = processStatistics(data);
       setStats(processedData);
+      
+      console.log('Statistics processed successfully');
     } catch (err) {
       console.error('Error fetching statistics:', err);
       setError(err.message);
@@ -278,8 +436,6 @@ export default function Statistics() {
   useEffect(() => {
     fetchStatistics();
   }, []);
-
-  // Remove the selectedPeriod dependency since we always show all data
 
   const getChartColors = (isDarkMode = false) => {
     return {
@@ -372,13 +528,13 @@ export default function Statistics() {
               onClick={() => setShowExportDropdown(!showExportDropdown)}
               disabled={!stats || stats.summary.total === 0}
             >
-              Export Data
+              {t('statistics.exportData') || 'Export Data'} ({stats?.summary.total || 0} records)
             </Button>
             {showExportDropdown && (
               <div className="absolute right-0 mt-2 w-56 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg z-20">
                 <div className="p-2">
                   <div className="text-sm font-medium text-gray-700 dark:text-gray-300 px-2 py-1 mb-2">
-                    Select Period:
+                    {t('statistics.selectPeriod') || 'Select Period'}:
                   </div>
                   {periodOptions.map((period) => (
                     <div key={period.value} className="mb-2">
@@ -414,7 +570,7 @@ export default function Statistics() {
             onClick={fetchStatistics}
             disabled={loading}
           >
-            Refresh
+            {t('common.refresh') || 'Refresh'}
           </Button>
         </div>
       </div>
@@ -429,13 +585,14 @@ export default function Statistics() {
 
       {error ? (
         <div className="p-4 bg-error-100 dark:bg-error-900/20 text-error-700 dark:text-error-400 rounded-md">
-          {error}
+          <p><strong>Error:</strong> {error}</p>
+          <p className="text-sm mt-2">Please check the browser console for more details.</p>
         </div>
       ) : loading ? (
         <div className="flex justify-center p-12">
           <div className="animate-pulse text-center">
             <FiRefreshCw className="animate-spin mx-auto h-8 w-8 text-primary-600 dark:text-primary-400" />
-            <p className="mt-2 text-gray-600 dark:text-gray-400">{t('common.loading')}</p>
+            <p className="mt-2 text-gray-600 dark:text-gray-400">{t('common.loading') || 'Loading...'}</p>
           </div>
         </div>
       ) : stats ? (
@@ -443,23 +600,23 @@ export default function Statistics() {
           {/* Summary Stats */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <Card className="p-4">
-              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Total Scans</p>
+              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">{t('statistics.totalScans') || 'Total Scans'}</p>
               <p className="mt-1 text-2xl font-semibold">{stats.summary.total}</p>
             </Card>
             <Card className="p-4">
-              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Positive Cases</p>
+              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">{t('statistics.positiveCases') || 'Positive Cases'}</p>
               <p className="mt-1 text-2xl font-semibold text-error-600 dark:text-error-400">
                 {stats.summary.totalPositive}
               </p>
             </Card>
             <Card className="p-4">
-              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Negative Cases</p>
+              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">{t('statistics.negativeCases') || 'Negative Cases'}</p>
               <p className="mt-1 text-2xl font-semibold text-success-600 dark:text-success-400">
                 {stats.summary.totalNegative}
               </p>
             </Card>
             <Card className="p-4">
-              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Positive Rate</p>
+              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">{t('statistics.positiveRate') || 'Positive Rate'}</p>
               <p className="mt-1 text-2xl font-semibold">{stats.summary.positiveRate}%</p>
             </Card>
           </div>
@@ -468,7 +625,7 @@ export default function Statistics() {
           <Card className="p-6">
             <div className="flex items-center mb-4">
               <FiTrendingUp size={20} className="text-primary-600 dark:text-primary-400 mr-2" />
-              <h2 className="text-xl font-semibold">{t('statistics.detectionRate')}</h2>
+              <h2 className="text-xl font-semibold">{t('statistics.detectionRate') || 'Detection Rate Over Time'}</h2>
             </div>
             <div className="h-80">
               <Line
@@ -509,12 +666,12 @@ export default function Statistics() {
             <Card className="p-6">
               <div className="flex items-center mb-4">
                 <FiBarChart2 size={20} className="text-secondary-600 dark:text-secondary-400 mr-2" />
-                <h2 className="text-xl font-semibold">Positive/Negative Distribution</h2>
+                <h2 className="text-xl font-semibold">{t('statistics.distributionChart') || 'Detection Results Distribution'}</h2>
               </div>
               <div className="h-64">
                 <Bar
                   data={{
-                    labels: ['Positive', 'Negative'],
+                    labels: [t('statistics.positiveDetections') || 'Positive', t('statistics.negativeDetections') || 'Negative'],
                     datasets: [
                       {
                         label: 'Count',
@@ -542,7 +699,7 @@ export default function Statistics() {
             <Card className="p-6">
               <div className="flex items-center mb-4">
                 <FiPieChart size={20} className="text-accent-600 dark:text-accent-400 mr-2" />
-                <h2 className="text-xl font-semibold">Confidence Distribution</h2>
+                <h2 className="text-xl font-semibold">{t('statistics.confidenceDistribution') || 'Confidence Level Distribution'}</h2>
               </div>
               <div className="h-64">
                 <Doughnut
@@ -563,7 +720,14 @@ export default function Statistics() {
         </>
       ) : (
         <div className="text-center p-12">
-          <p>{t('statistics.noData')}</p>
+          <p>{t('statistics.noData') || 'No data available'}</p>
+          <Button 
+            onClick={fetchStatistics} 
+            className="mt-4"
+            icon={<FiRefreshCw />}
+          >
+            Try Again
+          </Button>
         </div>
       )}
     </motion.div>

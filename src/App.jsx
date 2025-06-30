@@ -8,20 +8,26 @@ import Layout from './components/layout/Layout'
 
 // Pages
 import Login from './pages/Login'
+import Signup from './pages/Signup'
 import Home from './pages/Home'
 import MalariaDetection from './pages/MalariaDetection'
 import Statistics from './pages/Statistics'
 import LocationStats from './pages/LocationStats'
 import Settings from './pages/Settings'
 import Feedback from './pages/Feedback'
+import AdminDashboard from './pages/AdminDashboard'
 import NotFound from './pages/NotFound'
 
-const ProtectedRoute = ({ children }) => {
-  const { isAuthenticated } = useAuth()
+const ProtectedRoute = ({ children, adminOnly = false }) => {
+  const { isAuthenticated, user } = useAuth()
   const location = useLocation()
 
   if (!isAuthenticated) {
     return <Navigate to="/login" state={{ from: location }} replace />
+  }
+
+  if (adminOnly && user?.role !== 'admin') {
+    return <Navigate to="/" replace />
   }
 
   return children
@@ -67,6 +73,11 @@ export default function App() {
         element={isAuthenticated ? <Navigate to="/" replace /> : <Login />} 
       />
       
+      <Route 
+        path="/signup" 
+        element={isAuthenticated ? <Navigate to="/" replace /> : <Signup />} 
+      />
+      
       <Route path="/" element={
         <ProtectedRoute>
           <Layout />
@@ -78,6 +89,11 @@ export default function App() {
         <Route path="location-stats" element={<LocationStats />} />
         <Route path="settings" element={<Settings />} />
         <Route path="feedback" element={<Feedback />} />
+        <Route path="admin" element={
+          <ProtectedRoute adminOnly={true}>
+            <AdminDashboard />
+          </ProtectedRoute>
+        } />
       </Route>
       
       <Route path="*" element={<NotFound />} />

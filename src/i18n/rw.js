@@ -20,33 +20,61 @@ export const translationRW = {
     darkMode: "Umukara",
     lightMode: "Urumuri",
     language: "Ururimi",
+    settings: "Igenamiterere",
+    refresh: "Kuvugurura"
   },
   auth: {
     login: "Injira",
     logout: "Sohoka",
+    signup: "Iyandikishe",
     email: "Imeyili",
     password: "Ijambo ryibanga",
+    confirmPassword: "Emeza ijambo ryibanga",
+    name: "Amazina yose",
     loginButton: "Injira",
+    signupButton: "Kora konti",
     loginError: "Imeyili cyangwa ijambo ryibanga sibyo",
+    signupError: "Kurema konti ntibyakunze",
+    signupSuccess: "Konti yaremwe neza! Nyamuneka winjire.",
     forgotPassword: "Wibagiwe ijambo ryibanga?",
     emailRequired: "Imeyili irakenewe",
-    passwordRequired: "Ijambo ryibanga rirakenewe"
+    passwordRequired: "Ijambo ryibanga rirakenewe",
+    nameRequired: "Izina rirakenewe",
+    passwordMismatch: "Amagambo yibanga ntabwo ahura",
+    passwordTooShort: "Ijambo ryibanga rigomba kuba rifite byibuze inyuguti 6",
+    emailInvalid: "Nyamuneka shyiramo imeyili nyayo",
+    noAccount: "Nta konti ufite? Iyandikishe",
+    hasAccount: "Usanzwe ufite konti? Injira",
+    demoCredentials: "Amakuru yo kwerekana",
+    admin: "Umuyobozi",
+    clinician: "Umuganga",
+    namePlaceholder: "Shyiramo amazina yawe yose"
   },
   nav: {
     home: "Ahabanza",
     detection: "Gusuzuma Malariya",
     statistics: "Imibare",
+    locationStats: "Ikarita y'Ahantu",
     settings: "Igenamiterere",
-    feedback: "Ibitekerezo"
+    feedback: "Ibitekerezo",
+    admin: "Ikibaho cy'Ubuyobozi"
+  },
+  settings: {
+    title: "Igenamiterere",
+    profile: "Igenamiterere rya konti",
+    updateSuccess: "Igenamiterere ryavuguruwe neza",
+    updateError: "Kuvugurura igenamiterere ntibyakunze"
   },
   home: {
-    welcome: "Murakaza neza kuri MalariaDetect",
+    welcome: "Murakaza neza kuri SafeCell",
     subtitle: "Sisitemu yo gusuzuma malariya ikoresheje ubwenge bwite",
     description: "Iyi sisitemu ifasha abakozi bo kwa muganga gusuzuma udukoko twa malariya mu mashusho y'amaraso hakoreshejwe ikoranabuhanga ry'ubwenge bwite.",
+    recentDetections: "Isuzuma Rigezweho",
     getStarted: "Tangira",
     quickAccess: "Ibikoresho byihuse",
     recentActivity: "Ibikorwa bya vuba",
-    noActivity: "Nta bikorwa bya vuba"
+    noActivity: "Nta bikorwa bya vuba",
+    noDetections: "Nta suzuma rigezweho"
   },
   detection: {
     title: "Gusuzuma Malariya",
@@ -84,13 +112,15 @@ export const translationRW = {
     district: "Akarere",
     sector: "Umurenge",
     highRiskAreas: "Ahantu hafite ibyago byinshi",
-    casesPerRegion: "Abanduye buri karere"
-  },
-  settings: {
-    title: "Igenamiterere",
-    profile: "Igenamiterere rya konti",
-    updateSuccess: "Igenamiterere ryavuguruwe neza",
-    updateError: "Kuvugurura igenamiterere ntibyakunze"
+    casesPerRegion: "Abanduye buri karere",
+    intensityLevels: {
+      title: "Inzego z'Ubukana",
+      level1: "Urwego 1 - Bike",
+      level2: "Urwego 2 - Byoroshye",
+      level3: "Urwego 3 - Byagereranije",
+      level4: "Urwego 4 - Byinshi",
+      level5: "Urwego 5 - Bikabije"
+    }
   },
   feedback: {
     title: "Ibitekerezo",
@@ -105,7 +135,46 @@ export const translationRW = {
     message: "Ibitekerezo byawe",
     submit: "Ohereza",
     thankYou: "Urakoze ku bitekerezo byawe!",
-    messageRequired: "Ibitekerezo birakenewe"
+    thankYouMessage: "Ibitekerezo byawe bidufasha guteza imbere sisitemu yo gusuzuma malariya.",
+    messageRequired: "Ubutumwa bw'ibitekerezo burakenewe",
+    submitError: "Kohereza ibitekerezo ntibyakunze",
+    submitAnother: "Ohereza Ibindi Bitekerezo",
+    namePlaceholder: "Shyiramo izina ryawe (ntabwo ari ngombwa)",
+    messagePlaceholder: "Nyamuneka sangira ibitekerezo byawe, ibyifuzo cyangwa raporo ibibazo..."
+  },
+  admin: {
+    dashboard: "Ikibaho cy'Ubuyobozi",
+    dashboardSubtitle: "Gucunga ibitekerezo n'ubuyobozi bwa sisitemu",
+    accessDenied: "Kwinjira Birabuze",
+    adminOnly: "Uyu rupapuro rushobora gufungurwa n'abayobozi gusa",
+    totalFeedback: "Ibitekerezo Byose",
+    recentFeedback: "Bya vuba (iminsi 7)",
+    suggestions: "Ibyifuzo",
+    bugReports: "Raporo z'Ibibazo",
+    filters: "Amashyushyu",
+    filterByType: "Shyushya ukurikije ubwoko",
+    filterByDate: "Shyushya ukurikije itariki",
+    allTypes: "Ubwoko bwose",
+    allTime: "Igihe cyose",
+    today: "Uyu munsi",
+    thisWeek: "Iki cyumweru",
+    thisMonth: "Uku kwezi",
+    search: "Shakisha",
+    searchPlaceholder: "Shakisha ukurikije izina, imeyili cyangwa ubutumwa...",
+    feedbackList: "Urutonde rw'Ibitekerezo",
+    feedbackDetails: "Amakuru y'Ibitekerezo",
+    noFeedback: "Nta bitekerezo byabonetse",
+    selectFeedback: "Hitamo ibitekerezo kugira ngo urebe amakuru",
+    submittedBy: "Byoherejwe na",
+    type: "Ubwoko",
+    status: "Uko bimeze",
+    priority: "Icyambere",
+    submittedOn: "Byoherejwe ku",
+    message: "Ubutumwa",
+    markResolved: "Shyira nk'Byakemuwe",
+    confirmDelete: "Uzi neza ko ushaka gusiba ibi bitekerezo?",
+    exportFeedback: "Gusohora Ibitekerezo",
+    loadError: "Gupakurura amakuru y'ibitekerezo ntibyakunze"
   },
   notFound: {
     title: "Paji Ntaboneka",
