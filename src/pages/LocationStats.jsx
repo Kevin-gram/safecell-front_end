@@ -133,7 +133,7 @@ const fetchLocationData = async (showRefreshLoader = false) => {
 
   try {
     // Fetch detection data from the API
-    const response = await fetch("https://safecell-3.onrender.com/detection-data/");
+    const response = await fetch("https://safecell.onrender.com/detection-data/");
 
     if (!response.ok) {
       throw new Error(

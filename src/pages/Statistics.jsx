@@ -400,7 +400,7 @@ export default function Statistics() {
 
     try {
       console.log('Fetching statistics from API...');
-      const response = await fetch('https://safecell-3.onrender.com/detection-data/');
+      const response = await fetch('https://safecell.onrender.com/detection-data/');
       
       if (!response.ok) {
         throw new Error(`Failed to fetch data: ${response.status} ${response.statusText}`);

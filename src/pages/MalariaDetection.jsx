@@ -193,7 +193,7 @@ const handleAnalyze = async () => {
       console.log('FormData entry:', key, value);
     }
 
-    const response = await fetch('https://safecell-3.onrender.com/predict/', {
+    const response = await fetch('https://safecell.onrender.com/predict/', {
       method: 'POST',
       body: formData,
       // Don't set Content-Type header - let browser set it automatically with boundary
@@ -415,7 +415,7 @@ const handleAnalyze = async () => {
 
     // Send comprehensive data to database - NOW WITH ALL ENHANCED DATE FIELDS
     try {
-      const saveResponse = await fetch('https://safecell-3.onrender.com/detection-data/', {
+      const saveResponse = await fetch('https://safecell.onrender.com/detection-data/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
