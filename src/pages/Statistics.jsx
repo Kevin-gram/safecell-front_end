@@ -400,12 +400,12 @@ export default function Statistics() {
 
     try {
       console.log('Fetching statistics from API...');
-      const response = await fetch('https://safecell-3.onrender.com/predict/');
+      const response = await fetch('https://safecell-3.onrender.com/detection-data/');
       
       if (!response.ok) {
         throw new Error(`Failed to fetch data: ${response.status} ${response.statusText}`);
       }
-console.log("backend resposne",response)
+      console.log("backend response", response)
       const apiResponse = await response.json();
       console.log('API Response:', apiResponse);
       
@@ -584,9 +584,18 @@ console.log("backend resposne",response)
       )}
 
       {error ? (
-        <div className="p-4 bg-error-100 dark:bg-error-900/20 text-error-700 dark:text-error-400 rounded-md">
+        <div className="p-4 bg-red-100 dark:bg-red-900/20 text-red-700 dark:text-red-400 rounded-md">
           <p><strong>Error:</strong> {error}</p>
           <p className="text-sm mt-2">Please check the browser console for more details.</p>
+          <Button
+            variant="outline"
+            size="sm"
+            className="mt-4"
+            icon={<FiRefreshCw />}
+            onClick={fetchStatistics}
+          >
+            Try Again
+          </Button>
         </div>
       ) : loading ? (
         <div className="flex justify-center p-12">
@@ -605,13 +614,13 @@ console.log("backend resposne",response)
             </Card>
             <Card className="p-4">
               <p className="text-sm font-medium text-gray-600 dark:text-gray-400">{t('statistics.positiveCases') || 'Positive Cases'}</p>
-              <p className="mt-1 text-2xl font-semibold text-error-600 dark:text-error-400">
+              <p className="mt-1 text-2xl font-semibold text-red-600 dark:text-red-400">
                 {stats.summary.totalPositive}
               </p>
             </Card>
             <Card className="p-4">
               <p className="text-sm font-medium text-gray-600 dark:text-gray-400">{t('statistics.negativeCases') || 'Negative Cases'}</p>
-              <p className="mt-1 text-2xl font-semibold text-success-600 dark:text-success-400">
+              <p className="mt-1 text-2xl font-semibold text-green-600 dark:text-green-400">
                 {stats.summary.totalNegative}
               </p>
             </Card>
@@ -709,7 +718,7 @@ console.log("backend resposne",response)
                     maintainAspectRatio: false,
                     plugins: {
                       legend: {
-                        position: 'right',
+                        position: 'bottom',
                       },
                     },
                   }}
@@ -720,13 +729,15 @@ console.log("backend resposne",response)
         </>
       ) : (
         <div className="text-center p-12">
-          <p>{t('statistics.noData') || 'No data available'}</p>
-          <Button 
-            onClick={fetchStatistics} 
+          <p className="text-gray-600 dark:text-gray-400">{t('statistics.noData') || 'No data available'}</p>
+          <Button
+            variant="outline"
+            size="sm"
             className="mt-4"
             icon={<FiRefreshCw />}
+            onClick={fetchStatistics}
           >
-            Try Again
+            {t('common.tryAgain') || 'Try Again'}
           </Button>
         </div>
       )}
