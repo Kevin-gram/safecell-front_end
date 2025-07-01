@@ -8,7 +8,7 @@ import Layout from './components/layout/Layout'
 
 // Pages
 import Login from './pages/Login'
-import Signup from './pages/signup'
+import Signup from './pages/Signup'
 import Home from './pages/Home'
 import MalariaDetection from './pages/MalariaDetection'
 import Statistics from './pages/Statistics'
