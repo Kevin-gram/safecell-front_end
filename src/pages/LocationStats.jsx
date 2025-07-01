@@ -5,7 +5,6 @@ import { MapContainer, TileLayer, Circle, Popup, Marker } from "react-leaflet";
 import Card from "../components/ui/Card";
 import Select from "../components/ui/Select";
 import {
-  FiMapPin,
   FiAlertTriangle,
   FiActivity,
   FiTrendingUp,
@@ -14,6 +13,7 @@ import {
   FiBarChart2,
   FiRefreshCw,
 } from "react-icons/fi";
+import { FiMapPin } from "react-icons/fi";
 import { apiRequest } from "../utils/api";
 import "leaflet/dist/leaflet.css";
 
