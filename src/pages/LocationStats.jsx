@@ -20,8 +20,8 @@ import "leaflet/dist/leaflet.css";
 // Rwanda's center coordinates and bounds
 const RWANDA_CENTER = [-1.9403, 29.8739];
 const RWANDA_BOUNDS = [
-  [-2.8389, 28.8617], // Southwest
-  [-1.0474, 30.8862], // Northeast
+  [-2.8389, 28.8617], 
+  [-1.0474, 30.8862], 
 ];
 
 const RWANDA_DISTRICT_COORDINATES = {
