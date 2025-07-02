@@ -52,6 +52,7 @@ export const translationEN = {
     namePlaceholder: "Enter your full name"
   },
   nav: {
+    "appName":"SafeCell",
     home: "Home",
     detection: "Malaria Detection",
     statistics: "Statistics",

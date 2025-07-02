@@ -29,7 +29,7 @@ export default function Navbar({ toggleSidebar, isSidebarOpen }) {
             
             {/* Logo */}
             <Link to="/" className="ml-4 flex items-center space-x-2">
-              <span className="text-primary-600 dark:text-primary-400 text-2xl font-bold">{t('common.appName')}</span>
+              <span className="text-primary-600 dark:text-primary-400 text-2xl font-bold">{t('nav.appName')}</span>
             </Link>
           </div>
 
