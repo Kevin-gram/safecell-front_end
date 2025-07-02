@@ -24,6 +24,7 @@ export const translationEN = {
     refresh: "Refresh"
   },
   auth: {
+    "appName":"SafeCell",
     login: "Login",
     logout: "Logout",
     signup: "Sign Up",
@@ -180,5 +181,49 @@ export const translationEN = {
     title: "Page Not Found",
     message: "Sorry, the page you are looking for does not exist.",
     returnHome: "Return to Home"
-  }
+  },
+    "time": {
+    "morning": "matin",
+    "afternoon": "après-midi",
+    "evening": "soir"
+  },
+  "home": {
+    "greeting": "Bon {{timeOfDay}}",
+    "welcome": "Bienvenue sur SafeCell!",
+    "description": "Votre plateforme de confiance pour la détection et les statistiques du paludisme.",
+    "getStarted": "Commencer",
+    "quickAccess": "Accès rapide",
+    "detectionDescription": "Analyser les images de frottis sanguins",
+    "statisticsDescription": "Voir les tendances et les analyses de détection",
+    "feedbackDescription": "Fournir des suggestions pour l'amélioration",
+    "recentDetections": "Détections récentes",
+    "noDetections": "Aucune détection récente disponible.",
+    "noDetectionsDescription": "Les résultats récents de détection apparaîtront ici.",
+    "confidence": "confiance"
+  },
+  "common": {
+   " appName":"SafeCell",
+    "loading": "Chargement...",
+    "error": "Erreur",
+    "tryAgain": "Réessayer"
+  },
+    "time": {
+    "morning": "morning",
+    "afternoon": "afternoon",
+    "evening": "evening"
+  },
+  "home": {
+    "greeting": "Good {{timeOfDay}}",
+    "welcome": "Welcome to SafeCell!",
+    "description": "Your trusted platform for malaria detection and statistics.",
+    "getStarted": "Get Started",
+    "quickAccess": "Quick Access",
+    "detectionDescription": "Analyze blood smear images",
+    "statisticsDescription": "View detection trends and insights",
+    "feedbackDescription": "Provide suggestions for improvement",
+    "recentDetections": "Recent Detections",
+    "noDetections": "No recent detections available.",
+    "noDetectionsDescription": "Recent detection results will appear here.",
+    "confidence": "confidence"
+  },
 }

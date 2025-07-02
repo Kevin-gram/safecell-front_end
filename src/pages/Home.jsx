@@ -17,15 +17,15 @@ export default function Home() {
 
   useEffect(() => {
     const hour = new Date().getHours();
-    if (hour < 12) setTimeOfDay('morning');
-    else if (hour < 17) setTimeOfDay('afternoon');
-    else setTimeOfDay('evening');
-  }, []);
+    if (hour < 12) setTimeOfDay(t('time.morning')); // Use i18n for "morning"
+    else if (hour < 17) setTimeOfDay(t('time.afternoon')); // Use i18n for "afternoon"
+    else setTimeOfDay(t('time.evening')); // Use i18n for "evening"
+  }, [t]); // Add `t` as a dependency to ensure it updates when the language changes
 
   // Generate random timestamps for the last 7 days
   const generateRandomTimestamp = () => {
     const now = new Date();
-    const sevenDaysAgo = new Date(now.getTime() - (7 * 24 * 60 * 60 * 1000));
+    const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
     const randomTime = sevenDaysAgo.getTime() + Math.random() * (now.getTime() - sevenDaysAgo.getTime());
     return new Date(randomTime);
   };
@@ -33,19 +33,19 @@ export default function Home() {
   const fetchRecentDetections = async () => {
     setLoading(true);
     setError(null);
-  
+
     try {
       const response = await fetch('https://safecell.onrender.com/detection-data/');
       if (!response.ok) {
         throw new Error(`Failed to fetch data: ${response.status} ${response.statusText}`);
       }
-  
+
       const apiResponse = await response.json();
       console.log('API Response:', apiResponse);
-  
+
       // Extract the actual data array from the API response
       const detections = apiResponse.data || [];
-  
+
       // Add random timestamps and process the data
       const processedDetections = detections.map((detection, index) => ({
         ...detection,
@@ -57,15 +57,15 @@ export default function Home() {
         normalizedResult: {
           result: detection.predictionResults?.result === 'positive' ? 'Positive' : 'Negative',
           confidenceLevel: detection.predictionResults?.confidenceLevel || 0,
-          processingTime: detection.predictionResults?.processingTime || 0
-        }
+          processingTime: detection.predictionResults?.processingTime || 0,
+        },
       }));
 
       // Sort by timestamp (most recent first) and take the latest 5
       const sortedDetections = processedDetections
         .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
         .slice(0, 5);
-  
+
       setRecentDetections(sortedDetections);
     } catch (err) {
       console.error('Error fetching recent detections:', err);
@@ -102,12 +102,12 @@ export default function Home() {
     const date = new Date(timestamp);
     const now = new Date();
     const diffInSeconds = Math.floor((now - date) / 1000);
-    
+
     if (diffInSeconds < 60) return 'Just now';
     if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}m ago`;
     if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}h ago`;
     if (diffInSeconds < 604800) return `${Math.floor(diffInSeconds / 86400)}d ago`;
-    
+
     return date.toLocaleDateString();
   };
 
@@ -124,7 +124,7 @@ export default function Home() {
         className="bg-gradient-to-r from-primary-600 to-secondary-600 dark:from-primary-800 dark:to-secondary-800 rounded-xl p-8 text-white shadow-lg"
       >
         <h1 className="text-3xl md:text-4xl font-bold">
-          Good {timeOfDay}, {user?.name}!
+          {t('home.greeting', { timeOfDay })}, {user?.name}!
         </h1>
         <p className="mt-2 text-lg text-white/90">{t('home.welcome')}</p>
         <p className="mt-1 text-white/80 max-w-2xl">{t('home.description')}</p>
@@ -152,7 +152,7 @@ export default function Home() {
                   <div className="ml-4">
                     <h3 className="font-medium">{t('nav.detection')}</h3>
                     <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                      Analyze blood smear images
+                      {t('home.detectionDescription')}
                     </p>
                   </div>
                 </div>
@@ -170,7 +170,7 @@ export default function Home() {
                   <div className="ml-4">
                     <h3 className="font-medium">{t('nav.statistics')}</h3>
                     <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                      View detection trends and insights
+                      {t('home.statisticsDescription')}
                     </p>
                   </div>
                 </div>
@@ -188,7 +188,7 @@ export default function Home() {
                   <div className="ml-4">
                     <h3 className="font-medium">{t('nav.feedback')}</h3>
                     <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                      Provide suggestions for improvement
+                      {t('home.feedbackDescription')}
                     </p>
                   </div>
                 </div>
@@ -219,13 +219,13 @@ export default function Home() {
                 <p className="text-error-500 dark:text-error-400">
                   {t('common.error')}: {error}
                 </p>
-                <Button 
-                  variant="outline" 
-                  size="sm" 
+                <Button
+                  variant="outline"
+                  size="sm"
                   className="mt-3"
                   onClick={fetchRecentDetections}
                 >
-                  Try Again
+                  {t('common.tryAgain')}
                 </Button>
               </div>
             ) : recentDetections.length > 0 ? (
@@ -246,29 +246,31 @@ export default function Home() {
                         />
                         <div className="min-w-0 flex-1">
                           <div className="flex items-center space-x-2">
-                            <span className={`font-medium ${
-                              detection.normalizedResult.result === 'Positive'
-                                ? 'text-error-700 dark:text-error-400'
-                                : 'text-success-700 dark:text-success-400'
-                            }`}>
+                            <span
+                              className={`font-medium ${
+                                detection.normalizedResult.result === 'Positive'
+                                  ? 'text-error-700 dark:text-error-400'
+                                  : 'text-success-700 dark:text-success-400'
+                              }`}
+                            >
                               {detection.normalizedResult.result}
                             </span>
                             <span className="text-xs bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded-full">
-                              {detection.normalizedResult.confidenceLevel}% confidence
+                              {detection.normalizedResult.confidenceLevel}% {t('home.confidence')}
                             </span>
                           </div>
-                          
+
                           <div className="flex items-center mt-1 text-sm text-gray-600 dark:text-gray-400">
                             <FiMapPin size={12} className="mr-1" />
                             <span>{detection.hospital}</span>
                           </div>
-                          
+
                           <div className="text-xs text-gray-500 dark:text-gray-500 mt-1">
                             {detection.district}, {detection.province} • {detection.sector}
                           </div>
                         </div>
                       </div>
-                      
+
                       <div className="text-right flex-shrink-0 ml-4">
                         <span className="text-sm text-gray-500 dark:text-gray-400">
                           {formatTimestamp(detection.timestamp)}
@@ -288,7 +290,7 @@ export default function Home() {
                   {t('home.noDetections')}
                 </p>
                 <p className="text-sm text-gray-400 dark:text-gray-500 mt-1">
-                  Recent detection results will appear here
+                  {t('home.noDetectionsDescription')}
                 </p>
               </div>
             )}

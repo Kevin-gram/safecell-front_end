@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useI18n } from "../contexts/I18nContext";
 import { MapContainer, TileLayer, Circle, Popup, Marker } from "react-leaflet";
+import { divIcon } from 'leaflet';
 import Card from "../components/ui/Card";
 import Select from "../components/ui/Select";
 import {
@@ -111,6 +112,101 @@ const INTENSITY_LEVELS = [
     priority: "emergency",
   },
 ];
+
+// Create custom marker icons using HTML/CSS instead of React icons
+const createCustomMarker = (result, size = 'small') => {
+  const isPositive = result === 'positive';
+  const markerSize = size === 'large' ? 24 : 16;
+  const iconSize = size === 'large' ? 14 : 10;
+  
+  return divIcon({
+    html: `
+      <div style="
+        width: ${markerSize}px;
+        height: ${markerSize}px;
+        background-color: ${isPositive ? '#dc2626' : '#10b981'};
+        border: 2px solid white;
+        border-radius: 50%;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+      ">
+        <div style="
+          width: ${iconSize}px;
+          height: ${iconSize}px;
+          background-color: white;
+          border-radius: 50%;
+          ${isPositive ? 'background-image: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAxNiAxNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTggMTJMMTIgNEg0TDggMTJaIiBmaWxsPSIjZGMyNjI2Ii8+Cjwvc3ZnPgo=);' : 'background-image: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAxNiAxNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTYuNSAxMUwzIDcuNUw0LjQxIDYuMDlMNi41IDguMTlMMTEuNTkgMy4wOUwxMyA0LjVMNi41IDExWiIgZmlsbD0iIzEwYjk4MSIvPgo8L3N2Zz4K);'}
+          background-size: ${iconSize - 2}px;
+          background-repeat: no-repeat;
+          background-position: center;
+        "></div>
+      </div>
+    `,
+    className: 'custom-marker',
+    iconSize: [markerSize, markerSize],
+    iconAnchor: [markerSize / 2, markerSize / 2],
+    popupAnchor: [0, -markerSize / 2]
+  });
+};
+
+// Alternative: Create simple emoji-based markers
+const createEmojiMarker = (result, emoji = null) => {
+  const isPositive = result === 'positive';
+  const markerEmoji = emoji || (isPositive ? '🔴' : '🟢');
+  
+  return divIcon({
+    html: `
+      <div style="
+        font-size: 20px;
+        text-align: center;
+        line-height: 1;
+        filter: drop-shadow(1px 1px 2px rgba(0,0,0,0.5));
+      ">
+        ${markerEmoji}
+      </div>
+    `,
+    className: 'emoji-marker',
+    iconSize: [24, 24],
+    iconAnchor: [12, 12],
+    popupAnchor: [0, -12]
+  });
+};
+
+// Create hospital/facility markers
+const createFacilityMarker = (facilityType = 'hospital') => {
+  const facilityEmojis = {
+    hospital: '🏥',
+    clinic: '🏥',
+    health_center: '⚕️',
+    default: '🏥'
+  };
+  
+  const emoji = facilityEmojis[facilityType] || facilityEmojis.default;
+  
+  return divIcon({
+    html: `
+      <div style="
+        font-size: 24px;
+        text-align: center;
+        line-height: 1;
+        filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.5));
+        background-color: white;
+        border-radius: 50%;
+        padding: 2px;
+        border: 2px solid #0284c7;
+      ">
+        ${emoji}
+      </div>
+    `,
+    className: 'facility-marker',
+    iconSize: [32, 32],
+    iconAnchor: [16, 16],
+    popupAnchor: [0, -16]
+  });
+};
 
 export default function LocationStats() {
   const { t } = useI18n();
@@ -611,7 +707,7 @@ const fetchLocationData = async (showRefreshLoader = false) => {
             </h2>
             <p className="text-sm text-medical-600 dark:text-medical-400 mt-1">
               Circle size represents total cases per district, color indicates
-              risk intensity level
+              risk intensity level. Markers show individual detection results.
             </p>
           </div>
           <div className="h-[600px]">
@@ -652,119 +748,123 @@ const fetchLocationData = async (showRefreshLoader = false) => {
                 />
 
                 {/* District-level circles */}
-{districtData.map((district, index) => (
-  <Circle
-    key={`district-${index}`}
-    center={district.coordinates}
-    radius={getCircleSize(district.totalCases)}
-    pathOptions={{
-      color: getCircleColor(district.intensity),
-      fillColor: getCircleColor(district.intensity),
-      fillOpacity: 0.6,
-      weight: 3,
-    }}
-  >
-    <Popup>
-      <div className="p-2 min-w-[200px] text-xs">
-        <h3 className="font-bold text-sm text-medical-800">{district.name} District</h3>
-        <p className="text-gray-600 mb-1">{district.province}</p>
-        <div className="space-y-1">
-          <p>
-            <strong>Total Tests:</strong> {district.totalCases}
-          </p>
-          <p>
-            <strong>Positive Cases:</strong> {district.positiveCases}
-          </p>
-          <p>
-            <strong>Positive Rate:</strong> {district.positiveRate}%
-          </p>
-          <p>
-            <strong>Risk Level:</strong>
-            <span
-              className={`ml-1 px-1 py-0.5 rounded text-xs ${
-                district.riskLevel === "critical"
-                  ? "bg-error-100 text-error-800"
-                  : district.riskLevel === "high"
-                  ? "bg-warning-100 text-warning-800"
-                  : district.riskLevel === "moderate"
-                  ? "bg-accent-100 text-accent-800"
-                  : "bg-success-100 text-success-800"
-              }`}
-            >
-              {district.riskLevel.toUpperCase()}
-            </span>
-          </p>
-          <p>
-            <strong>Healthcare Facilities:</strong>
-          </p>
-          <ul className="text-xs ml-2">
-            {district.facilities.slice(0, 2).map((facility, i) => (
-              <li key={i}>• {facility}</li>
-            ))}
-            {district.facilities.length > 2 && (
-              <li>• +{district.facilities.length - 2} more</li>
-            )}
-          </ul>
-        </div>
-      </div>
-    </Popup>
-  </Circle>
-))}
+                {districtData.map((district, index) => (
+                  <Circle
+                    key={`district-${index}`}
+                    center={district.coordinates}
+                    radius={getCircleSize(district.totalCases)}
+                    pathOptions={{
+                      color: getCircleColor(district.intensity),
+                      fillColor: getCircleColor(district.intensity),
+                      fillOpacity: 0.6,
+                      weight: 3,
+                    }}
+                  >
+                    <Popup>
+                      <div className="p-2 min-w-[200px] text-xs">
+                        <h3 className="font-bold text-sm text-medical-800">{district.name} District</h3>
+                        <p className="text-gray-600 mb-1">{district.province}</p>
+                        <div className="space-y-1">
+                          <p>
+                            <strong>Total Tests:</strong> {district.totalCases}
+                          </p>
+                          <p>
+                            <strong>Positive Cases:</strong> {district.positiveCases}
+                          </p>
+                          <p>
+                            <strong>Positive Rate:</strong> {district.positiveRate}%
+                          </p>
+                          <p>
+                            <strong>Risk Level:</strong>
+                            <span
+                              className={`ml-1 px-1 py-0.5 rounded text-xs ${
+                                district.riskLevel === "critical"
+                                  ? "bg-error-100 text-error-800"
+                                  : district.riskLevel === "high"
+                                  ? "bg-warning-100 text-warning-800"
+                                  : district.riskLevel === "moderate"
+                                  ? "bg-accent-100 text-accent-800"
+                                  : "bg-success-100 text-success-800"
+                              }`}
+                            >
+                              {district.riskLevel.toUpperCase()}
+                            </span>
+                          </p>
+                          <p>
+                            <strong>Healthcare Facilities:</strong>
+                          </p>
+                          <ul className="text-xs ml-2">
+                            {district.facilities.slice(0, 2).map((facility, i) => (
+                              <li key={i}>• {facility}</li>
+                            ))}
+                            {district.facilities.length > 2 && (
+                              <li>• +{district.facilities.length - 2} more</li>
+                            )}
+                          </ul>
+                        </div>
+                      </div>
+                    </Popup>
+                  </Circle>
+                ))}
 
-                {/* FIXED: Individual detection markers for recent cases */}
-{detectionData.slice(-50).map((detection, index) => {
-  const districtCoords = getDistrictCoordinates(detection.district);
-  const offset = 0.02;
-  const randomLat = districtCoords[0] + (Math.random() - 0.5) * offset;
-  const randomLng = districtCoords[1] + (Math.random() - 0.5) * offset;
+                {/* Individual detection markers using custom HTML/CSS markers */}
+                {detectionData.slice(-50).map((detection, index) => {
+                  const districtCoords = getDistrictCoordinates(detection.district);
+                  const offset = 0.02;
+                  const randomLat = districtCoords[0] + (Math.random() - 0.5) * offset;
+                  const randomLng = districtCoords[1] + (Math.random() - 0.5) * offset;
+                  
+                  const result = detection.predictionResults?.result === "positive" ? "positive" : "negative";
 
-  return (
-    <Marker
-      key={`detection-${detection._id || index}`}
-      position={[randomLat, randomLng]}
-    >
-      <Popup>
-        <div className="p-2 min-w-[200px] text-xs">
-          <h4 className="font-medium text-sm text-medical-800">Recent Diagnosis</h4>
-          <div className="mt-1 space-y-1">
-            <p>
-              <strong>Result:</strong>
-              <span
-                className={`ml-1 px-1 py-0.5 rounded text-xs ${
-                  detection.predictionResults?.result === "positive"
-                    ? "bg-error-100 text-error-800"
-                    : "bg-success-100 text-success-800"
-                }`}
-              >
-                {detection.predictionResults?.result === "positive"
-                  ? "POSITIVE"
-                  : "NEGATIVE"}
-              </span>
-            </p>
-            <p>
-              <strong>Confidence:</strong> {detection.predictionResults?.confidenceLevel || "N/A"}%
-            </p>
-            <p>
-              <strong>District:</strong> {detection.district || "Unknown"}
-            </p>
-            <p>
-              <strong>Province:</strong> {detection.province || "Unknown"}
-            </p>
-            <p>
-              <strong>Sector:</strong> {detection.sector || "Unknown"}
-            </p>
-            <p>
-              <strong>Hospital:</strong> {detection.hospital || "Unknown"}
-            </p>
-            <p>
-              <strong>Processing Time:</strong> {detection.predictionResults?.processingTime || "N/A"}ms
-            </p>
-          </div>
-        </div>
-      </Popup>
-    </Marker>
-  );
-})}        </MapContainer>
+                  return (
+                    <Marker
+                      key={`detection-${detection._id || index}`}
+                      position={[randomLat, randomLng]}
+                      icon={createCustomMarker(result)}
+                    >
+                      <Popup>
+                        <div className="p-2 min-w-[200px] text-xs">
+                          <h4 className="font-medium text-sm text-medical-800">Recent Diagnosis</h4>
+                          <div className="mt-1 space-y-1">
+                            <p>
+                              <strong>Result:</strong>
+                              <span
+                                className={`ml-1 px-1 py-0.5 rounded text-xs ${
+                                  detection.predictionResults?.result === "positive"
+                                    ? "bg-error-100 text-error-800"
+                                    : "bg-success-100 text-success-800"
+                                }`}
+                              >
+                                {detection.predictionResults?.result === "positive"
+                                  ? "POSITIVE"
+                                  : "NEGATIVE"}
+                              </span>
+                            </p>
+                            <p>
+                              <strong>Confidence:</strong> {detection.predictionResults?.confidenceLevel || "N/A"}%
+                            </p>
+                            <p>
+                              <strong>District:</strong> {detection.district || "Unknown"}
+                            </p>
+                            <p>
+                              <strong>Province:</strong> {detection.province || "Unknown"}
+                            </p>
+                            <p>
+                              <strong>Sector:</strong> {detection.sector || "Unknown"}
+                            </p>
+                            <p>
+                              <strong>Hospital:</strong> {detection.hospital || "Unknown"}
+                            </p>
+                            <p>
+                              <strong>Processing Time:</strong> {detection.predictionResults?.processingTime || "N/A"}ms
+                            </p>
+                          </div>
+                        </div>
+                      </Popup>
+                    </Marker>
+                  );
+                })}
+              </MapContainer>
             )}
           </div>
         </Card>
