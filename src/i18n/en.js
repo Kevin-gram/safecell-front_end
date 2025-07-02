@@ -183,30 +183,12 @@ export const translationEN = {
     message: "Sorry, the page you are looking for does not exist.",
     returnHome: "Return to Home"
   },
-    "time": {
-    "morning": "matin",
-    "afternoon": "après-midi",
-    "evening": "soir"
-  },
-  "home": {
-    "greeting": "Bon {{timeOfDay}}",
-    "welcome": "Bienvenue sur SafeCell!",
-    "description": "Votre plateforme de confiance pour la détection et les statistiques du paludisme.",
-    "getStarted": "Commencer",
-    "quickAccess": "Accès rapide",
-    "detectionDescription": "Analyser les images de frottis sanguins",
-    "statisticsDescription": "Voir les tendances et les analyses de détection",
-    "feedbackDescription": "Fournir des suggestions pour l'amélioration",
-    "recentDetections": "Détections récentes",
-    "noDetections": "Aucune détection récente disponible.",
-    "noDetectionsDescription": "Les résultats récents de détection apparaîtront ici.",
-    "confidence": "confiance"
-  },
+   
   "common": {
    " appName":"SafeCell",
-    "loading": "Chargement...",
-    "error": "Erreur",
-    "tryAgain": "Réessayer"
+    "loading": "Loading...",
+    "error": "error",
+    "tryAgain": "try again please"
   },
     "time": {
     "morning": "morning",

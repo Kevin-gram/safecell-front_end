@@ -65,16 +65,24 @@ export const translationFR = {
     updateSuccess: "Paramètres mis à jour avec succès",
     updateError: "Échec de la mise à jour des paramètres"
   },
-  home: {
-    welcome: "Bienvenue sur SafeCell",
-    subtitle: "Système de détection de paludisme assisté par IA",
-    description: "Cette plateforme aide le personnel clinique à détecter les parasites du paludisme dans les images de frottis sanguins avec une grande précision grâce à la technologie IA avancée.",
-    recentDetections: "Détections Récentes",
-    getStarted: "Commencer",
-    quickAccess: "Accès Rapide",
-    recentActivity: "Activité Récente",
-    noActivity: "Aucune activité récente",
-    noDetections: "Aucune détection récente"
+   "time": {
+    "morning": "matin",
+    "afternoon": "après-midi",
+    "evening": "soir"
+  },
+  "home": {
+    "greeting": "Bon {{timeOfDay}}",
+    "welcome": "Bienvenue sur SafeCell!",
+    "description": "Votre plateforme de confiance pour la détection et les statistiques du paludisme.",
+    "getStarted": "Commencer",
+    "quickAccess": "Accès rapide",
+    "detectionDescription": "Analyser les images de frottis sanguins",
+    "statisticsDescription": "Voir les tendances et les analyses de détection",
+    "feedbackDescription": "Fournir des suggestions pour l'amélioration",
+    "recentDetections": "Détections récentes",
+    "noDetections": "Aucune détection récente disponible.",
+    "noDetectionsDescription": "Les résultats récents de détection apparaîtront ici.",
+    "confidence": "confiance"
   },
   detection: {
     title: "Détection de Malaria",

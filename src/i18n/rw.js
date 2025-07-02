@@ -51,6 +51,7 @@ export const translationRW = {
     namePlaceholder: "Shyiramo amazina yawe yose"
   },
   nav: {
+  
     home: "Ahabanza",
     detection: "Gusuzuma Malariya",
     statistics: "Imibare",
@@ -66,6 +67,7 @@ export const translationRW = {
     updateError: "Kuvugurura igenamiterere ntibyakunze"
   },
   home: {
+    "greeting": "{{timeOfDay}}",
     welcome: "Murakaza neza kuri SafeCell",
     subtitle: "Sisitemu yo gusuzuma malariya ikoresheje ubwenge bwite",
     description: "Iyi sisitemu ifasha abakozi bo kwa muganga gusuzuma udukoko twa malariya mu mashusho y'amaraso hakoreshejwe ikoranabuhanga ry'ubwenge bwite.",
@@ -121,6 +123,11 @@ export const translationRW = {
       level4: "Urwego 4 - Byinshi",
       level5: "Urwego 5 - Bikabije"
     }
+  },
+  "time": {
+    "morning": "Mwaramutse",
+    "afternoon": "Mwiriwe",
+    "evening": "Mwiriwe"
   },
   feedback: {
     title: "Ibitekerezo",

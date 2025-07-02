@@ -53,7 +53,6 @@ export default function Sidebar({ closeSidebar }) {
   return (
     <div className="w-64 h-full bg-white dark:bg-gray-800 border-r dark:border-gray-700 shadow-sm flex flex-col">
       <div className="p-4 border-b dark:border-gray-700">
-        <h1 className="text-xl font-bold text-primary-600 dark:text-primary-400">{t('common.appName')}</h1>
         {user && (
           <div className="mt-2 text-sm text-gray-600 dark:text-gray-400">
             <p>{user.name}</p>
