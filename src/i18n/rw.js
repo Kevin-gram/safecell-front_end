@@ -1,7 +1,7 @@
 export const translationRW = {
   common: {
     appName: "SafeCell",
-    loading: "Gutegereza...",
+    loading: "Tegereza...",
     error: "Hari ikibazo cyavutse",
     success: "Byagenze neza!",
     save: "Bika",
@@ -150,7 +150,7 @@ export const translationRW = {
     messagePlaceholder: "Nyamuneka sangira ibitekerezo byawe, ibyifuzo cyangwa raporo ibibazo..."
   },
   admin: {
-    dashboard: "Ikibaho cy'Ubuyobozi",
+    dashboard: "Ikibaho cy'Umuyobozi",
     dashboardSubtitle: "Gucunga ibitekerezo n'ubuyobozi bwa sisitemu",
     accessDenied: "Kwinjira Birabuze",
     adminOnly: "Uyu rupapuro rushobora gufungurwa n'abayobozi gusa",
@@ -158,9 +158,9 @@ export const translationRW = {
     recentFeedback: "Bya vuba (iminsi 7)",
     suggestions: "Ibyifuzo",
     bugReports: "Raporo z'Ibibazo",
-    filters: "Amashyushyu",
-    filterByType: "Shyushya ukurikije ubwoko",
-    filterByDate: "Shyushya ukurikije itariki",
+    filters: "Shakisha",
+    filterByType: "Shakishaukurikije ubwoko",
+    filterByDate: "Shakisha ukurikije itariki",
     allTypes: "Ubwoko bwose",
     allTime: "Igihe cyose",
     today: "Uyu munsi",
