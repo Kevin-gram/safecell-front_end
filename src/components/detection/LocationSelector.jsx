@@ -36,61 +36,66 @@ export default function LocationSelector({
   });
   const [patientIdError, setPatientIdError] = useState(false);
 
-  // Update districts when province changes
+  // Initialize with selected location if provided
+  useEffect(() => {
+    if (selectedLocation) {
+      console.log('Initializing with selectedLocation:', selectedLocation);
+      
+      // Extract IDs from the selected location object
+      const provinceId = selectedLocation.province?.id || selectedLocation.province;
+      const districtId = selectedLocation.district?.id || selectedLocation.district;
+      const sectorId = selectedLocation.sector?.id || selectedLocation.sector;
+      const facilityId = selectedLocation.facility?.id || selectedLocation.facility;
+      const patientId = selectedLocation.patientId || '';
+
+      setLocationData({
+        province: provinceId,
+        district: districtId,
+        sector: sectorId,
+        facility: facilityId,
+        patientId: patientId,
+      });
+
+      // Set up dependent dropdowns
+      if (provinceId) {
+        const districtOptions = getDistricts(provinceId);
+        setDistricts(districtOptions);
+        
+        if (districtId) {
+          const sectorOptions = getSectors(provinceId, districtId);
+          setSectors(sectorOptions);
+          
+          const facilityOptions = getHealthFacilities(provinceId, districtId);
+          setHealthFacilities(facilityOptions);
+        }
+      }
+    }
+  }, [selectedLocation]);
+
+  // Update districts when province changes - NO RESET OF OTHER FIELDS
   useEffect(() => {
     if (locationData.province) {
       const districtOptions = getDistricts(locationData.province);
       setDistricts(districtOptions);
-
-      // Reset dependent fields if province changed
-      if (
-        locationData.district &&
-        !districtOptions.find((d) => d.value === locationData.district)
-      ) {
-        setLocationData((prev) => ({
-          ...prev,
-          district: '',
-          sector: '',
-          facility: '',
-        }));
-        setSectors([]);
-        setHealthFacilities([]);
-      }
+      console.log('Updated districts for province:', locationData.province, districtOptions);
     } else {
       setDistricts([]);
-      setSectors([]);
-      setHealthFacilities([]);
     }
   }, [locationData.province]);
 
-  // Update sectors and health facilities when district changes
+  // Update sectors and health facilities when district changes - NO RESET OF OTHER FIELDS
   useEffect(() => {
     if (locationData.province && locationData.district) {
-      const sectorOptions = getSectors(
-        locationData.province,
-        locationData.district
-      );
+      const sectorOptions = getSectors(locationData.province, locationData.district);
       setSectors(sectorOptions);
 
-      const facilityOptions = getHealthFacilities(
-        locationData.province,
-        locationData.district
-      );
+      const facilityOptions = getHealthFacilities(locationData.province, locationData.district);
       setHealthFacilities(facilityOptions);
-
-      // Reset dependent fields if district changed
-      if (
-        locationData.sector &&
-        !sectorOptions.find((s) => s.value === locationData.sector)
-      ) {
-        setLocationData((prev) => ({ ...prev, sector: '' }));
-      }
-      if (
-        locationData.facility &&
-        !facilityOptions.find((f) => f.value === locationData.facility)
-      ) {
-        setLocationData((prev) => ({ ...prev, facility: '' }));
-      }
+      
+      console.log('Updated sectors and facilities for district:', locationData.district, {
+        sectors: sectorOptions,
+        facilities: facilityOptions
+      });
     } else {
       setSectors([]);
       setHealthFacilities([]);
@@ -119,6 +124,7 @@ export default function LocationSelector({
           patientId: locationData.patientId.trim(),
         };
 
+        console.log('Sending complete location to parent:', completeLocation);
         onLocationChange(completeLocation);
 
         // Log location selection
@@ -135,33 +141,13 @@ export default function LocationSelector({
     }
   }, [locationData, onLocationChange, logInteraction]);
 
-  // Initialize with selected location if provided
-  useEffect(() => {
-    if (selectedLocation) {
-      setLocationData({
-        province: selectedLocation.province.id,
-        district: selectedLocation.district.id,
-        sector: selectedLocation.sector.id,
-        facility: selectedLocation.facility?.id || '',
-        patientId: selectedLocation.patientId || '',
-      });
-    }
-  }, [selectedLocation]);
-
   const handleLocationChange = (field, value) => {
+    console.log(`User selected ${field}:`, value);
+    
+    // Simply update the field - NO AUTOMATIC RESETS
     setLocationData((prev) => {
       const newData = { ...prev, [field]: value };
-
-      // Reset dependent fields when parent field changes
-      if (field === 'province') {
-        newData.district = '';
-        newData.sector = '';
-        newData.facility = '';
-      } else if (field === 'district') {
-        newData.sector = '';
-        newData.facility = '';
-      }
-
+      console.log('Updated location data:', newData);
       return newData;
     });
   };
