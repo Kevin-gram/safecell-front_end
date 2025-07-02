@@ -20,7 +20,7 @@ export default function MalariaDetection() {
   const [locationError, setLocationError] = useState(false);
   const [combinedData, setCombinedData] = useState(null);
 
-  // Handle image selection
+  // Handle image selection - DON'T reset location or result here
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -31,7 +31,7 @@ export default function MalariaDetection() {
       fileType: file.type,
     });
 
-    setResult(null);
+    // Only clear error and combined data, keep location and result
     setError(null);
     setCombinedData(null);
 
@@ -60,17 +60,14 @@ export default function MalariaDetection() {
     setPreviewUrl(URL.createObjectURL(file));
   };
 
-
 const handleLocationChange = (location) => {
   // Only proceed if we have a valid location object with all required fields
   if (!location || typeof location !== 'object') {
     return;
   }
 
- 
   console.log('Location received in handleLocationChange:', location);
 
- 
   const getLocationValue = (value) => {
     if (typeof value === 'string') return value;
     if (value && typeof value === 'object' && value.name) return value.name;
@@ -138,11 +135,9 @@ const handleLocationChange = (location) => {
     }
   }
 
- 
   setSelectedLocation(normalizedLocation);
   setLocationError(false);
 
-  
   logInteraction('select', 'complete-location', {
     userId: '1750600866432',
     province: newProvince,
@@ -451,6 +446,8 @@ const handleAnalyze = async () => {
     setIsAnalyzing(false);
   }
 };
+
+  // Reset function - this is where we reset everything including location
   const handleReset = () => {
     logInteraction('click', 'reset-button');
     setSelectedImage(null);
@@ -461,13 +458,28 @@ const handleAnalyze = async () => {
     setLocationError(false);
     setCombinedData(null);
     
-   
+    // Clear the file input
     const fileInput = document.getElementById('image-upload');
     if (fileInput) {
       fileInput.value = '';
     }
   };
 
+  // New function to handle "Try Another Image" - keeps location but resets image and results
+  const handleTryAnotherImage = () => {
+    logInteraction('click', 'try-another-image-button');
+    setSelectedImage(null);
+    setPreviewUrl(null);
+    setResult(null);
+    setError(null);
+    setCombinedData(null);
+    
+    // Clear the file input but keep location
+    const fileInput = document.getElementById('image-upload');
+    if (fileInput) {
+      fileInput.value = '';
+    }
+  };
 
   const formatFileSize = (bytes) => {
     if (bytes === 0) return '0 Bytes';
@@ -477,7 +489,6 @@ const handleAnalyze = async () => {
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
   };
 
- 
   const formatTimestamp = (timestamp) => {
     return new Date(timestamp).toLocaleString('en-US', {
       year: 'numeric',
@@ -576,18 +587,25 @@ const handleAnalyze = async () => {
                   </div>
                 </div>
                 <div className="mt-4 flex flex-wrap gap-2">
-<Button
-  variant="primary"
-  onClick={handleAnalyze}
-  disabled={isAnalyzing || !selectedLocation || !selectedImage || result !== null}
-  icon={isAnalyzing ? <FiRefreshCw className="animate-spin" /> : <FiMapPin />}
-  className={`bg-medical-600 hover:bg-medical-700 disabled:bg-green-50 disabled:text-green-800 disabled:cursor-not-allowed`}
->
-  {isAnalyzing ? (t('detection.analyzing') || 'Analyzing...') : 'Analyze Blood Smear'}
-</Button>
-                  <Button variant="outline" onClick={handleReset} disabled={isAnalyzing}>
-                    Reset
+                  <Button
+                    variant="primary"
+                    onClick={handleAnalyze}
+                    disabled={isAnalyzing || !selectedLocation || !selectedImage}
+                    icon={isAnalyzing ? <FiRefreshCw className="animate-spin" /> : <FiMapPin />}
+                    className="bg-medical-600 hover:bg-medical-700"
+                  >
+                    {isAnalyzing ? (t('detection.analyzing') || 'Analyzing...') : 'Analyze Blood Smear'}
                   </Button>
+                  
+                  {result ? (
+                    <Button variant="outline" onClick={handleTryAnotherImage} disabled={isAnalyzing}>
+                      Try Another Image
+                    </Button>
+                  ) : (
+                    <Button variant="outline" onClick={handleReset} disabled={isAnalyzing}>
+                      Reset All
+                    </Button>
+                  )}
                 </div>
                 {error && (
                   <div className="mt-3 text-error-600 dark:text-error-400 text-sm bg-error-50 dark:bg-error-900/20 p-3 rounded-md border border-error-200 dark:border-error-800">
