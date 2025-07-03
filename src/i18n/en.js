@@ -24,7 +24,7 @@ export const translationEN = {
     refresh: "Refresh"
   },
   auth: {
-    "appName":"SafeCell",
+    "appName": "SafeCell",
     login: "Login",
     logout: "Logout",
     signup: "Sign Up",
@@ -52,7 +52,7 @@ export const translationEN = {
     namePlaceholder: "Enter your full name"
   },
   nav: {
-    "appName":"SafeCell",
+    "appName": "SafeCell",
     home: "Home",
     detection: "Malaria Detection",
     statistics: "Statistics",
@@ -183,14 +183,76 @@ export const translationEN = {
     message: "Sorry, the page you are looking for does not exist.",
     returnHome: "Return to Home"
   },
-   
+locationSelector: {
+  "title": "Diagnosis Location",
+  "description": "Please provide complete location details and healthcare facility information for accurate regional data collection and mapping.",
+  "patientInfo": "Patient Information",
+  "patientIdLabel": "Patient ID (Required)",
+  "patientIdPlaceholder": "Enter Patient ID (at least 5 digits)",
+  "patientIdError": "Patient ID must be at least 5 digits",
+  "patientIdHelper": "Patient ID is required and must be at least 5 digits.",
+  "adminLocation": "Administrative Location",
+  "selectProvince": "Select Province",
+  "provinceRequired": "Province is required",
+  "selectDistrict": "Select District",
+  "selectProvinceFirst": "Select Province First",
+  "districtRequired": "District is required",
+  "selectSector": "Select Sector",
+  "selectDistrictFirst": "Select District First",
+  "sectorRequired": "Sector is required",
+  "healthcareFacility": "Healthcare Facility",
+  "facilityLabel": "Hospital/Clinic/Health Center",
+  "selectFacility": "Select Healthcare Facility",
+  "facilityRequired": "Healthcare facility is required",
+  "facilityHelper": "Select the hospital, clinic, or health center where the diagnosis is being performed.",
+  "errorTitle": "Complete Location Required",
+  "errorDescription": "Please select your complete location (Province, District, Sector, and Healthcare Facility) before proceeding with the diagnosis.",
+  "completeTitle": "Location Complete",
+  "completeLocation": "Location:",
+  "completeFacility": "Facility:",
+  "completePatientId": "Patient ID:"
+  
+},
+
+  detection: {
+    header: "Detection Page",
+    subheader: "AI-powered malaria detection system for healthcare professionals",
+    selectedImage: "Selected Image",
+    uploadTitle: "Upload Blood Smear Image",
+    supportedFormats: "Supported formats: JPEG, PNG (Max 5MB)",
+    ready: "Ready for Analysis",
+    tryAnotherImage: "Try Another Image",
+    resetAll: "Reset All",
+    resultsTitle: "Malaria Detection Results",
+    positive: "POSITIVE - Malaria Detected",
+    negative: "NEGATIVE - No Malaria Detected",
+    confidenceLabel: "Confidence Level:",
+    locationLabel: "Location:",
+    imageLabel: "Image:",
+    rawResultLabel: "Raw Result:",
+    recommendationTitle: "Recommendation:",
+    recommendationText: "Please consult with a healthcare professional immediately for proper diagnosis and treatment.",
+    summaryTitle: "Detection Summary & Details",
+    locationDetails: "Location Details",
+    analysisResults: "Analysis Results",
+    fileNameLabel: "File Name:",
+    fileSizeLabel: "File Size:",
+    fileTypeLabel: "File Type:",
+    timestampInfo: "Timestamp Information",
+    analysisCompleted: "Analysis Completed:",
+    elementType: "Element Type:",
+    technicalDetails: "Technical Details (JSON)",
+    emptyState: "Upload a blood smear image and select your location to begin malaria detection analysis.",
+    dropzone: "Drag and drop image here or click to upload",
+  uploadButton: "Upload Image",
+  },
   "common": {
-   " appName":"SafeCell",
+    " appName": "SafeCell",
     "loading": "Loading...",
     "error": "error",
     "tryAgain": "try again please"
   },
-    "time": {
+  "time": {
     "morning": "morning",
     "afternoon": "afternoon",
     "evening": "evening"

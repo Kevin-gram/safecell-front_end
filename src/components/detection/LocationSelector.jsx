@@ -1,18 +1,18 @@
-import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { useI18n } from '../../contexts/I18nContext';
-import { useLogger } from '../../hooks/useLogger';
-import Card from '../ui/Card';
-import Select from '../ui/Select';
-import Input from '../ui/Input';
-import { FiMapPin, FiAlertCircle, FiUser, FiHome } from 'react-icons/fi';
+import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
+import { useI18n } from "../../contexts/I18nContext";
+import { useLogger } from "../../hooks/useLogger";
+import Card from "../ui/Card";
+import Select from "../ui/Select";
+import Input from "../ui/Input";
+import { FiMapPin, FiAlertCircle, FiUser, FiHome } from "react-icons/fi";
 import {
   getProvinces,
   getDistricts,
   getSectors,
   getHealthFacilities,
   getLocationDetails,
-} from '../../services/rwandaLocations';
+} from "../../services/rwandaLocations";
 
 export default function LocationSelector({
   selectedLocation,
@@ -28,25 +28,26 @@ export default function LocationSelector({
   const [sectors, setSectors] = useState([]);
   const [healthFacilities, setHealthFacilities] = useState([]);
   const [locationData, setLocationData] = useState({
-    province: '',
-    district: '',
-    sector: '',
-    facility: '',
-    patientId: '',
+    province: "",
+    district: "",
+    sector: "",
+    facility: "",
+    patientId: "",
   });
   const [patientIdError, setPatientIdError] = useState(false);
 
   // Initialize with selected location if provided
   useEffect(() => {
     if (selectedLocation) {
-      console.log('Initializing with selectedLocation:', selectedLocation);
-      
       // Extract IDs from the selected location object
-      const provinceId = selectedLocation.province?.id || selectedLocation.province;
-      const districtId = selectedLocation.district?.id || selectedLocation.district;
+      const provinceId =
+        selectedLocation.province?.id || selectedLocation.province;
+      const districtId =
+        selectedLocation.district?.id || selectedLocation.district;
       const sectorId = selectedLocation.sector?.id || selectedLocation.sector;
-      const facilityId = selectedLocation.facility?.id || selectedLocation.facility;
-      const patientId = selectedLocation.patientId || '';
+      const facilityId =
+        selectedLocation.facility?.id || selectedLocation.facility;
+      const patientId = selectedLocation.patientId || "";
 
       setLocationData({
         province: provinceId,
@@ -60,11 +61,11 @@ export default function LocationSelector({
       if (provinceId) {
         const districtOptions = getDistricts(provinceId);
         setDistricts(districtOptions);
-        
+
         if (districtId) {
           const sectorOptions = getSectors(provinceId, districtId);
           setSectors(sectorOptions);
-          
+
           const facilityOptions = getHealthFacilities(provinceId, districtId);
           setHealthFacilities(facilityOptions);
         }
@@ -77,7 +78,6 @@ export default function LocationSelector({
     if (locationData.province) {
       const districtOptions = getDistricts(locationData.province);
       setDistricts(districtOptions);
-      console.log('Updated districts for province:', locationData.province, districtOptions);
     } else {
       setDistricts([]);
     }
@@ -86,16 +86,17 @@ export default function LocationSelector({
   // Update sectors and health facilities when district changes - NO RESET OF OTHER FIELDS
   useEffect(() => {
     if (locationData.province && locationData.district) {
-      const sectorOptions = getSectors(locationData.province, locationData.district);
+      const sectorOptions = getSectors(
+        locationData.province,
+        locationData.district
+      );
       setSectors(sectorOptions);
 
-      const facilityOptions = getHealthFacilities(locationData.province, locationData.district);
+      const facilityOptions = getHealthFacilities(
+        locationData.province,
+        locationData.district
+      );
       setHealthFacilities(facilityOptions);
-      
-      console.log('Updated sectors and facilities for district:', locationData.district, {
-        sectors: sectorOptions,
-        facilities: facilityOptions
-      });
     } else {
       setSectors([]);
       setHealthFacilities([]);
@@ -124,11 +125,10 @@ export default function LocationSelector({
           patientId: locationData.patientId.trim(),
         };
 
-        console.log('Sending complete location to parent:', completeLocation);
         onLocationChange(completeLocation);
 
         // Log location selection
-        logInteraction('select', 'complete-location', {
+        logInteraction("select", "complete-location", {
           province: details.province.name,
           district: details.district.name,
           sector: details.sector.name,
@@ -142,12 +142,8 @@ export default function LocationSelector({
   }, [locationData, onLocationChange, logInteraction]);
 
   const handleLocationChange = (field, value) => {
-    console.log(`User selected ${field}:`, value);
-    
-    // Simply update the field - NO AUTOMATIC RESETS
     setLocationData((prev) => {
       const newData = { ...prev, [field]: value };
-      console.log('Updated location data:', newData);
       return newData;
     });
   };
@@ -168,20 +164,20 @@ export default function LocationSelector({
     locationData.patientId.length >= 5;
 
   return (
-    <Card className="p-6 border-l-4 border-l-medical-500">
+    <Card className="p-4 border-l-4 border-l-medical-500">
       <div className="flex items-center mb-4">
         <FiMapPin
           className="text-medical-600 dark:text-medical-400 mr-2"
           size={20}
         />
         <h3 className="text-lg font-medium text-medical-800 dark:text-medical-200">
-          Diagnosis Location {required && <span className="text-error-500">*</span>}
+          {t("locationSelector.title")}{" "}
+          {required && <span className="text-error-500">*</span>}
         </h3>
       </div>
 
       <p className="text-sm text-gray-600 dark:text-gray-400 mb-6">
-        Please provide complete location details and healthcare facility
-        information for accurate regional data collection and mapping.
+        {t("locationSelector.description")}
       </p>
 
       <div className="space-y-4">
@@ -193,23 +189,23 @@ export default function LocationSelector({
               size={16}
             />
             <h4 className="text-sm font-medium text-medical-700 dark:text-medical-300">
-              Patient Information
+              {t("locationSelector.patientInfo")}
             </h4>
           </div>
           <Input
-            label="Patient ID (Required)"
+            label={t("locationSelector.patientIdLabel")}
             type="number"
             value={locationData.patientId}
             onChange={(e) => {
-              handleLocationChange('patientId', e.target.value);
+              handleLocationChange("patientId", e.target.value);
               validatePatientId(e.target.value);
             }}
-            placeholder="Enter Patient ID (at least 5 digits)"
+            placeholder={t("locationSelector.patientIdPlaceholder")}
             className="bg-white dark:bg-gray-700"
-            error={patientIdError ? 'Patient ID must be at least 5 digits' : ''}
+            error={patientIdError ? t("locationSelector.patientIdError") : ""}
           />
           <p className="text-xs text-medical-600 dark:text-medical-400 mt-1">
-            Patient ID is required and must be at least 5 digits.
+            {t("locationSelector.patientIdHelper")}
           </p>
         </div>
 
@@ -221,35 +217,37 @@ export default function LocationSelector({
               size={16}
             />
             <h4 className="text-sm font-medium text-blue-700 dark:text-blue-300">
-              Administrative Location
+              {t("locationSelector.adminLocation")}
             </h4>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <Select
-              label={t('statistics.province')}
+              label={t("statistics.province")}
               value={locationData.province}
-              onChange={(e) => handleLocationChange('province', e.target.value)}
+              onChange={(e) => handleLocationChange("province", e.target.value)}
               options={[
-                { value: '', label: 'Select Province' },
+                { value: "", label: t("locationSelector.selectProvince") },
                 ...provinces,
               ]}
               required={required}
               error={
-                error && !locationData.province ? 'Province is required' : ''
+                error && !locationData.province
+                  ? t("locationSelector.provinceRequired")
+                  : ""
               }
             />
 
             <Select
-              label={t('statistics.district')}
+              label={t("statistics.district")}
               value={locationData.district}
-              onChange={(e) => handleLocationChange('district', e.target.value)}
+              onChange={(e) => handleLocationChange("district", e.target.value)}
               options={[
                 {
-                  value: '',
+                  value: "",
                   label: locationData.province
-                    ? 'Select District'
-                    : 'Select Province First',
+                    ? t("locationSelector.selectDistrict")
+                    : t("locationSelector.selectProvinceFirst"),
                 },
                 ...districts,
               ]}
@@ -257,21 +255,21 @@ export default function LocationSelector({
               required={required}
               error={
                 error && locationData.province && !locationData.district
-                  ? 'District is required'
-                  : ''
+                  ? t("locationSelector.districtRequired")
+                  : ""
               }
             />
 
             <Select
-              label={t('statistics.sector')}
+              label={t("statistics.sector")}
               value={locationData.sector}
-              onChange={(e) => handleLocationChange('sector', e.target.value)}
+              onChange={(e) => handleLocationChange("sector", e.target.value)}
               options={[
                 {
-                  value: '',
+                  value: "",
                   label: locationData.district
-                    ? 'Select Sector'
-                    : 'Select District First',
+                    ? t("locationSelector.selectSector")
+                    : t("locationSelector.selectDistrictFirst"),
                 },
                 ...sectors,
               ]}
@@ -279,8 +277,8 @@ export default function LocationSelector({
               required={required}
               error={
                 error && locationData.district && !locationData.sector
-                  ? 'Sector is required'
-                  : ''
+                  ? t("locationSelector.sectorRequired")
+                  : ""
               }
             />
           </div>
@@ -294,20 +292,20 @@ export default function LocationSelector({
               size={16}
             />
             <h4 className="text-sm font-medium text-green-700 dark:text-green-300">
-              Healthcare Facility
+              {t("locationSelector.healthcareFacility")}
             </h4>
           </div>
 
           <Select
-            label="Hospital/Clinic/Health Center"
+            label={t("locationSelector.facilityLabel")}
             value={locationData.facility}
-            onChange={(e) => handleLocationChange('facility', e.target.value)}
+            onChange={(e) => handleLocationChange("facility", e.target.value)}
             options={[
               {
-                value: '',
+                value: "",
                 label: locationData.district
-                  ? 'Select Healthcare Facility'
-                  : 'Select District First',
+                  ? t("locationSelector.selectFacility")
+                  : t("locationSelector.selectDistrictFirst"),
               },
               ...healthFacilities,
             ]}
@@ -315,13 +313,12 @@ export default function LocationSelector({
             required={required}
             error={
               error && locationData.district && !locationData.facility
-                ? 'Healthcare facility is required'
-                : ''
+                ? t("locationSelector.facilityRequired")
+                : ""
             }
           />
           <p className="text-xs text-green-600 dark:text-green-400 mt-1">
-            Select the hospital, clinic, or health center where the diagnosis is
-            being performed.
+            {t("locationSelector.facilityHelper")}
           </p>
         </div>
       </div>
@@ -336,12 +333,10 @@ export default function LocationSelector({
             <FiAlertCircle className="text-error-500 mt-0.5 mr-2 flex-shrink-0" />
             <div>
               <p className="text-sm text-error-700 dark:text-error-300 font-medium">
-                Complete Location Required
+                {t("locationSelector.errorTitle")}
               </p>
               <p className="text-sm text-error-600 dark:text-error-400 mt-1">
-                Please select your complete location (Province, District,
-                Sector, and Healthcare Facility) before proceeding with the
-                diagnosis.
+                {t("locationSelector.errorDescription")}
               </p>
             </div>
           </div>
@@ -358,20 +353,23 @@ export default function LocationSelector({
             <FiMapPin className="text-success-500 mt-0.5 mr-2 flex-shrink-0" />
             <div>
               <p className="text-sm text-success-700 dark:text-success-300 font-medium">
-                Location Complete
+                {t("locationSelector.completeTitle")}
               </p>
               <div className="text-sm text-success-600 dark:text-success-400 mt-1">
                 <p>
-                  <strong>Location:</strong> {selectedLocation?.sector.name},{' '}
-                  {selectedLocation?.district.name},{' '}
+                  <strong>{t("locationSelector.completeLocation")}</strong>{" "}
+                  {selectedLocation?.sector.name},{" "}
+                  {selectedLocation?.district.name},{" "}
                   {selectedLocation?.province.name}
                 </p>
                 <p>
-                  <strong>Facility:</strong> {selectedLocation?.facility?.name}
+                  <strong>{t("locationSelector.completeFacility")}</strong>{" "}
+                  {selectedLocation?.facility?.name}
                 </p>
                 {selectedLocation?.patientId && (
                   <p>
-                    <strong>Patient ID:</strong> {selectedLocation.patientId}
+                    <strong>{t("locationSelector.completePatientId")}</strong>{" "}
+                    {selectedLocation.patientId}
                   </p>
                 )}
               </div>
