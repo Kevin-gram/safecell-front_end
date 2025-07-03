@@ -161,7 +161,7 @@ export default function Signup() {
         className="sm:mx-auto sm:w-full sm:max-w-md"
       >
         <h1 className="text-center text-3xl font-extrabold text-gray-900 dark:text-white">
-          {t('common.appName')}
+          {t('auth.appName')}
         </h1>
         <h2 className="mt-2 text-center text-xl text-gray-600 dark:text-gray-400">
           {t('auth.signup')}
