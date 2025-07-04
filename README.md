@@ -69,10 +69,10 @@ SafeCell is a modern web application designed to visualize, monitor, and analyze
 You can use the following sample images to test the malaria detection feature:
 
 - **Positive Sample:**
-  - ![Positive Sample]![alt text](image.png)
+  - ![alt text](image.png)
 
 - **Negative Sample:**
-  - ![Negative Sample]
+  - ![alt text](image-1.png)
 
 ---
 
