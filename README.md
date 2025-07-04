@@ -1,6 +1,6 @@
 # SafeCell Malaria Detection & Statistics Frontend
 
-[![Live Demo](https://img.shields.io/badge/Live%20Demo-Open-green?style=for-the-badge)](https://safecell-frontend.vercel.app)
+[![Live Demo](https://www.loom.com/share/ba94bb2950c24cccb1ee6e20343b25a2?sid=1c1ba3cf-6a54-44f0-b03d-c0834648e4c9)](https://safecell.netlify.app/)
 
 ## 🌍 Project Description
 
@@ -18,7 +18,7 @@ SafeCell is a modern web application designed to visualize, monitor, and analyze
 
 ## 🚀 Live Demo
 
-👉 [SafeCell Live App](https://safecell-frontend.vercel.app)
+👉 [SafeCell Live App](https://safecell.netlify.app/)
 
 ---
 
@@ -34,8 +34,7 @@ SafeCell is a modern web application designed to visualize, monitor, and analyze
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/your-username/safecell-front_end.git
-   cd safecell-front_end
+   git clone https://github.com/Kevin-gram/safecell-front_end.git
    ```
 2. **Install dependencies:**
    ```bash
