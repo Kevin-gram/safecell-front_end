@@ -1,7 +1,5 @@
 # SafeCell Malaria Detection & Statistics Frontend
 
-[![Live Demo](https://www.loom.com/share/ba94bb2950c24cccb1ee6e20343b25a2?sid=1c1ba3cf-6a54-44f0-b03d-c0834648e4c9)](https://safecell.netlify.app/)
-
 ## 🌍 Project Description
 
 SafeCell is a modern web application designed to visualize, monitor, and analyze malaria detection data across Rwanda. It provides real-time statistics, interactive maps, and risk assessments for healthcare professionals, researchers, and the public. The app leverages advanced data visualization and a user-friendly interface to empower data-driven decisions in the fight against malaria.
@@ -68,7 +66,7 @@ SafeCell is a modern web application designed to visualize, monitor, and analyze
 
 ## 🎬 5-Minute Demo Video
 
-[![Watch Demo](https://img.shields.io/badge/Watch%20Demo-YouTube-red?style=for-the-badge&logo=youtube)](https://youtu.be/your-demo-video-link)
+[![Watch Demo])](https://www.loom.com/share/ba94bb2950c24cccb1ee6e20343b25a2?sid=1c1ba3cf-6a54-44f0-b03d-c0834648e4c9)
 
 > **Note:** The demo video focuses on the core functionalities: malaria detection, malaria statistics, interactive map, risk levels, and data visualization. Sign-up and sign-in are briefly shown but not the main focus.
 
