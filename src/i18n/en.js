@@ -23,6 +23,138 @@ export const translationEN = {
     settings: "Settings",
     refresh: "Refresh"
   },
+  locationStats: {
+    // Header Section
+    title: "District-Level Malaria Surveillance",
+    subtitle: "Real-time malaria distribution and intensity mapping across Rwanda's districts based on healthcare facility diagnoses",
+    refreshData: "Refresh data",
+    
+    // Time Range Options
+    timeRangeToday: "Today",
+    timeRangeThisWeek: "This Week",
+    timeRangeThisMonth: "This Month",
+    timeRangeThisYear: "This Year",
+    
+    // Error Messages
+    failedToLoadData: "Failed to load data",
+    retry: "Retry",
+    
+    // Summary Statistics Cards
+    activeDistricts: "Active Districts",
+    totalDiagnoses: "Total Diagnoses",
+    positiveCases: "Positive Cases",
+    healthcareFacilities: "Healthcare Facilities",
+    avgPositiveRate: "Avg Positive Rate",
+    
+    // Risk Assessment Levels
+    riskAssessmentTitle: "Risk Assessment Levels",
+    lowRisk: "Low Risk",
+    moderateRisk: "Moderate Risk",
+    highRisk: "High Risk",
+    veryHighRisk: "Very High Risk",
+    criticalRisk: "Critical Risk",
+    
+    // Risk Descriptions
+    minimalCases: "Minimal cases (1-5 per district)",
+    someCases: "Some cases detected (6-15 per district)",
+    significantCases: "Significant cases (16-30 per district)",
+    heavyCases: "Heavy case load (31-50 per district)",
+    outbreakLevel: "Outbreak level (>50 per district)",
+    
+    // Priority Levels
+    routine: "ROUTINE",
+    monitor: "MONITOR",
+    alert: "ALERT",
+    urgent: "URGENT",
+    emergency: "EMERGENCY",
+    
+    // Live Data Status
+    liveDataStatus: "Live Data Status:",
+    currentlyDisplaying: "Currently displaying",
+    diagnosesFrom: "diagnoses from",
+    facilitiesAcross: "healthcare facilities across",
+    districtsInRwanda: "districts in Rwanda.",
+    avgRate: "avg rate",
+    timeRange: "Time Range:",
+    lastUpdated: "Last Updated:",
+    dataSource: "Data Source:",
+    dataSourceValue: "Healthcare facility diagnostic systems",
+    
+    // No Data Messages
+    noDataTitle: "No Data Available:",
+    noDataMessage: "No malaria detection data found for the selected time range",
+    noDataSuggestion: "Try selecting a different time period or verify that your API endpoint is returning data with the correct structure.",
+    retryButton: "Retry Loading Data",
+    
+    // Map Section
+    mapTitle: "District-Level Malaria Distribution Map",
+    mapDescription: "Circle size represents total cases per district, color indicates risk intensity level. Markers show individual detection results.",
+    loadingData: "Loading district data...",
+    unableToLoad: "Unable to load map data",
+    
+    // Popup Content
+    district: "District",
+    totalTests: "Total Tests:",
+    positiveRate: "Positive Rate:",
+    riskLevel: "Risk Level:",
+    recentDiagnosis: "Recent Diagnosis",
+    result: "Result:",
+    positive: "POSITIVE",
+    negative: "NEGATIVE",
+    confidence: "Confidence:",
+    province: "Province:",
+    sector: "Sector:",
+    hospital: "Hospital:",
+    processingTime: "Processing Time:",
+    unknown: "Unknown",
+    
+    // Table Headers
+    tableTitle: "District Health Surveillance Summary",
+    districts: "Districts",
+    basedOn: "Based on",
+    totalDiagnosesText: "total diagnoses from healthcare facilities",
+    districtHeader: "District",
+    totalCases: "Total Cases",
+    intensityLevel: "Intensity Level",
+    
+    // Table Summary Footer
+    totalDistricts: "Total Districts:",
+    averagePositiveRate: "Average Positive Rate:",
+    
+    // Empty State
+    emptyStateTitle: "No Detection Data Available",
+    emptyStateMessage: "No malaria detection data found for the selected time range. Try selecting a different time period or check if the API is returning data.",
+    emptyStateRefreshButton: "Refresh Data",
+    
+    // Level Indicators
+    level: "Level",
+    more: "more",
+    
+    // Risk Level Values
+    low: "LOW",
+    moderate: "MODERATE",
+    high: "HIGH",
+    critical: "CRITICAL",
+    
+    // Loading and Error States
+    loadingDots: "...",
+    notAvailable: "N/A",
+    milliseconds: "ms",
+    unknownDistrict: "Unknown District",
+    unknownProvince: "Unknown Province",
+    unknownFacility: "Unknown Facility"
+  },
+  settings: {
+    title: "User Settings",
+    subtitle: "Manage your account settings and preferences",
+    profile: "Profile Settings",
+    displayName: "Display Name",
+    email: "Email",
+    saveChanges: "Save Changes",
+    profileUpdatedSuccess: "Profile updated successfully!",
+    updateSuccess: "Settings updated successfully",
+    updateError: "Failed to update settings"
+  },
   auth: {
     "appName": "SafeCell",
     login: "Login",
@@ -60,12 +192,6 @@ export const translationEN = {
     settings: "Settings",
     feedback: "Feedback",
     admin: "Admin Dashboard"
-  },
-  settings: {
-    title: "Settings",
-    profile: "Profile Settings",
-    updateSuccess: "Settings updated successfully",
-    updateError: "Failed to update settings"
   },
   home: {
     welcome: "Welcome to SafeCell",
@@ -183,37 +309,35 @@ export const translationEN = {
     message: "Sorry, the page you are looking for does not exist.",
     returnHome: "Return to Home"
   },
-locationSelector: {
-  "title": "Diagnosis Location",
-  "description": "Please provide complete location details and healthcare facility information for accurate regional data collection and mapping.",
-  "patientInfo": "Patient Information",
-  "patientIdLabel": "Patient ID (Required)",
-  "patientIdPlaceholder": "Enter Patient ID (at least 5 digits)",
-  "patientIdError": "Patient ID must be at least 5 digits",
-  "patientIdHelper": "Patient ID is required and must be at least 5 digits.",
-  "adminLocation": "Administrative Location",
-  "selectProvince": "Select Province",
-  "provinceRequired": "Province is required",
-  "selectDistrict": "Select District",
-  "selectProvinceFirst": "Select Province First",
-  "districtRequired": "District is required",
-  "selectSector": "Select Sector",
-  "selectDistrictFirst": "Select District First",
-  "sectorRequired": "Sector is required",
-  "healthcareFacility": "Healthcare Facility",
-  "facilityLabel": "Hospital/Clinic/Health Center",
-  "selectFacility": "Select Healthcare Facility",
-  "facilityRequired": "Healthcare facility is required",
-  "facilityHelper": "Select the hospital, clinic, or health center where the diagnosis is being performed.",
-  "errorTitle": "Complete Location Required",
-  "errorDescription": "Please select your complete location (Province, District, Sector, and Healthcare Facility) before proceeding with the diagnosis.",
-  "completeTitle": "Location Complete",
-  "completeLocation": "Location:",
-  "completeFacility": "Facility:",
-  "completePatientId": "Patient ID:"
-  
-},
-
+  locationSelector: {
+    "title": "Diagnosis Location",
+    "description": "Please provide complete location details and healthcare facility information for accurate regional data collection and mapping.",
+    "patientInfo": "Patient Information",
+    "patientIdLabel": "Patient ID (Required)",
+    "patientIdPlaceholder": "Enter Patient ID (at least 5 digits)",
+    "patientIdError": "Patient ID must be at least 5 digits",
+    "patientIdHelper": "Patient ID is required and must be at least 5 digits.",
+    "adminLocation": "Administrative Location",
+    "selectProvince": "Select Province",
+    "provinceRequired": "Province is required",
+    "selectDistrict": "Select District",
+    "selectProvinceFirst": "Select Province First",
+    "districtRequired": "District is required",
+    "selectSector": "Select Sector",
+    "selectDistrictFirst": "Select District First",
+    "sectorRequired": "Sector is required",
+    "healthcareFacility": "Healthcare Facility",
+    "facilityLabel": "Hospital/Clinic/Health Center",
+    "selectFacility": "Select Healthcare Facility",
+    "facilityRequired": "Healthcare facility is required",
+    "facilityHelper": "Select the hospital, clinic, or health center where the diagnosis is being performed.",
+    "errorTitle": "Complete Location Required",
+    "errorDescription": "Please select your complete location (Province, District, Sector, and Healthcare Facility) before proceeding with the diagnosis.",
+    "completeTitle": "Location Complete",
+    "completeLocation": "Location:",
+    "completeFacility": "Facility:",
+    "completePatientId": "Patient ID:"
+  },
   detection: {
     header: "Detection Page",
     subheader: "AI-powered malaria detection system for healthcare professionals",
@@ -244,13 +368,7 @@ locationSelector: {
     technicalDetails: "Technical Details (JSON)",
     emptyState: "Upload a blood smear image and select your location to begin malaria detection analysis.",
     dropzone: "Drag and drop image here or click to upload",
-  uploadButton: "Upload Image",
-  },
-  "common": {
-    " appName": "SafeCell",
-    "loading": "Loading...",
-    "error": "error",
-    "tryAgain": "try again please"
+    uploadButton: "Upload Image",
   },
   "time": {
     "morning": "morning",

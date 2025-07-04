@@ -27,7 +27,7 @@ export default function Settings() {
       await updateUser(formData)
       setSuccess(true)
     } catch (err) {
-      setError(err.message || 'Failed to update profile')
+      setError(err.message || t('settings.updateError'))
     }
   }
   
@@ -43,9 +43,9 @@ export default function Settings() {
       className="max-w-2xl mx-auto space-y-8"
     >
       <div>
-        <h1 className="text-2xl md:text-3xl font-bold">User Settings</h1>
+        <h1 className="text-2xl md:text-3xl font-bold">{t('settings.title')}</h1>
         <p className="text-gray-600 dark:text-gray-400 mt-2">
-          Manage your account settings and preferences
+          {t('settings.subtitle')}
         </p>
       </div>
       
@@ -54,7 +54,7 @@ export default function Settings() {
           {success && (
             <Alert
               type="success"
-              message="Profile updated successfully!"
+              message={t('settings.profileUpdatedSuccess')}
               onClose={() => setSuccess(false)}
             />
           )}
@@ -69,7 +69,7 @@ export default function Settings() {
           
           <div className="space-y-4">
             <Input
-              label="Display Name"
+              label={t('settings.displayName')}
               name="name"
               value={formData.name}
               onChange={handleChange}
@@ -78,7 +78,7 @@ export default function Settings() {
             />
             
             <Input
-              label="Email"
+              label={t('settings.email')}
               name="email"
               type="email"
               value={formData.email}
@@ -93,7 +93,7 @@ export default function Settings() {
             variant="primary"
             icon={<FiSave />}
           >
-            Save Changes
+            {t('settings.saveChanges')}
           </Button>
         </form>
       </Card>

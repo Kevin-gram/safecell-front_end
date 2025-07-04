@@ -456,10 +456,10 @@ const fetchLocationData = async (showRefreshLoader = false) => {
   };
 
   const timeRangeOptions = [
-    { value: "today", label: "Today" },
-    { value: "week", label: "This Week" },
-    { value: "month", label: "This Month" },
-    { value: "year", label: "This Year" },
+    { value: "today", label: t('locationStats.timeRangeToday') },
+    { value: "week", label: t('locationStats.timeRangeThisWeek') },
+    { value: "month", label: t('locationStats.timeRangeThisMonth') },
+    { value: "year", label: t('locationStats.timeRangeThisYear') },
   ];
 
   return (
@@ -473,11 +473,10 @@ const fetchLocationData = async (showRefreshLoader = false) => {
         <div>
           <h1 className="text-2xl md:text-3xl font-bold flex items-center text-medical-800 dark:text-medical-200">
             <FiMapPin className="mr-2 text-medical-600" />
-            District-Level Malaria Surveillance
+            {t('locationStats.title')}
           </h1>
           <p className="text-gray-600 dark:text-gray-400 mt-2">
-            Real-time malaria distribution and intensity mapping across Rwanda's
-            districts based on healthcare facility diagnoses
+            {t('locationStats.subtitle')}
           </p>
         </div>
 
@@ -492,7 +491,7 @@ const fetchLocationData = async (showRefreshLoader = false) => {
             onClick={handleRefresh}
             disabled={refreshing}
             className="p-2 rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800 disabled:opacity-50"
-            title="Refresh data"
+            title={t('locationStats.refreshData')}
           >
             <FiRefreshCw
               className={`w-4 h-4 ${refreshing ? "animate-spin" : ""}`}
@@ -507,7 +506,7 @@ const fetchLocationData = async (showRefreshLoader = false) => {
             <FiAlertTriangle className="text-error-500 mr-2" />
             <div>
               <p className="text-error-800 dark:text-error-200 font-medium">
-                Failed to load data
+                {t('locationStats.failedToLoadData')}
               </p>
               <p className="text-error-600 dark:text-error-400 text-sm mt-1">
                 {error}
@@ -516,7 +515,7 @@ const fetchLocationData = async (showRefreshLoader = false) => {
                 onClick={() => fetchLocationData()}
                 className="mt-2 px-3 py-1 bg-error-600 text-white rounded text-sm hover:bg-error-700"
               >
-                Retry
+                {t('locationStats.retry')}
               </button>
             </div>
           </div>
@@ -529,10 +528,10 @@ const fetchLocationData = async (showRefreshLoader = false) => {
             <FiMapPin className="text-medical-500 mr-2" />
             <div>
               <p className="text-sm text-gray-600 dark:text-gray-400">
-                Active Districts
+                {t('locationStats.activeDistricts')}
               </p>
               <p className="text-2xl font-bold text-medical-600">
-                {loading ? "..." : stats?.activeDistricts || 0}
+                {loading ? t('locationStats.loadingDots') : stats?.activeDistricts || 0}
               </p>
             </div>
           </div>
@@ -543,10 +542,10 @@ const fetchLocationData = async (showRefreshLoader = false) => {
             <FiActivity className="text-blue-500 mr-2" />
             <div>
               <p className="text-sm text-gray-600 dark:text-gray-400">
-                Total Diagnoses
+                {t('locationStats.totalDiagnoses')}
               </p>
               <p className="text-2xl font-bold text-blue-600">
-                {loading ? "..." : stats?.totalCases || 0}
+                {loading ? t('locationStats.loadingDots') : stats?.totalCases || 0}
               </p>
             </div>
           </div>
@@ -557,10 +556,10 @@ const fetchLocationData = async (showRefreshLoader = false) => {
             <FiAlertTriangle className="text-error-500 mr-2" />
             <div>
               <p className="text-sm text-gray-600 dark:text-gray-400">
-                Positive Cases
+                {t('locationStats.positiveCases')}
               </p>
               <p className="text-2xl font-bold text-error-600">
-                {loading ? "..." : stats?.totalPositive || 0}
+                {loading ? t('locationStats.loadingDots') : stats?.totalPositive || 0}
               </p>
             </div>
           </div>
@@ -571,10 +570,10 @@ const fetchLocationData = async (showRefreshLoader = false) => {
             <FiHome className="text-success-500 mr-2" />
             <div>
               <p className="text-sm text-gray-600 dark:text-gray-400">
-                Healthcare Facilities
+                {t('locationStats.healthcareFacilities')}
               </p>
               <p className="text-2xl font-bold text-success-600">
-                {loading ? "..." : stats?.totalFacilities || 0}
+                {loading ? t('locationStats.loadingDots') : stats?.totalFacilities || 0}
               </p>
             </div>
           </div>
@@ -585,10 +584,10 @@ const fetchLocationData = async (showRefreshLoader = false) => {
             <FiTrendingUp className="text-accent-500 mr-2" />
             <div>
               <p className="text-sm text-gray-600 dark:text-gray-400">
-                Avg Positive Rate
+                {t('locationStats.avgPositiveRate')}
               </p>
               <p className="text-2xl font-bold text-accent-600">
-                {loading ? "..." : `${stats?.averagePositiveRate || 0}%`}
+                {loading ? t('locationStats.loadingDots') : `${stats?.averagePositiveRate || 0}%`}
               </p>
             </div>
           </div>
@@ -599,7 +598,7 @@ const fetchLocationData = async (showRefreshLoader = false) => {
         <Card className="p-6 border-l-4 border-l-medical-500">
           <h2 className="text-xl font-semibold mb-4 flex items-center text-medical-800 dark:text-medical-200">
             <FiAlertTriangle className="mr-2" />
-            Risk Assessment Levels
+            {t('locationStats.riskAssessmentTitle')}
           </h2>
           <div className="space-y-4">
             {INTENSITY_LEVELS.map(
@@ -611,10 +610,10 @@ const fetchLocationData = async (showRefreshLoader = false) => {
                   />
                   <div>
                     <h3 className="font-medium text-sm">
-                      Level {level} - {name}
+                      {t('locationStats.level')} {level} - {t(`locationStats.${name.toLowerCase().replace(' ', '')}Risk`)}
                     </h3>
                     <p className="text-xs text-gray-600 dark:text-gray-400">
-                      {description}
+                      {t(`locationStats.${description.split(' ')[0].toLowerCase()}Cases`)}
                     </p>
                     <span
                       className={`inline-block mt-1 px-2 py-1 text-xs rounded-full ${
@@ -629,7 +628,7 @@ const fetchLocationData = async (showRefreshLoader = false) => {
                           : "bg-success-100 text-success-800 dark:bg-success-900/50 dark:text-success-200"
                       }`}
                     >
-                      {priority.toUpperCase()}
+                      {t(`locationStats.${priority}`)}
                     </span>
                   </div>
                 </div>
@@ -640,31 +639,30 @@ const fetchLocationData = async (showRefreshLoader = false) => {
           {!loading && detectionData.length > 0 && (
             <div className="mt-6 p-3 bg-medical-50 dark:bg-medical-900/20 rounded-md border border-medical-200 dark:border-medical-800">
               <p className="text-sm text-medical-800 dark:text-medical-200">
-                <strong>Live Data Status:</strong> Currently displaying{" "}
-                {detectionData.length} diagnoses from{" "}
-                {stats?.totalFacilities || 0} healthcare facilities across{" "}
-                {stats?.activeDistricts || 0} districts in Rwanda.
+                <strong>{t('locationStats.liveDataStatus')}</strong> {t('locationStats.currentlyDisplaying')}{" "}
+                {detectionData.length} {t('locationStats.diagnosesFrom')}{" "}
+                {stats?.totalFacilities || 0} {t('locationStats.facilitiesAcross')}{" "}
+                {stats?.activeDistricts || 0} {t('locationStats.districtsInRwanda')}
               </p>
               <div className="mt-2 grid grid-cols-2 gap-2 text-xs">
                 <div className="text-medical-600 dark:text-medical-400">
-                  <strong>Positive Cases:</strong> {stats?.totalPositive || 0} (
-                  {stats?.averagePositiveRate || 0}% avg rate)
+                  <strong>{t('locationStats.positiveCases')}:</strong> {stats?.totalPositive || 0} (
+                  {stats?.averagePositiveRate || 0}% {t('locationStats.avgRate')})
                 </div>
                 <div className="text-medical-600 dark:text-medical-400">
-                  <strong>Time Range:</strong>{" "}
+                  <strong>{t('locationStats.timeRange')}</strong>{" "}
                   {timeRange === "today"
-                    ? "Today"
+                    ? t('locationStats.timeRangeToday')
                     : timeRange === "week"
-                    ? "This Week"
+                    ? t('locationStats.timeRangeThisWeek')
                     : timeRange === "month"
-                    ? "This Month"
-                    : "This Year"}
+                    ? t('locationStats.timeRangeThisMonth')
+                    : t('locationStats.timeRangeThisYear')}
                 </div>
               </div>
               <div className="mt-2 text-xs text-medical-500 dark:text-medical-500">
-                <strong>Last Updated:</strong> {new Date().toLocaleString()} |
-                <strong className="ml-2">Data Source:</strong> Healthcare
-                facility diagnostic systems
+                <strong>{t('locationStats.lastUpdated')}</strong> {new Date().toLocaleString()} |
+                <strong className="ml-2">{t('locationStats.dataSource')}</strong> {t('locationStats.dataSourceValue')}
               </div>
             </div>
           )}
@@ -672,27 +670,25 @@ const fetchLocationData = async (showRefreshLoader = false) => {
           {!loading && detectionData.length === 0 && !error && (
             <div className="mt-6 p-3 bg-gray-50 dark:bg-gray-800 rounded-md border border-gray-200 dark:border-gray-700">
               <p className="text-sm text-gray-600 dark:text-gray-400">
-                <strong>No Data Available:</strong> No malaria detection data
-                found for the selected time range (
+                <strong>{t('locationStats.noDataTitle')}</strong> {t('locationStats.noDataMessage')} (
                 {timeRange === "today"
-                  ? "Today"
+                  ? t('locationStats.timeRangeToday')
                   : timeRange === "week"
-                  ? "This Week"
+                  ? t('locationStats.timeRangeThisWeek')
                   : timeRange === "month"
-                  ? "This Month"
-                  : "This Year"}
+                  ? t('locationStats.timeRangeThisMonth')
+                  : t('locationStats.timeRangeThisYear')}
                 ).
               </p>
               <p className="text-xs text-gray-500 dark:text-gray-500 mt-1">
-                Try selecting a different time period or verify that your API
-                endpoint is returning data with the correct structure.
+                {t('locationStats.noDataSuggestion')}
               </p>
               <div className="mt-2">
                 <button
                   onClick={() => fetchLocationData()}
                   className="px-3 py-1 bg-medical-600 text-white rounded text-xs hover:bg-medical-700"
                 >
-                  Retry Loading Data
+                  {t('locationStats.retryButton')}
                 </button>
               </div>
             </div>
@@ -703,11 +699,10 @@ const fetchLocationData = async (showRefreshLoader = false) => {
         <Card className="lg:col-span-2 overflow-hidden border-l-4 border-l-medical-500">
           <div className="p-4 border-b dark:border-gray-700 bg-medical-50 dark:bg-medical-900/20">
             <h2 className="text-xl font-semibold text-medical-800 dark:text-medical-200">
-              District-Level Malaria Distribution Map
+              {t('locationStats.mapTitle')}
             </h2>
             <p className="text-sm text-medical-600 dark:text-medical-400 mt-1">
-              Circle size represents total cases per district, color indicates
-              risk intensity level. Markers show individual detection results.
+              {t('locationStats.mapDescription')}
             </p>
           </div>
           <div className="h-[600px]">
@@ -716,7 +711,7 @@ const fetchLocationData = async (showRefreshLoader = false) => {
                 <div className="text-center">
                   <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-medical-600 mx-auto"></div>
                   <p className="mt-2 text-gray-600 dark:text-gray-400">
-                    Loading district data...
+                    {t('locationStats.loadingData')}
                   </p>
                 </div>
               </div>
@@ -725,13 +720,13 @@ const fetchLocationData = async (showRefreshLoader = false) => {
                 <div className="text-center">
                   <FiAlertTriangle className="h-12 w-12 text-error-500 mx-auto mb-4" />
                   <p className="text-gray-600 dark:text-gray-400">
-                    Unable to load map data
+                    {t('locationStats.unableToLoad')}
                   </p>
                   <button
                     onClick={() => fetchLocationData()}
                     className="mt-2 px-4 py-2 bg-medical-600 text-white rounded hover:bg-medical-700"
                   >
-                    Retry
+                    {t('locationStats.retry')}
                   </button>
                 </div>
               </div>
@@ -762,20 +757,20 @@ const fetchLocationData = async (showRefreshLoader = false) => {
                   >
                     <Popup>
                       <div className="p-2 min-w-[200px] text-xs">
-                        <h3 className="font-bold text-sm text-medical-800">{district.name} District</h3>
+                        <h3 className="font-bold text-sm text-medical-800">{district.name} {t('locationStats.district')}</h3>
                         <p className="text-gray-600 mb-1">{district.province}</p>
                         <div className="space-y-1">
                           <p>
-                            <strong>Total Tests:</strong> {district.totalCases}
+                            <strong>{t('locationStats.totalTests')}</strong> {district.totalCases}
                           </p>
                           <p>
-                            <strong>Positive Cases:</strong> {district.positiveCases}
+                            <strong>{t('locationStats.positiveCases')}:</strong> {district.positiveCases}
                           </p>
                           <p>
-                            <strong>Positive Rate:</strong> {district.positiveRate}%
+                            <strong>{t('locationStats.positiveRate')}</strong> {district.positiveRate}%
                           </p>
                           <p>
-                            <strong>Risk Level:</strong>
+                            <strong>{t('locationStats.riskLevel')}:</strong>
                             <span
                               className={`ml-1 px-1 py-0.5 rounded text-xs ${
                                 district.riskLevel === "critical"
@@ -787,18 +782,18 @@ const fetchLocationData = async (showRefreshLoader = false) => {
                                   : "bg-success-100 text-success-800"
                               }`}
                             >
-                              {district.riskLevel.toUpperCase()}
+                              {t(`locationStats.${district.riskLevel}`)}
                             </span>
                           </p>
                           <p>
-                            <strong>Healthcare Facilities:</strong>
+                            <strong>{t('locationStats.healthcareFacilities')}:</strong>
                           </p>
                           <ul className="text-xs ml-2">
                             {district.facilities.slice(0, 2).map((facility, i) => (
                               <li key={i}>• {facility}</li>
                             ))}
                             {district.facilities.length > 2 && (
-                              <li>• +{district.facilities.length - 2} more</li>
+                              <li>• +{district.facilities.length - 2} {t('locationStats.more')}</li>
                             )}
                           </ul>
                         </div>
@@ -824,10 +819,10 @@ const fetchLocationData = async (showRefreshLoader = false) => {
                     >
                       <Popup>
                         <div className="p-2 min-w-[200px] text-xs">
-                          <h4 className="font-medium text-sm text-medical-800">Recent Diagnosis</h4>
+                          <h4 className="font-medium text-sm text-medical-800">{t('locationStats.recentDiagnosis')}</h4>
                           <div className="mt-1 space-y-1">
                             <p>
-                              <strong>Result:</strong>
+                              <strong>{t('locationStats.result')}</strong>
                               <span
                                 className={`ml-1 px-1 py-0.5 rounded text-xs ${
                                   detection.predictionResults?.result === "positive"
@@ -836,27 +831,27 @@ const fetchLocationData = async (showRefreshLoader = false) => {
                                 }`}
                               >
                                 {detection.predictionResults?.result === "positive"
-                                  ? "POSITIVE"
-                                  : "NEGATIVE"}
+                                  ? t('locationStats.positive')
+                                  : t('locationStats.negative')}
                               </span>
                             </p>
                             <p>
-                              <strong>Confidence:</strong> {detection.predictionResults?.confidenceLevel || "N/A"}%
+                              <strong>{t('locationStats.confidence')}</strong> {detection.predictionResults?.confidenceLevel || t('locationStats.notAvailable')}%
                             </p>
                             <p>
-                              <strong>District:</strong> {detection.district || "Unknown"}
+                              <strong>{t('locationStats.district')}:</strong> {detection.district || t('locationStats.unknown')}
                             </p>
                             <p>
-                              <strong>Province:</strong> {detection.province || "Unknown"}
+                              <strong>{t('locationStats.province')}</strong> {detection.province || t('locationStats.unknown')}
                             </p>
                             <p>
-                              <strong>Sector:</strong> {detection.sector || "Unknown"}
+                              <strong>{t('locationStats.sector')}</strong> {detection.sector || t('locationStats.unknown')}
                             </p>
                             <p>
-                              <strong>Hospital:</strong> {detection.hospital || "Unknown"}
+                              <strong>{t('locationStats.hospital')}</strong> {detection.hospital || t('locationStats.unknown')}
                             </p>
                             <p>
-                              <strong>Processing Time:</strong> {detection.predictionResults?.processingTime || "N/A"}ms
+                              <strong>{t('locationStats.processingTime')}</strong> {detection.predictionResults?.processingTime || t('locationStats.notAvailable')}{t('locationStats.milliseconds')}
                             </p>
                           </div>
                         </div>
@@ -875,12 +870,11 @@ const fetchLocationData = async (showRefreshLoader = false) => {
           <div className="p-4 border-b dark:border-gray-700 bg-medical-50 dark:bg-medical-900/20">
             <h2 className="text-xl font-semibold text-medical-800 dark:text-medical-200 flex items-center">
               <FiBarChart2 className="mr-2" />
-              District Health Surveillance Summary ({districtData.length}{" "}
-              Districts)
+              {t('locationStats.tableTitle')} ({districtData.length}{" "}
+              {t('locationStats.districts')})
             </h2>
             <p className="text-sm text-medical-600 dark:text-medical-400 mt-1">
-              Based on {detectionData.length} total diagnoses from healthcare
-              facilities
+              {t('locationStats.basedOn')} {detectionData.length} {t('locationStats.totalDiagnosesText')}
             </p>
           </div>
           <div className="overflow-x-auto">
@@ -888,25 +882,25 @@ const fetchLocationData = async (showRefreshLoader = false) => {
               <thead className="bg-gray-50 dark:bg-gray-800">
                 <tr>
                   <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                    District
+                    {t('locationStats.districtHeader')}
                   </th>
                   <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                    Total Cases
+                    {t('locationStats.totalCases')}
                   </th>
                   <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                    Positive Cases
+                    {t('locationStats.positiveCases')}
                   </th>
                   <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                    Positive Rate
+                    {t('locationStats.positiveRate')}
                   </th>
                   <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                    Risk Level
+                    {t('locationStats.riskLevel')}
                   </th>
                   <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                    Healthcare Facilities
+                    {t('locationStats.healthcareFacilities')}
                   </th>
                   <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                    Intensity Level
+                    {t('locationStats.intensityLevel')}
                   </th>
                 </tr>
               </thead>
@@ -970,7 +964,7 @@ const fetchLocationData = async (showRefreshLoader = false) => {
                                 : "bg-success-100 text-success-800 dark:bg-success-900/50 dark:text-success-200"
                             }`}
                           >
-                            {district.riskLevel.toUpperCase()}
+                            {t(`locationStats.${district.riskLevel}`)}
                           </span>
                         </div>
                       </td>
@@ -984,7 +978,7 @@ const fetchLocationData = async (showRefreshLoader = false) => {
                             <div className="ml-2 text-xs text-gray-500">
                               {district.facilities.slice(0, 2).join(", ")}
                               {district.facilities.length > 2 &&
-                                `, +${district.facilities.length - 2} more`}
+                                `, +${district.facilities.length - 2} ${t('locationStats.more')}`}
                             </div>
                           )}
                         </div>
@@ -992,12 +986,12 @@ const fetchLocationData = async (showRefreshLoader = false) => {
                       <td className="px-4 py-3 text-sm text-gray-900 dark:text-gray-100">
                         <div className="flex items-center">
                           <span className="text-xs font-medium mr-2">
-                            Level {district.intensity}
+                            {t('locationStats.level')} {district.intensity}
                           </span>
                           <span className="text-xs text-gray-500">
                             (
                             {INTENSITY_LEVELS[district.intensity - 1]?.name ||
-                              "Unknown"}
+                              t('locationStats.unknown')}
                             )
                           </span>
                         </div>
@@ -1012,31 +1006,31 @@ const fetchLocationData = async (showRefreshLoader = false) => {
           <div className="p-4 bg-gray-50 dark:bg-gray-800 border-t dark:border-gray-700">
             <div className="flex flex-wrap gap-4 text-sm text-gray-600 dark:text-gray-400">
               <span>
-                Total Districts:{" "}
+                {t('locationStats.totalDistricts')}{" "}
                 <strong className="text-gray-900 dark:text-gray-100">
                   {districtData.length}
                 </strong>
               </span>
               <span>
-                Total Cases:{" "}
+                {t('locationStats.totalCases')}{" "}
                 <strong className="text-gray-900 dark:text-gray-100">
                   {stats?.totalCases || 0}
                 </strong>
               </span>
               <span>
-                Positive Cases:{" "}
+                {t('locationStats.positiveCases')}{" "}
                 <strong className="text-error-600">
                   {stats?.totalPositive || 0}
                 </strong>
               </span>
               <span>
-                Healthcare Facilities:{" "}
+                {t('locationStats.healthcareFacilities')}{" "}
                 <strong className="text-success-600">
                   {stats?.totalFacilities || 0}
                 </strong>
               </span>
               <span>
-                Average Positive Rate:{" "}
+                {t('locationStats.averagePositiveRate')}{" "}
                 <strong className="text-accent-600">
                   {stats?.averagePositiveRate || 0}%
                 </strong>
@@ -1050,18 +1044,16 @@ const fetchLocationData = async (showRefreshLoader = false) => {
         <Card className="p-8 text-center border-l-4 border-l-gray-300">
           <FiMapPin className="h-12 w-12 text-gray-400 mx-auto mb-4" />
           <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">
-            No Detection Data Available
+            {t('locationStats.emptyStateTitle')}
           </h3>
           <p className="text-gray-600 dark:text-gray-400 mb-4">
-            No malaria detection data found for the selected time range. Try
-            selecting a different time period or check if the API is returning
-            data.
+            {t('locationStats.emptyStateMessage')}
           </p>
           <button
             onClick={() => fetchLocationData()}
             className="px-4 py-2 bg-medical-600 text-white rounded-lg hover:bg-medical-700 transition-colors"
           >
-            Refresh Data
+            {t('locationStats.emptyStateRefreshButton')}
           </button>
         </Card>
       )}
