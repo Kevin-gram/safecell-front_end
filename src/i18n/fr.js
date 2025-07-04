@@ -23,6 +23,138 @@ export const translationFR = {
     settings: "Paramètres",
     refresh: "Actualiser"
   },
+  locationStats: {
+    // Header Section
+    title: "Surveillance du Paludisme au Niveau des Districts",
+    subtitle: "Cartographie en temps réel de la distribution et de l'intensité du paludisme dans les districts du Rwanda basée sur les diagnostics des établissements de santé",
+    refreshData: "Actualiser les données",
+    
+    // Time Range Options
+    timeRangeToday: "Aujourd'hui",
+    timeRangeThisWeek: "Cette Semaine",
+    timeRangeThisMonth: "Ce Mois",
+    timeRangeThisYear: "Cette Année",
+    
+    // Error Messages
+    failedToLoadData: "Échec du chargement des données",
+    retry: "Réessayer",
+    
+    // Summary Statistics Cards
+    activeDistricts: "Districts Actifs",
+    totalDiagnoses: "Total des Diagnostics",
+    positiveCases: "Cas Positifs",
+    healthcareFacilities: "Établissements de Santé",
+    avgPositiveRate: "Taux Positif Moyen",
+    
+    // Risk Assessment Levels
+    riskAssessmentTitle: "Niveaux d'Évaluation des Risques",
+    lowRisk: "Risque Faible",
+    moderateRisk: "Risque Modéré",
+    highRisk: "Risque Élevé",
+    veryHighRisk: "Risque Très Élevé",
+    criticalRisk: "Risque Critique",
+    
+    // Risk Descriptions
+    minimalCases: "Cas minimaux (1-5 par district)",
+    someCases: "Quelques cas détectés (6-15 par district)",
+    significantCases: "Cas significatifs (16-30 par district)",
+    heavyCases: "Charge de cas lourde (31-50 par district)",
+    outbreakLevel: "Niveau d'épidémie (>50 par district)",
+    
+    // Priority Levels
+    routine: "ROUTINE",
+    monitor: "SURVEILLER",
+    alert: "ALERTE",
+    urgent: "URGENT",
+    emergency: "URGENCE",
+    
+    // Live Data Status
+    liveDataStatus: "État des Données en Direct :",
+    currentlyDisplaying: "Affichage actuel de",
+    diagnosesFrom: "diagnostics de",
+    facilitiesAcross: "établissements de santé dans",
+    districtsInRwanda: "districts au Rwanda.",
+    avgRate: "taux moyen",
+    timeRange: "Période :",
+    lastUpdated: "Dernière Mise à Jour :",
+    dataSource: "Source des Données :",
+    dataSourceValue: "Systèmes de diagnostic des établissements de santé",
+    
+    // No Data Messages
+    noDataTitle: "Aucune Donnée Disponible :",
+    noDataMessage: "Aucune donnée de détection du paludisme trouvée pour la période sélectionnée",
+    noDataSuggestion: "Essayez de sélectionner une période différente ou vérifiez que votre point de terminaison API renvoie des données avec la structure correcte.",
+    retryButton: "Réessayer le Chargement des Données",
+    
+    // Map Section
+    mapTitle: "Carte de Distribution du Paludisme au Niveau des Districts",
+    mapDescription: "La taille du cercle représente le total des cas par district, la couleur indique le niveau d'intensité du risque. Les marqueurs montrent les résultats de détection individuels.",
+    loadingData: "Chargement des données du district...",
+    unableToLoad: "Impossible de charger les données de la carte",
+    
+    // Popup Content
+    district: "District",
+    totalTests: "Total des Tests :",
+    positiveRate: "Taux Positif :",
+    riskLevel: "Niveau de Risque :",
+    recentDiagnosis: "Diagnostic Récent",
+    result: "Résultat :",
+    positive: "POSITIF",
+    negative: "NÉGATIF",
+    confidence: "Confiance :",
+    province: "Province :",
+    sector: "Secteur :",
+    hospital: "Hôpital :",
+    processingTime: "Temps de Traitement :",
+    unknown: "Inconnu",
+    
+    // Table Headers
+    tableTitle: "Résumé de la Surveillance Sanitaire des Districts",
+    districts: "Districts",
+    basedOn: "Basé sur",
+    totalDiagnosesText: "diagnostics totaux des établissements de santé",
+    districtHeader: "District",
+    totalCases: "Total des Cas",
+    intensityLevel: "Niveau d'Intensité",
+    
+    // Table Summary Footer
+    totalDistricts: "Total des Districts :",
+    averagePositiveRate: "Taux Positif Moyen :",
+    
+    // Empty State
+    emptyStateTitle: "Aucune Donnée de Détection Disponible",
+    emptyStateMessage: "Aucune donnée de détection du paludisme trouvée pour la période sélectionnée. Essayez de sélectionner une période différente ou vérifiez si l'API renvoie des données.",
+    emptyStateRefreshButton: "Actualiser les Données",
+    
+    // Level Indicators
+    level: "Niveau",
+    more: "plus",
+    
+    // Risk Level Values
+    low: "FAIBLE",
+    moderate: "MODÉRÉ",
+    high: "ÉLEVÉ",
+    critical: "CRITIQUE",
+    
+    // Loading and Error States
+    loadingDots: "...",
+    notAvailable: "N/D",
+    milliseconds: "ms",
+    unknownDistrict: "District Inconnu",
+    unknownProvince: "Province Inconnue",
+    unknownFacility: "Établissement Inconnu"
+  },
+  settings: {
+    title: "Paramètres Utilisateur",
+    subtitle: "Gérer les paramètres et préférences de votre compte",
+    profile: "Paramètres du Profil",
+    displayName: "Nom d'Affichage",
+    email: "Email",
+    saveChanges: "Enregistrer les Modifications",
+    profileUpdatedSuccess: "Profil mis à jour avec succès !",
+    updateSuccess: "Paramètres mis à jour avec succès",
+    updateError: "Échec de la mise à jour des paramètres"
+  },
   auth: {
     login: "Connexion",
     logout: "Déconnexion",
@@ -59,81 +191,72 @@ export const translationFR = {
     feedback: "Commentaires",
     admin: "Tableau de Bord Admin"
   },
-  settings: {
-    title: "Paramètres",
-    profile: "Paramètres du profil",
-    updateSuccess: "Paramètres mis à jour avec succès",
-    updateError: "Échec de la mise à jour des paramètres"
-  },
-   "time": {
+  "time": {
     "morning": "matin",
     "afternoon": "après-midi",
     "evening": "soir"
   },
   locationSelector: {
-  title: "Lieu du Diagnostic",
-  description: "Veuillez fournir des informations complètes sur l’emplacement et l’établissement de santé pour une collecte de données régionales précise.",
-  patientInfo: "Informations du Patient",
-  patientIdLabel: "ID du Patient (Obligatoire)",
-  patientIdPlaceholder: "Entrez l'ID du patient (au moins 5 chiffres)",
-  patientIdError: "L’ID du patient doit comporter au moins 5 chiffres",
-  patientIdHelper: "L’ID du patient est requis et doit comporter au moins 5 chiffres.",
-  adminLocation: "Localisation Administrative",
-  selectProvince: "Sélectionnez une Province",
-  provinceRequired: "La province est requise",
-  selectDistrict: "Sélectionnez un District",
-  selectProvinceFirst: "Sélectionnez d'abord une province",
-  districtRequired: "Le district est requis",
-  selectSector: "Sélectionnez un Secteur",
-  selectDistrictFirst: "Sélectionnez d'abord un district",
-  sectorRequired: "Le secteur est requis",
-  healthcareFacility: "Établissement de Santé",
-  facilityLabel: "Hôpital/Clinique/Centre de Santé",
-  selectFacility: "Sélectionnez un Établissement de Santé",
-  facilityRequired: "L’établissement de santé est requis",
-  facilityHelper: "Sélectionnez l’hôpital, la clinique ou le centre de santé où le diagnostic est effectué.",
-  errorTitle: "Localisation Complète Requise",
-  errorDescription: "Veuillez sélectionner votre localisation complète (Province, District, Secteur et Établissement de Santé) avant de continuer le diagnostic.",
-  completeTitle: "Localisation Complète",
-  completeLocation: "Localisation :",
-  completeFacility: "Établissement :",
-  completePatientId: "ID du Patient :"
-},
-
-detection: {
-  header: "Page de Détection",
-  subheader: "Système de détection du paludisme alimenté par l'IA pour les professionnels de santé",
-  selectedImage: "Image Sélectionnée",
-  uploadTitle: "Télécharger une Image de Frottis Sanguin",
-  supportedFormats: "Formats pris en charge : JPEG, PNG (Max 5 Mo)",
-  ready: "Prêt pour l'Analyse",
-  tryAnotherImage: "Essayer une autre image",
-  resetAll: "Réinitialiser Tout",
-  resultsTitle: "Résultats de la Détection du Paludisme",
-  positive: "POSITIF - Paludisme Détecté",
-  negative: "NÉGATIF - Aucun Paludisme Détecté",
-  confidenceLabel: "Niveau de Confiance :",
-  locationLabel: "Emplacement :",
-  imageLabel: "Image :",
-  rawResultLabel: "Résultat Brut :",
-  recommendationTitle: "Recommandation :",
-  recommendationText: "Veuillez consulter immédiatement un professionnel de santé pour un diagnostic et un traitement appropriés.",
-  summaryTitle: "Résumé et Détails de la Détection",
-  locationDetails: "Détails sur l'Emplacement",
-  analysisResults: "Résultats de l'Analyse",
-  fileNameLabel: "Nom du Fichier :",
-  fileSizeLabel: "Taille du Fichier :",
-  fileTypeLabel: "Type de Fichier :",
-  timestampInfo: "Informations sur l'Horodatage",
-  analysisCompleted: "Analyse Terminée :",
-  elementType: "Type d'Élément :",
-  technicalDetails: "Détails Techniques (JSON)",
-  emptyState: "Téléchargez une image de frottis sanguin et sélectionnez votre emplacement pour commencer l'analyse de détection du paludisme.",
-  dropzone: "Glissez-déposez l'image ici ou cliquez pour télécharger",
-  uploadButton: "Télécharger l'image",
-},
-
-
+    title: "Lieu du Diagnostic",
+    description: "Veuillez fournir des informations complètes sur l'emplacement et l'établissement de santé pour une collecte de données régionales précise.",
+    patientInfo: "Informations du Patient",
+    patientIdLabel: "ID du Patient (Obligatoire)",
+    patientIdPlaceholder: "Entrez l'ID du patient (au moins 5 chiffres)",
+    patientIdError: "L'ID du patient doit comporter au moins 5 chiffres",
+    patientIdHelper: "L'ID du patient est requis et doit comporter au moins 5 chiffres.",
+    adminLocation: "Localisation Administrative",
+    selectProvince: "Sélectionnez une Province",
+    provinceRequired: "La province est requise",
+    selectDistrict: "Sélectionnez un District",
+    selectProvinceFirst: "Sélectionnez d'abord une province",
+    districtRequired: "Le district est requis",
+    selectSector: "Sélectionnez un Secteur",
+    selectDistrictFirst: "Sélectionnez d'abord un district",
+    sectorRequired: "Le secteur est requis",
+    healthcareFacility: "Établissement de Santé",
+    facilityLabel: "Hôpital/Clinique/Centre de Santé",
+    selectFacility: "Sélectionnez un Établissement de Santé",
+    facilityRequired: "L'établissement de santé est requis",
+    facilityHelper: "Sélectionnez l'hôpital, la clinique ou le centre de santé où le diagnostic est effectué.",
+    errorTitle: "Localisation Complète Requise",
+    errorDescription: "Veuillez sélectionner votre localisation complète (Province, District, Secteur et Établissement de Santé) avant de continuer le diagnostic.",
+    completeTitle: "Localisation Complète",
+    completeLocation: "Localisation :",
+    completeFacility: "Établissement :",
+    completePatientId: "ID du Patient :"
+  },
+  detection: {
+    header: "Page de Détection",
+    subheader: "Système de détection du paludisme alimenté par l'IA pour les professionnels de santé",
+    selectedImage: "Image Sélectionnée",
+    uploadTitle: "Télécharger une Image de Frottis Sanguin",
+    supportedFormats: "Formats pris en charge : JPEG, PNG (Max 5 Mo)",
+    ready: "Prêt pour l'Analyse",
+    tryAnotherImage: "Essayer une autre image",
+    resetAll: "Réinitialiser Tout",
+    resultsTitle: "Résultats de la Détection du Paludisme",
+    positive: "POSITIF - Paludisme Détecté",
+    negative: "NÉGATIF - Aucun Paludisme Détecté",
+    confidenceLabel: "Niveau de Confiance :",
+    locationLabel: "Emplacement :",
+    imageLabel: "Image :",
+    rawResultLabel: "Résultat Brut :",
+    recommendationTitle: "Recommandation :",
+    recommendationText: "Veuillez consulter immédiatement un professionnel de santé pour un diagnostic et un traitement appropriés.",
+    summaryTitle: "Résumé et Détails de la Détection",
+    locationDetails: "Détails sur l'Emplacement",
+    analysisResults: "Résultats de l'Analyse",
+    fileNameLabel: "Nom du Fichier :",
+    fileSizeLabel: "Taille du Fichier :",
+    fileTypeLabel: "Type de Fichier :",
+    timestampInfo: "Informations sur l'Horodatage",
+    analysisCompleted: "Analyse Terminée :",
+    elementType: "Type d'Élément :",
+    technicalDetails: "Détails Techniques (JSON)",
+    emptyState: "Téléchargez une image de frottis sanguin et sélectionnez votre emplacement pour commencer l'analyse de détection du paludisme.",
+    dropzone: "Glissez-déposez l'image ici ou cliquez pour télécharger",
+    uploadButton: "Télécharger l'image",
+  },
   "home": {
     "greeting": "Bon {{timeOfDay}}",
     "welcome": "Bienvenue sur SafeCell!",

@@ -1,102 +1,47 @@
-import { useEffect } from 'react'
-import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
-import { useAuth } from './contexts/AuthContext'
-import { useLogger } from './hooks/useLogger'
-
-// Layouts
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
+import { AuthProvider } from './contexts/AuthContext'
+import { ThemeProvider } from './contexts/ThemeContext'
+import { I18nProvider } from './contexts/I18nContext'
 import Layout from './components/layout/Layout'
-
-// Pages
+import Home from './pages/Home'
 import Login from './pages/Login'
 import Signup from './pages/Signup'
-import Home from './pages/Home'
 import MalariaDetection from './pages/MalariaDetection'
 import Statistics from './pages/Statistics'
 import LocationStats from './pages/LocationStats'
+import AdminDashboard from './pages/AdminDashboard'
 import Settings from './pages/Settings'
 import Feedback from './pages/Feedback'
-import AdminDashboard from './pages/AdminDashboard'
 import NotFound from './pages/NotFound'
 
-const ProtectedRoute = ({ children, adminOnly = false }) => {
-  const { isAuthenticated, user } = useAuth()
-  const location = useLocation()
-
-  if (!isAuthenticated) {
-    return <Navigate to="/login" state={{ from: location }} replace />
-  }
-
-  if (adminOnly && user?.role !== 'admin') {
-    return <Navigate to="/" replace />
-  }
-
-  return children
-}
-
-export default function App() {
-  const { isAuthenticated } = useAuth()
-  const location = useLocation()
-  const { logError } = useLogger()
-
-  // Scroll to top on route change
-  useEffect(() => {
-    window.scrollTo(0, 0)
-  }, [location.pathname])
-
-  // Global error handler
-  useEffect(() => {
-    const handleError = (event) => {
-      logError(event.error, 'Global error handler', {
-        filename: event.filename,
-        lineno: event.lineno,
-        colno: event.colno
-      })
-    }
-
-    const handleUnhandledRejection = (event) => {
-      logError(new Error(event.reason), 'Unhandled promise rejection')
-    }
-
-    window.addEventListener('error', handleError)
-    window.addEventListener('unhandledrejection', handleUnhandledRejection)
-
-    return () => {
-      window.removeEventListener('error', handleError)
-      window.removeEventListener('unhandledrejection', handleUnhandledRejection)
-    }
-  }, [logError])
-
+function App() {
   return (
-    <Routes>
-      <Route 
-        path="/login" 
-        element={isAuthenticated ? <Navigate to="/" replace /> : <Login />} 
-      />
-      
-      <Route 
-        path="/signup" 
-        element={isAuthenticated ? <Navigate to="/" replace /> : <Signup />} 
-      />
-      
-      <Route path="/" element={
-        <ProtectedRoute>
-          <Layout />
-        </ProtectedRoute>
-      }>
-        <Route index element={<Home />} />
-        <Route path="detection" element={<MalariaDetection />} />
-        <Route path="statistics" element={<Statistics />} />
-        <Route path="location-stats" element={<LocationStats />} />
-        <Route path="settings" element={<Settings />} />
-        <Route path="feedback" element={<Feedback />} />
-        <Route path="admin" element={
-          <ProtectedRoute adminOnly={true}>
-            <AdminDashboard />
-          </ProtectedRoute>
-        } />
-      </Route>
-      
-      <Route path="*" element={<NotFound />} />
-    </Routes>
+    <I18nProvider>
+      <ThemeProvider>
+        <AuthProvider>
+          <Router>
+            <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+              <Routes>
+                <Route path="/login" element={<Login />} />
+                <Route path="/signup" element={<Signup />} />
+                <Route path="/" element={<Layout />}>
+                  <Route index element={<Navigate to="/home" replace />} />
+                  <Route path="home" element={<Home />} />
+                  <Route path="detection" element={<MalariaDetection />} />
+                  <Route path="statistics" element={<Statistics />} />
+                  <Route path="location-stats" element={<LocationStats />} />
+                  <Route path="admin" element={<AdminDashboard />} />
+                  <Route path="settings" element={<Settings />} />
+                  <Route path="feedback" element={<Feedback />} />
+                </Route>
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </div>
+          </Router>
+        </AuthProvider>
+      </ThemeProvider>
+    </I18nProvider>
   )
 }
+
+export default App

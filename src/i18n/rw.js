@@ -23,6 +23,138 @@ export const translationRW = {
     settings: "Igenamiterere",
     refresh: "Kuvugurura"
   },
+  locationStats: {
+    // Header Section
+    title: "Gukurikirana Malariya ku Rwego rw'Uturere",
+    subtitle: "Ikarita y'igihe nyacyo y'ikwirakwizwa n'ubukana bwa malariya mu turere tw'u Rwanda ukurikije amakuru y'ibigo by'ubuvuzi",
+    refreshData: "Kuvugurura amakuru",
+    
+    // Time Range Options
+    timeRangeToday: "Uyu Munsi",
+    timeRangeThisWeek: "Iki Cyumweru",
+    timeRangeThisMonth: "Uku Kwezi",
+    timeRangeThisYear: "Uyu Mwaka",
+    
+    // Error Messages
+    failedToLoadData: "Gupakurura amakuru ntibyakunze",
+    retry: "Ongera ugerageze",
+    
+    // Summary Statistics Cards
+    activeDistricts: "Uturere Tukora",
+    totalDiagnoses: "Isuzuma Ryose",
+    positiveCases: "Abarwayi Bafite Malariya",
+    healthcareFacilities: "Ibigo by'Ubuvuzi",
+    avgPositiveRate: "Igipimo cy'Abarwayi",
+    
+    // Risk Assessment Levels
+    riskAssessmentTitle: "Inzego z'Isuzuma ry'Ibyago",
+    lowRisk: "Ibyago Bike",
+    moderateRisk: "Ibyago Byagereranije",
+    highRisk: "Ibyago Byinshi",
+    veryHighRisk: "Ibyago Byinshi Cyane",
+    criticalRisk: "Ibyago Bikabije",
+    
+    // Risk Descriptions
+    minimalCases: "Abarwayi bake (1-5 ku karere)",
+    someCases: "Abarwayi bamwe babonetse (6-15 ku karere)",
+    significantCases: "Abarwayi benshi (16-30 ku karere)",
+    heavyCases: "Abarwayi benshi cyane (31-50 ku karere)",
+    outbreakLevel: "Urwego rw'icyorezo (>50 ku karere)",
+    
+    // Priority Levels
+    routine: "IBISANZWE",
+    monitor: "GUKURIKIRANA",
+    alert: "UMUBURO",
+    urgent: "BYIHUTIRWA",
+    emergency: "BYIHUTIRWA CYANE",
+    
+    // Live Data Status
+    liveDataStatus: "Uko Amakuru Ameze :",
+    currentlyDisplaying: "Ubu twereka",
+    diagnosesFrom: "isuzuma kuva",
+    facilitiesAcross: "ibigo by'ubuvuzi mu",
+    districtsInRwanda: "turere muri Rwanda.",
+    avgRate: "igipimo cy'agaciro",
+    timeRange: "Igihe :",
+    lastUpdated: "Ivugururwa Ryanyuma :",
+    dataSource: "Inkomoko y'Amakuru :",
+    dataSourceValue: "Sisitemu z'isuzuma z'ibigo by'ubuvuzi",
+    
+    // No Data Messages
+    noDataTitle: "Nta Makuru Ahari :",
+    noDataMessage: "Nta makuru y'isuzuma rya malariya yabonetse ku gihe cyahiswemo",
+    noDataSuggestion: "Gerageza guhitamo igihe gitandukanye cyangwa ugenzure ko API yawe itanga amakuru afite imiterere ikwiye.",
+    retryButton: "Ongera Ugerageze Gupakurura Amakuru",
+    
+    // Map Section
+    mapTitle: "Ikarita y'Ikwirakwizwa rya Malariya ku Rwego rw'Uturere",
+    mapDescription: "Ubunini bw'uruziga bugaragaza umubare w'abarwayi ku karere, ibara ryerekana urwego rw'ibyago. Ibimenyetso byerekana ibisubizo by'isuzuma ku giti cyabo.",
+    loadingData: "Gupakurura amakuru y'akarere...",
+    unableToLoad: "Ntibyashobotse gupakurura amakuru y'ikarita",
+    
+    // Popup Content
+    district: "Akarere",
+    totalTests: "Isuzuma Ryose :",
+    positiveRate: "Igipimo cy'Abarwayi :",
+    riskLevel: "Urwego rw'Ibyago :",
+    recentDiagnosis: "Isuzuma Rigezweho",
+    result: "Igisubizo :",
+    positive: "YAFITE",
+    negative: "NTAFITE",
+    confidence: "Icyizere :",
+    province: "Intara :",
+    sector: "Umurenge :",
+    hospital: "Ibitaro :",
+    processingTime: "Igihe cy'Isesengura :",
+    unknown: "Kitazwi",
+    
+    // Table Headers
+    tableTitle: "Incamake y'Ubukurikirana Ubuzima bw'Uturere",
+    districts: "Uturere",
+    basedOn: "Bishingiye ku",
+    totalDiagnosesText: "isuzuma ryose kuva mu bigo by'ubuvuzi",
+    districtHeader: "Akarere",
+    totalCases: "Abarwayi Bose",
+    intensityLevel: "Urwego rw'Ubukana",
+    
+    // Table Summary Footer
+    totalDistricts: "Uturere Twose :",
+    averagePositiveRate: "Igipimo cy'Abarwayi :",
+    
+    // Empty State
+    emptyStateTitle: "Nta Makuru y'Isuzuma Ahari",
+    emptyStateMessage: "Nta makuru y'isuzuma rya malariya yabonetse ku gihe cyahiswemo. Gerageza guhitamo igihe gitandukanye cyangwa ugenzure niba API itanga amakuru.",
+    emptyStateRefreshButton: "Kuvugurura Amakuru",
+    
+    // Level Indicators
+    level: "Urwego",
+    more: "andi",
+    
+    // Risk Level Values
+    low: "BIKE",
+    moderate: "BYAGERERANIJE",
+    high: "BYINSHI",
+    critical: "BIKABIJE",
+    
+    // Loading and Error States
+    loadingDots: "...",
+    notAvailable: "Ntabwo bihari",
+    milliseconds: "ms",
+    unknownDistrict: "Akarere Kitazwi",
+    unknownProvince: "Intara Itazwi",
+    unknownFacility: "Ikigo Kitazwi"
+  },
+  settings: {
+    title: "Igenamiterere ry'Ukoresha",
+    subtitle: "Gucunga igenamiterere n'ibyifuzo by'konti yawe",
+    profile: "Igenamiterere rya Konti",
+    displayName: "Izina ryo Kwerekana",
+    email: "Imeyili",
+    saveChanges: "Bika Impinduka",
+    profileUpdatedSuccess: "Konti yavuguruwe neza!",
+    updateSuccess: "Igenamiterere ryavuguruwe neza",
+    updateError: "Kuvugurura igenamiterere ntibyakunze"
+  },
   auth: {
     login: "Injira",
     logout: "Sohoka",
@@ -51,40 +183,38 @@ export const translationRW = {
     namePlaceholder: "Shyiramo amazina yawe yose"
   },
   detection: {
-  header: "Urubuga rwo Gupima",
-  subheader: "Sisitemu ishingiye kubwenge buhimbano yo gupima malaria",
-  selectedImage: "Ifoto Yahiswemo",
-  uploadTitle: "Ohereza Ifoto ya Frottis y'Amaraso",
-  supportedFormats: "Amoko yemerewe: JPEG, PNG (Byibuze 5MB)",
-  ready: "Byiteguye gusesengurwa",
-  tryAnotherImage: "Gerageza Indi Foto",
-  resetAll: "Ongera",
-  resultsTitle: "Ibisubizo by’Isesengura rya Malaria",
-  positive: "POSITIF - Malaria Yabonetse",
-  negative: "NEGATIF - Nta Malaria Yabonetse",
-  confidenceLabel: "Urwego rw'Icyizere :",
-  locationLabel: "Aho Uherereye :",
-  imageLabel: "Ifoto :",
-  rawResultLabel: "Ibisubizo By'Ibanze :",
-  recommendationTitle: "Inama :",
-  recommendationText: "Nyamuneka jya guhita uganira n’umuganga kugirango ubone isuzuma n’ubuvuzi bukwiriye.",
-  summaryTitle: "Incamake n'Ibisobanuro by'Isesengura",
-  locationDetails: "Ibisobanuro ku hantu",
-  analysisResults: "Ibisubizo by'Isesengura",
-  fileNameLabel: "Izina ry'Ifayili :",
-  fileSizeLabel: "Ingano y'Ifayili :",
-  fileTypeLabel: "Ubwoko bw'Ifayili :",
-  timestampInfo: "Amakuru ku Igihe",
-  analysisCompleted: "Isesengura Ryararangiye :",
-  elementType: "Ubwoko bw'Ikintu :",
-  technicalDetails: "Amakuru ya Tekiniki (JSON)",
-  emptyState: "Ohereza ifoto ya frottis y’amaraso kandi hitamo aho uherereye kugirango utangire isesengura rya malaria.",
-   dropzone: "Kanda cyangwa ushyiremo ifoto hano kugirango wohereze",
-  uploadButton: "Ohereza Ifoto",
-},
-
+    header: "Urubuga rwo Gupima",
+    subheader: "Sisitemu ishingiye kubwenge buhimbano yo gupima malaria",
+    selectedImage: "Ifoto Yahiswemo",
+    uploadTitle: "Ohereza Ifoto ya Frottis y'Amaraso",
+    supportedFormats: "Amoko yemerewe: JPEG, PNG (Byibuze 5MB)",
+    ready: "Byiteguye gusesengurwa",
+    tryAnotherImage: "Gerageza Indi Foto",
+    resetAll: "Ongera",
+    resultsTitle: "Ibisubizo by'Isesengura rya Malaria",
+    positive: "POSITIF - Malaria Yabonetse",
+    negative: "NEGATIF - Nta Malaria Yabonetse",
+    confidenceLabel: "Urwego rw'Icyizere :",
+    locationLabel: "Aho Uherereye :",
+    imageLabel: "Ifoto :",
+    rawResultLabel: "Ibisubizo By'Ibanze :",
+    recommendationTitle: "Inama :",
+    recommendationText: "Nyamuneka jya guhita uganira n'umuganga kugirango ubone isuzuma n'ubuvuzi bukwiriye.",
+    summaryTitle: "Incamake n'Ibisobanuro by'Isesengura",
+    locationDetails: "Ibisobanuro ku hantu",
+    analysisResults: "Ibisubizo by'Isesengura",
+    fileNameLabel: "Izina ry'Ifayili :",
+    fileSizeLabel: "Ingano y'Ifayili :",
+    fileTypeLabel: "Ubwoko bw'Ifayili :",
+    timestampInfo: "Amakuru ku Igihe",
+    analysisCompleted: "Isesengura Ryararangiye :",
+    elementType: "Ubwoko bw'Ikintu :",
+    technicalDetails: "Amakuru ya Tekiniki (JSON)",
+    emptyState: "Ohereza ifoto ya frottis y'amaraso kandi hitamo aho uherereye kugirango utangire isesengura rya malaria.",
+    dropzone: "Kanda cyangwa ushyiremo ifoto hano kugirango wohereze",
+    uploadButton: "Ohereza Ifoto",
+  },
   nav: {
-  
     home: "Ahabanza",
     detection: "Gusuzuma Malariya",
     statistics: "Imibare",
@@ -92,12 +222,6 @@ export const translationRW = {
     settings: "Igenamiterere",
     feedback: "Ibitekerezo",
     admin: "Ikibaho cy'Ubuyobozi"
-  },
-  settings: {
-    title: "Igenamiterere",
-    profile: "Igenamiterere rya konti",
-    updateSuccess: "Igenamiterere ryavuguruwe neza",
-    updateError: "Kuvugurura igenamiterere ntibyakunze"
   },
   home: {
     "greeting": "{{timeOfDay}}",
@@ -111,36 +235,35 @@ export const translationRW = {
     noActivity: "Nta bikorwa bya vuba",
     noDetections: "Nta suzuma rigezweho"
   },
- locationSelector: {
-  title: "Aho Isuzuma Riri Kubera",
-  description: "Nyamuneka shyiraho amakuru arambuye yerekeye aho uri n’ikigo cy’ubuvuzi kugirango amakuru yegeranyijwe abe yizewe kandi ajyanye n’akarere.",
-  patientInfo: "Amakuru y’Umurwayi",
-  patientIdLabel: "Indangamuntu y’Umurwayi (Itegetswe)",
-  patientIdPlaceholder: "Andika Indangamuntu y’Umurwayi (Nibura Imibare 5)",
-  patientIdError: "Indangamuntu y’umurwayi igomba kuba nibura imibare 5",
-  patientIdHelper: "Indangamuntu y’umurwayi irakenewe kandi igomba kuba nibura imibare 5.",
-  adminLocation: "Aho Aherereye mu Buyobozi",
-  selectProvince: "Hitamo Intara",
-  provinceRequired: "Intara irakenewe",
-  selectDistrict: "Hitamo Akarere",
-  selectProvinceFirst: "Hitamo Intara Mbere",
-  districtRequired: "Akarere kirakenewe",
-  selectSector: "Hitamo Umurenge",
-  selectDistrictFirst: "Hitamo Akarere Mbere",
-  sectorRequired: "Umurenge urakenewe",
-  healthcareFacility: "Ikigo cy’Ubuvuzi",
-  facilityLabel: "Ibitaro/Kliniki/Ikigo Nderabuzima",
-  selectFacility: "Hitamo Ikigo cy’Ubuvuzi",
-  facilityRequired: "Ikigo cy’ubuvuzi kirakenewe",
-  facilityHelper: "Hitamo ibitaro, kliniki cyangwa ikigo nderabuzima aho isuzuma riri gukorerwa.",
-  errorTitle: "Amakuru Yuzuye y’Aho Uherereye Arakenewe",
-  errorDescription: "Nyamuneka hitamo intara, akarere, umurenge n’ikigo cy’ubuvuzi mbere yo gukomeza isuzuma.",
-  completeTitle: "Aho Uherereye Haruzuye",
-  completeLocation: "Aho Uherereye:",
-  completeFacility: "Ikigo:",
-  completePatientId: "Indangamuntu y’Umurwayi:"
-},
-
+  locationSelector: {
+    title: "Aho Isuzuma Riri Kubera",
+    description: "Nyamuneka shyiraho amakuru arambuye yerekeye aho uri n'ikigo cy'ubuvuzi kugirango amakuru yegeranyijwe abe yizewe kandi ajyanye n'akarere.",
+    patientInfo: "Amakuru y'Umurwayi",
+    patientIdLabel: "Indangamuntu y'Umurwayi (Itegetswe)",
+    patientIdPlaceholder: "Andika Indangamuntu y'Umurwayi (Nibura Imibare 5)",
+    patientIdError: "Indangamuntu y'umurwayi igomba kuba nibura imibare 5",
+    patientIdHelper: "Indangamuntu y'umurwayi irakenewe kandi igomba kuba nibura imibare 5.",
+    adminLocation: "Aho Aherereye mu Buyobozi",
+    selectProvince: "Hitamo Intara",
+    provinceRequired: "Intara irakenewe",
+    selectDistrict: "Hitamo Akarere",
+    selectProvinceFirst: "Hitamo Intara Mbere",
+    districtRequired: "Akarere kirakenewe",
+    selectSector: "Hitamo Umurenge",
+    selectDistrictFirst: "Hitamo Akarere Mbere",
+    sectorRequired: "Umurenge urakenewe",
+    healthcareFacility: "Ikigo cy'Ubuvuzi",
+    facilityLabel: "Ibitaro/Kliniki/Ikigo Nderabuzima",
+    selectFacility: "Hitamo Ikigo cy'Ubuvuzi",
+    facilityRequired: "Ikigo cy'ubuvuzi kirakenewe",
+    facilityHelper: "Hitamo ibitaro, kliniki cyangwa ikigo nderabuzima aho isuzuma riri gukorerwa.",
+    errorTitle: "Amakuru Yuzuye y'Aho Uherereye Arakenewe",
+    errorDescription: "Nyamuneka hitamo intara, akarere, umurenge n'ikigo cy'ubuvuzi mbere yo gukomeza isuzuma.",
+    completeTitle: "Aho Uherereye Haruzuye",
+    completeLocation: "Aho Uherereye:",
+    completeFacility: "Ikigo:",
+    completePatientId: "Indangamuntu y'Umurwayi:"
+  },
   statistics: {
     title: "Imibare",
     subtitle: "Imiterere n'ibyavuye mu isuzuma",
