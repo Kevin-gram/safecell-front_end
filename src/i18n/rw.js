@@ -36,7 +36,7 @@ export const translationRW = {
     timeRangeThisYear: "Uyu Mwaka",
     
     // Error Messages
-    failedToLoadData: "Gupakurura amakuru ntibyakunze",
+    failedToLoadData: "Gukurura amakuru ntibyakunze",
     retry: "Ongera ugerageze",
     
     // Summary Statistics Cards
@@ -84,13 +84,13 @@ export const translationRW = {
     noDataTitle: "Nta Makuru Ahari :",
     noDataMessage: "Nta makuru y'isuzuma rya malariya yabonetse ku gihe cyahiswemo",
     noDataSuggestion: "Gerageza guhitamo igihe gitandukanye cyangwa ugenzure ko API yawe itanga amakuru afite imiterere ikwiye.",
-    retryButton: "Ongera Ugerageze Gupakurura Amakuru",
+    retryButton: "Ongera Ugerageze Gukurura Amakuru",
     
     // Map Section
     mapTitle: "Ikarita y'Ikwirakwizwa rya Malariya ku Rwego rw'Uturere",
     mapDescription: "Ubunini bw'uruziga bugaragaza umubare w'abarwayi ku karere, ibara ryerekana urwego rw'ibyago. Ibimenyetso byerekana ibisubizo by'isuzuma ku giti cyabo.",
-    loadingData: "Gupakurura amakuru y'akarere...",
-    unableToLoad: "Ntibyashobotse gupakurura amakuru y'ikarita",
+    loadingData: "Gukurura amakuru y'akarere...",
+    unableToLoad: "Ntibyashobotse gukurura amakuru y'ikarita",
     
     // Popup Content
     district: "Akarere",
@@ -373,7 +373,7 @@ export const translationRW = {
     markResolved: "Shyira nk'Byakemuwe",
     confirmDelete: "Uzi neza ko ushaka gusiba ibi bitekerezo?",
     exportFeedback: "Gusohora Ibitekerezo",
-    loadError: "Gupakurura amakuru y'ibitekerezo ntibyakunze"
+    loadError: "Gukurura amakuru y'ibitekerezo ntibyakunze"
   },
   notFound: {
     title: "Paji Ntaboneka",
