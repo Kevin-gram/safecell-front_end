@@ -229,6 +229,138 @@ export const translationRW = {
     exportFeedback: "Gusohora Ibitekerezo",
     loadError: "Gupakurura amakuru y'ibitekerezo ntibyakunze"
   },
+  settings: {
+    title: "Ibyerekeye Umukoresha",
+    subtitle: "Hindura uko konte yawe n’imyirondoro byifashe",
+    profile: "Amakuru ya Konti",
+    displayName: "Izina rigaragara",
+    email: "Imeyili",
+    saveChanges: "Bika Impinduka",
+    profileUpdatedSuccess: "Umwirondoro wahinduwe neza!",
+    updateSuccess: "Amakuru yahinduwe neza",
+    updateError: "Ntibyakunze guhindura imyirondoro"
+},
+  locationStats: {
+    // Umutwe
+    title: "Igenzura ry'Uburwayi bwa Malariya ku rwego rw'Uturere",
+    subtitle: "Ikarita igaragaza uko Malariya ikwirakwira mu turere tw’u Rwanda hashingiwe ku bisubizo by'ibigo nderabuzima",
+    refreshData: "Kuzana amakuru mashya",
+    
+    // Igihe
+    timeRangeToday: "Uyu munsi",
+    timeRangeThisWeek: "Icyumweru Gishize",
+    timeRangeThisMonth: "Ukwezi Gushize",
+    timeRangeThisYear: "Umwaka Ushize",
+    
+    // Ubutumwa bw'amakosa
+    failedToLoadData: "Ntibyashobotse kuzana amakuru",
+    retry: "Kugerageza Kongera",
+    
+    // Imibare rusange
+    activeDistricts: "Uturere Twagaragayemo Ibyago",
+    totalDiagnoses: "Ibipimo Byose",
+    positiveCases: "Abanduye",
+    healthcareFacilities: "Ibigo Nderabuzima",
+    avgPositiveRate: "Impuzandengo y’Abanduye",
+    
+    // Urwego rw’Ingano y'ibyago
+    riskAssessmentTitle: "Urwego rw’Ibipimo by'Ibibazo",
+    lowRisk: "Ibyago Bike",
+    moderateRisk: "Ibyago Biringaniye",
+    highRisk: "Ibyago Byinshi",
+    veryHighRisk: "Ibyago Bikabije",
+    criticalRisk: "Ibyago Bikomeye",
+    
+    // Ibisobanuro by'Umutekano
+    minimalCases: "Abantu bake (1-5 kuri buri karere)",
+    someCases: "Hari abanduye (6-15 kuri buri karere)",
+    significantCases: "Umubare munini w'abanduye (16-30 kuri buri karere)",
+    heavyCases: "Ubwandu bwinshi (31-50 kuri buri karere)",
+    outbreakLevel: "Icyorezo (>50 kuri buri karere)",
+    
+    // Ibyiciro by'ibyihutirwa
+    routine: "BISANZWE",
+    monitor: "GUKURIKIRANA",
+    alert: "ALERTE",
+    urgent: "BYIHUTIRWA",
+    emergency: "IBIKOMEREYE",
+
+    // Amakuru y'ako kanya
+    liveDataStatus: "Imibare y'Ako kanya:",
+    currentlyDisplaying: "Uri kureba",
+    diagnosesFrom: "ibipimo byavuye kuri",
+    facilitiesAcross: "ibigo nderabuzima biri mu",
+    districtsInRwanda: "turere twose tw’u Rwanda.",
+    avgRate: "impuzandengo",
+    timeRange: "Igihe:",
+    lastUpdated: "Byaheruka Kuvugururwa:",
+    dataSource: "Inkomoko y'Amakuru:",
+    dataSourceValue: "Sisteme z'ibigo nderabuzima",
+    
+    // Amakuru ntaboneka
+    noDataTitle: "Amakuru Ntaboneka:",
+    noDataMessage: "Nta makuru y'ubwandu bwa Malariya yabonetse ku gihe wahisemo",
+    noDataSuggestion: "Gerageza guhitamo igihe gitandukanye cyangwa reba niba API igarura amakuru afite imiterere ikwiriye.",
+    retryButton: "Kongera Gushakisha Amakuru",
+    
+    // Ikarita
+    mapTitle: "Ikarita y'Ikwirakwira rya Malariya mu Turere",
+    mapDescription: "Ingano y'utudomo yerekana umubare w'abanduye mu karere, ibara rigaragaza urwego rw'ibyago. Akarango kerekana ibisubizo by'ibipimo ku giti cy'umuntu.",
+    loadingData: "Turimo gukusanya amakuru y'uturere...",
+    unableToLoad: "Ntibyashobotse kuzana amakuru y'ikarita",
+    
+    // Ibisobanuro
+    district: "Akarere",
+    totalTests: "Ibipimo Byose:",
+    positiveRate: "Igipimo cy’Abanduye:",
+    riskLevel: "Urwego rw'ibyago:",
+    recentDiagnosis: "Ibisubizo Biheruka",
+    result: "Ibisubizo:",
+    positive: "YANDUYE",
+    negative: "NTIYANDUYE",
+    confidence: "Icyizere:",
+    province: "Intara:",
+    sector: "Umurenge:",
+    hospital: "Ibitaro:",
+    processingTime: "Igihe cy'Isuzuma:",
+    unknown: "Ntibizwi",
+    
+    // Imbonerahamwe
+    tableTitle: "Igenzura ry’Ubuzima ku rwego rw’Uturere",
+    districts: "Uturere",
+    basedOn: "Hashingiwe ku",
+    totalDiagnosesText: "bipimo byose bivuye mu bigo nderabuzima",
+    districtHeader: "Akarere",
+    totalCases: "Umubare w'Abanduye",
+    intensityLevel: "Urwego rw'Ubukana",
+    
+    // Icyegeranyo
+    totalDistricts: "Uturere Twose:",
+    averagePositiveRate: "Impuzandengo y’Abanduye:",
+    
+    // Nta makuru
+    emptyStateTitle: "Nta makuru yabonetse",
+    emptyStateMessage: "Nta makuru y’ubwandu bwa Malariya yabonetse ku gihe wahisemo. Gerageza guhitamo ikindi gihe cyangwa usuzume API.",
+    emptyStateRefreshButton: "Kuzana amakuru mashya",
+    
+    // Ibyiciro
+    level: "Urwego",
+    more: "byinshi",
+    
+    // Ibyiciro by’Ibibazo
+    low: "BIKE",
+    moderate: "BIRINGANIYE",
+    high: "BYINSHI",
+    critical: "BITEYE IMPUGA",
+    
+    // Igihe n'ibibazo
+    loadingDots: "...",
+    notAvailable: "NTABONETSE",
+    milliseconds: "ms",
+    unknownDistrict: "Akarere Kazwi",
+    unknownProvince: "Intara Itazwi",
+    unknownFacility: "Ikigo Nderabuzima Kitazwi"
+},
   notFound: {
     title: "Paji Ntaboneka",
     message: "Tubababariye, paji mushaka ntibashobora kuboneka.",
