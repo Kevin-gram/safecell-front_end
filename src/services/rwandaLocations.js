@@ -135,6 +135,124 @@ const RWANDA_LOCATIONS = {
             { id: 'rwimiyaga', name: 'Rwimiyaga' },
             { id: 'tabagwe', name: 'Tabagwe' }
           ]
+        },
+        {
+          id: 'gatsibo',
+          name: 'Gatsibo',
+          coordinates: { lat: -1.5833, lng: 30.4167 },
+          healthFacilities: [
+            { id: 'gatsibo_hospital', name: 'Gatsibo District Hospital', type: 'hospital' },
+            { id: 'kabarore_hc', name: 'Kabarore Health Center', type: 'health_center' },
+            { id: 'muhura_clinic', name: 'Muhura Health Post', type: 'clinic' }
+          ],
+          sectors: [
+            { id: 'gatsibo', name: 'Gatsibo' },
+            { id: 'gitoki', name: 'Gitoki' },
+            { id: 'kabarore', name: 'Kabarore' },
+            { id: 'kageyo', name: 'Kageyo' },
+            { id: 'kiramuruzi', name: 'Kiramuruzi' },
+            { id: 'kiziguro', name: 'Kiziguro' },
+            { id: 'muhura', name: 'Muhura' },
+            { id: 'murambi', name: 'Murambi' },
+            { id: 'ngarama', name: 'Ngarama' },
+            { id: 'nyagihanga', name: 'Nyagihanga' },
+            { id: 'remera', name: 'Remera' },
+            { id: 'rugarama', name: 'Rugarama' },
+            { id: 'rwimbogo', name: 'Rwimbogo' }
+          ]
+        },
+        {
+          id: 'kayonza',
+          name: 'Kayonza',
+          coordinates: { lat: -1.8833, lng: 30.6167 },
+          healthFacilities: [
+            { id: 'kayonza_hospital', name: 'Kayonza District Hospital', type: 'hospital' },
+            { id: 'rwinkwavu_hc', name: 'Rwinkwavu Health Center', type: 'health_center' },
+            { id: 'gahini_clinic', name: 'Gahini Medical Clinic', type: 'clinic' }
+          ],
+          sectors: [
+            { id: 'gahini', name: 'Gahini' },
+            { id: 'kabare', name: 'Kabare' },
+            { id: 'mukarange', name: 'Mukarange' },
+            { id: 'murama', name: 'Murama' },
+            { id: 'murundi', name: 'Murundi' },
+            { id: 'ndego', name: 'Ndego' },
+            { id: 'nyamirama', name: 'Nyamirama' },
+            { id: 'rukara', name: 'Rukara' },
+            { id: 'ruramira', name: 'Ruramira' },
+            { id: 'rwinkwavu', name: 'Rwinkwavu' }
+          ]
+        },
+        {
+          id: 'kirehe',
+          name: 'Kirehe',
+          coordinates: { lat: -2.2167, lng: 30.7833 },
+          healthFacilities: [
+            { id: 'kirehe_hospital', name: 'Kirehe District Hospital', type: 'hospital' },
+            { id: 'mpanga_hc', name: 'Mpanga Health Center', type: 'health_center' },
+            { id: 'nasho_clinic', name: 'Nasho Health Post', type: 'clinic' }
+          ],
+          sectors: [
+            { id: 'gatore', name: 'Gatore' },
+            { id: 'jarama', name: 'Jarama' },
+            { id: 'kigarama', name: 'Kigarama' },
+            { id: 'kirehe', name: 'Kirehe' },
+            { id: 'mahama', name: 'Mahama' },
+            { id: 'mpanga', name: 'Mpanga' },
+            { id: 'mushikiri', name: 'Mushikiri' },
+            { id: 'nasho', name: 'Nasho' },
+            { id: 'nyamugari', name: 'Nyamugari' },
+            { id: 'nyarubuye', name: 'Nyarubuye' }
+          ]
+        },
+        {
+          id: 'ngoma',
+          name: 'Ngoma',
+          coordinates: { lat: -2.1500, lng: 30.5833 },
+          healthFacilities: [
+            { id: 'ngoma_hospital', name: 'Ngoma District Hospital', type: 'hospital' },
+            { id: 'kibungo_hc', name: 'Kibungo Health Center', type: 'health_center' },
+            { id: 'zaza_clinic', name: 'Zaza Health Post', type: 'clinic' }
+          ],
+          sectors: [
+            { id: 'gashanda', name: 'Gashanda' },
+            { id: 'jarama', name: 'Jarama' },
+            { id: 'karembo', name: 'Karembo' },
+            { id: 'kibungo', name: 'Kibungo' },
+            { id: 'mugesera', name: 'Mugesera' },
+            { id: 'murama', name: 'Murama' },
+            { id: 'remera', name: 'Remera' },
+            { id: 'rukira', name: 'Rukira' },
+            { id: 'rukumberi', name: 'Rukumberi' },
+            { id: 'sake', name: 'Sake' },
+            { id: 'zaza', name: 'Zaza' }
+          ]
+        },
+        {
+          id: 'rwamagana',
+          name: 'Rwamagana',
+          coordinates: { lat: -1.9500, lng: 30.4333 },
+          healthFacilities: [
+            { id: 'rwamagana_hospital', name: 'Rwamagana District Hospital', type: 'hospital' },
+            { id: 'fumbwe_hc', name: 'Fumbwe Health Center', type: 'health_center' },
+            { id: 'kigabiro_clinic', name: 'Kigabiro Health Post', type: 'clinic' }
+          ],
+          sectors: [
+            { id: 'fumbwe', name: 'Fumbwe' },
+            { id: 'gahengeri', name: 'Gahengeri' },
+            { id: 'gishari', name: 'Gishari' },
+            { id: 'karenge', name: 'Karenge' },
+            { id: 'kigabiro', name: 'Kigabiro' },
+            { id: 'muhazi', name: 'Muhazi' },
+            { id: 'munyaga', name: 'Munyaga' },
+            { id: 'munyiginya', name: 'Munyiginya' },
+            { id: 'musha', name: 'Musha' },
+            { id: 'nzige', name: 'Nzige' },
+            { id: 'nyakariro', name: 'Nyakariro' },
+            { id: 'rubona', name: 'Rubona' },
+            { id: 'rurenge', name: 'Rurenge' },
+            { id: 'rwamagana', name: 'Rwamagana' }
+          ]
         }
       ]
     },
@@ -197,6 +315,95 @@ const RWANDA_LOCATIONS = {
             { id: 'rusarabuye', name: 'Rusarabuye' },
             { id: 'rwerere', name: 'Rwerere' }
           ]
+        },
+        {
+          id: 'gakenke',
+          name: 'Gakenke',
+          coordinates: { lat: -1.6833, lng: 29.7833 },
+          healthFacilities: [
+            { id: 'gakenke_hospital', name: 'Gakenke District Hospital', type: 'hospital' },
+            { id: 'kivuruga_hc', name: 'Kivuruga Health Center', type: 'health_center' },
+            { id: 'mugunga_clinic', name: 'Mugunga Health Post', type: 'clinic' }
+          ],
+          sectors: [
+            { id: 'busengo', name: 'Busengo' },
+            { id: 'coko', name: 'Coko' },
+            { id: 'cyabingo', name: 'Cyabingo' },
+            { id: 'gakenke', name: 'Gakenke' },
+            { id: 'gashenyi', name: 'Gashenyi' },
+            { id: 'mugunga', name: 'Mugunga' },
+            { id: 'janja', name: 'Janja' },
+            { id: 'kamubuga', name: 'Kamubuga' },
+            { id: 'karambo', name: 'Karambo' },
+            { id: 'kivuruga', name: 'Kivuruga' },
+            { id: 'mataba', name: 'Mataba' },
+            { id: 'minazi', name: 'Minazi' },
+            { id: 'muhondo', name: 'Muhondo' },
+            { id: 'muyongwe', name: 'Muyongwe' },
+            { id: 'muzo', name: 'Muzo' },
+            { id: 'nemba', name: 'Nemba' },
+            { id: 'ruli', name: 'Ruli' },
+            { id: 'rusasa', name: 'Rusasa' },
+            { id: 'rushashi', name: 'Rushashi' }
+          ]
+        },
+        {
+          id: 'rulindo',
+          name: 'Rulindo',
+          coordinates: { lat: -1.7667, lng: 30.0667 },
+          healthFacilities: [
+            { id: 'rulindo_hospital', name: 'Rulindo District Hospital', type: 'hospital' },
+            { id: 'base_hc', name: 'Base Health Center', type: 'health_center' },
+            { id: 'kinihira_clinic', name: 'Kinihira Health Post', type: 'clinic' }
+          ],
+          sectors: [
+            { id: 'base', name: 'Base' },
+            { id: 'burega', name: 'Burega' },
+            { id: 'bushoki', name: 'Bushoki' },
+            { id: 'cyinzuzi', name: 'Cyinzuzi' },
+            { id: 'cyungo', name: 'Cyungo' },
+            { id: 'kinihira', name: 'Kinihira' },
+            { id: 'kisaro', name: 'Kisaro' },
+            { id: 'mbogo', name: 'Mbogo' },
+            { id: 'murambi', name: 'Murambi' },
+            { id: 'ngoma', name: 'Ngoma' },
+            { id: 'ntarabana', name: 'Ntarabana' },
+            { id: 'rukozo', name: 'Rukozo' },
+            { id: 'rusiga', name: 'Rusiga' },
+            { id: 'shyorongi', name: 'Shyorongi' },
+            { id: 'tumba', name: 'Tumba' }
+          ]
+        },
+        {
+          id: 'gicumbi',
+          name: 'Gicumbi',
+          coordinates: { lat: -1.5500, lng: 30.1833 },
+          healthFacilities: [
+            { id: 'gicumbi_hospital', name: 'Gicumbi District Hospital', type: 'hospital' },
+            { id: 'byumba_hc', name: 'Byumba Health Center', type: 'health_center' },
+            { id: 'miyove_clinic', name: 'Miyove Health Post', type: 'clinic' }
+          ],
+          sectors: [
+            { id: 'bukure', name: 'Bukure' },
+            { id: 'bwisige', name: 'Bwisige' },
+            { id: 'byumba', name: 'Byumba' },
+            { id: 'cyumba', name: 'Cyumba' },
+            { id: 'gicumbi', name: 'Gicumbi' },
+            { id: 'kaniga', name: 'Kaniga' },
+            { id: 'manyagiro', name: 'Manyagiro' },
+            { id: 'miyove', name: 'Miyove' },
+            { id: 'mukure', name: 'Mukure' },
+            { id: 'mutete', name: 'Mutete' },
+            { id: 'nyamiyaga', name: 'Nyamiyaga' },
+            { id: 'nyankenke', name: 'Nyankenke' },
+            { id: 'rubaya', name: 'Rubaya' },
+            { id: 'rukomo', name: 'Rukomo' },
+            { id: 'rushaki', name: 'Rushaki' },
+            { id: 'rutare', name: 'Rutare' },
+            { id: 'ruvune', name: 'Ruvune' },
+            { id: 'rwamiko', name: 'Rwamiko' },
+            { id: 'shangasha', name: 'Shangasha' }
+          ]
         }
       ]
     },
@@ -249,6 +456,146 @@ const RWANDA_LOCATIONS = {
             { id: 'ntyazo', name: 'Ntyazo' },
             { id: 'nyagisozi', name: 'Nyagisozi' },
             { id: 'rwabicuma', name: 'Rwabicuma' }
+          ]
+        },
+        {
+          id: 'gisagara',
+          name: 'Gisagara',
+          coordinates: { lat: -2.5500, lng: 29.8500 },
+          healthFacilities: [
+            { id: 'gisagara_hospital', name: 'Gisagara District Hospital', type: 'hospital' },
+            { id: 'save_hc', name: 'Save Health Center', type: 'health_center' },
+            { id: 'mugombwa_clinic', name: 'Mugombwa Health Post', type: 'clinic' }
+          ],
+          sectors: [
+            { id: 'gishubi', name: 'Gishubi' },
+            { id: 'kansi', name: 'Kansi' },
+            { id: 'kibirizi', name: 'Kibirizi' },
+            { id: 'kigembe', name: 'Kigembe' },
+            { id: 'muganza', name: 'Muganza' },
+            { id: 'mugombwa', name: 'Mugombwa' },
+            { id: 'mukindo', name: 'Mukindo' },
+            { id: 'ndora', name: 'Ndora' },
+            { id: 'nyanza', name: 'Nyanza' },
+            { id: 'rweru', name: 'Rweru' },
+            { id: 'save', name: 'Save' }
+          ]
+        },
+        {
+          id: 'nyaruguru',
+          name: 'Nyaruguru',
+          coordinates: { lat: -2.7000, lng: 29.5500 },
+          healthFacilities: [
+            { id: 'nyaruguru_hospital', name: 'Nyaruguru District Hospital', type: 'hospital' },
+            { id: 'kibeho_hc', name: 'Kibeho Health Center', type: 'health_center' },
+            { id: 'munini_clinic', name: 'Munini Health Post', type: 'clinic' }
+          ],
+          sectors: [
+            { id: 'busanze', name: 'Busanze' },
+            { id: 'cyahinda', name: 'Cyahinda' },
+            { id: 'kibeho', name: 'Kibeho' },
+            { id: 'kibumbwe', name: 'Kibumbwe' },
+            { id: 'kivu', name: 'Kivu' },
+            { id: 'mata', name: 'Mata' },
+            { id: 'munini', name: 'Munini' },
+            { id: 'ngera', name: 'Ngera' },
+            { id: 'ngoma', name: 'Ngoma' },
+            { id: 'nyabimata', name: 'Nyabimata' },
+            { id: 'ruramba', name: 'Ruramba' },
+            { id: 'rusenge', name: 'Rusenge' },
+            { id: 'ryamanyonza', name: 'Ryamanyonza' }
+          ]
+        },
+        {
+          id: 'nyamagabe',
+          name: 'Nyamagabe',
+          coordinates: { lat: -2.5167, lng: 29.4167 },
+          healthFacilities: [
+            { id: 'nyamagabe_hospital', name: 'Nyamagabe District Hospital', type: 'hospital' },
+            { id: 'gasaka_hc', name: 'Gasaka Health Center', type: 'health_center' },
+            { id: 'mushubi_clinic', name: 'Mushubi Health Post', type: 'clinic' }
+          ],
+          sectors: [
+            { id: 'buruhukiro', name: 'Buruhukiro' },
+            { id: 'cyanika', name: 'Cyanika' },
+            { id: 'gasaka', name: 'Gasaka' },
+            { id: 'gatare', name: 'Gatare' },
+            { id: 'kaduha', name: 'Kaduha' },
+            { id: 'kamegeri', name: 'Kamegeri' },
+            { id: 'kibago', name: 'Kibago' },
+            { id: 'kitabi', name: 'Kitabi' },
+            { id: 'mbazi', name: 'Mbazi' },
+            { id: 'mushubi', name: 'Mushubi' },
+            { id: 'musange', name: 'Musange' },
+            { id: 'nkomane', name: 'Nkomane' },
+            { id: 'tare', name: 'Tare' },
+            { id: 'uwinkingi', name: 'Uwinkingi' }
+          ]
+        },
+        {
+          id: 'nyarugenge',
+          name: 'Nyarugenge',
+          coordinates: { lat: -2.4667, lng: 29.9833 },
+          healthFacilities: [
+            { id: 'nyarugenge_hospital', name: 'Nyarugenge District Hospital', type: 'hospital' },
+            { id: 'gitarama_hc', name: 'Gitarama Health Center', type: 'health_center' },
+            { id: 'muhanga_clinic', name: 'Muhanga Health Post', type: 'clinic' }
+          ],
+          sectors: [
+            { id: 'cyeza', name: 'Cyeza' },
+            { id: 'gitarama', name: 'Gitarama' },
+            { id: 'kabacuzi', name: 'Kabacuzi' },
+            { id: 'kamonyi', name: 'Kamonyi' },
+            { id: 'kiyumba', name: 'Kiyumba' },
+            { id: 'muhanga', name: 'Muhanga' },
+            { id: 'mukura', name: 'Mukura' },
+            { id: 'nyabinoni', name: 'Nyabinoni' },
+            { id: 'nyamabuye', name: 'Nyamabuye' },
+            { id: 'nyarubaka', name: 'Nyarubaka' },
+            { id: 'rongi', name: 'Rongi' },
+            { id: 'rugendabari', name: 'Rugendabari' }
+          ]
+        },
+        {
+          id: 'kamonyi',
+          name: 'Kamonyi',
+          coordinates: { lat: -2.0667, lng: 29.8833 },
+          healthFacilities: [
+            { id: 'kamonyi_hospital', name: 'Kamonyi District Hospital', type: 'hospital' },
+            { id: 'runda_hc', name: 'Runda Health Center', type: 'health_center' },
+            { id: 'gacurabwenge_clinic', name: 'Gacurabwenge Health Post', type: 'clinic' }
+          ],
+          sectors: [
+            { id: 'gacurabwenge', name: 'Gacurabwenge' },
+            { id: 'karama', name: 'Karama' },
+            { id: 'kayenzi', name: 'Kayenzi' },
+            { id: 'kayumbu', name: 'Kayumbu' },
+            { id: 'mugina', name: 'Mugina' },
+            { id: 'musambira', name: 'Musambira' },
+            { id: 'nyamiyaga', name: 'Nyamiyaga' },
+            { id: 'nyarubaka', name: 'Nyarubaka' },
+            { id: 'runda', name: 'Runda' },
+            { id: 'ruzo', name: 'Ruzo' }
+          ]
+        },
+        {
+          id: 'ruhango',
+          name: 'Ruhango',
+          coordinates: { lat: -2.2833, lng: 29.7833 },
+          healthFacilities: [
+            { id: 'ruhango_hospital', name: 'Ruhango District Hospital', type: 'hospital' },
+            { id: 'kinazi_hc', name: 'Kinazi Health Center', type: 'health_center' },
+            { id: 'byimana_clinic', name: 'Byimana Health Post', type: 'clinic' }
+          ],
+          sectors: [
+            { id: 'bweramana', name: 'Bweramana' },
+            { id: 'byimana', name: 'Byimana' },
+            { id: 'kabagali', name: 'Kabagali' },
+            { id: 'kinazi', name: 'Kinazi' },
+            { id: 'kinihira', name: 'Kinihira' },
+            { id: 'mbuye', name: 'Mbuye' },
+            { id: 'ntongwe', name: 'Ntongwe' },
+            { id: 'ruhango', name: 'Ruhango' }
           ]
         }
       ]
@@ -304,6 +651,108 @@ const RWANDA_LOCATIONS = {
             { id: 'rugabano', name: 'Rugabano' },
             { id: 'ruganda', name: 'Ruganda' },
             { id: 'rwankuba', name: 'Rwankuba' }
+          ]
+        },
+        {
+          id: 'nyabihu',
+          name: 'Nyabihu',
+          coordinates: { lat: -1.6500, lng: 29.5167 },
+          healthFacilities: [
+            { id: 'nyabihu_hospital', name: 'Nyabihu District Hospital', type: 'hospital' },
+            { id: 'mukamira_hc', name: 'Mukamira Health Center', type: 'health_center' },
+            { id: 'jenda_clinic', name: 'Jenda Health Post', type: 'clinic' }
+          ],
+          sectors: [
+            { id: 'bigogwe', name: 'Bigogwe' },
+            { id: 'jenda', name: 'Jenda' },
+            { id: 'jomba', name: 'Jomba' },
+            { id: 'kabatwa', name: 'Kabatwa' },
+            { id: 'karago', name: 'Karago' },
+            { id: 'kintobo', name: 'Kintobo' },
+            { id: 'mukamira', name: 'Mukamira' },
+            { id: 'nyabihu', name: 'Nyabihu' },
+            { id: 'rurembo', name: 'Rurembo' },
+            { id: 'ruyanza', name: 'Ruyanza' },
+            { id: 'shyira', name: 'Shyira' }
+          ]
+        },
+        {
+          id: 'ngororero',
+          name: 'Ngororero',
+          coordinates: { lat: -1.7833, lng: 29.5333 },
+          healthFacilities: [
+            { id: 'ngororero_hospital', name: 'Ngororero District Hospital', type: 'hospital' },
+            { id: 'bwira_hc', name: 'Bwira Health Center', type: 'health_center' },
+            { id: 'kavumu_clinic', name: 'Kavumu Health Post', type: 'clinic' }
+          ],
+          sectors: [
+            { id: 'bwira', name: 'Bwira' },
+            { id: 'gasiza', name: 'Gasiza' },
+            { id: 'hindiro', name: 'Hindiro' },
+            { id: 'kabaya', name: 'Kabaya' },
+            { id: 'kageyo', name: 'Kageyo' },
+            { id: 'kavumu', name: 'Kavumu' },
+            { id: 'matyazo', name: 'Matyazo' },
+            { id: 'muhanda', name: 'Muhanda' },
+            { id: 'muhororo', name: 'Muhororo' },
+            { id: 'ndaro', name: 'Ndaro' },
+            { id: 'ngororero', name: 'Ngororero' },
+            { id: 'nyange', name: 'Nyange' },
+            { id: 'sovu', name: 'Sovu' }
+          ]
+        },
+        {
+          id: 'rusizi',
+          name: 'Rusizi',
+          coordinates: { lat: -2.4833, lng: 28.9167 },
+          healthFacilities: [
+            { id: 'rusizi_hospital', name: 'Rusizi District Hospital', type: 'hospital' },
+            { id: 'kamembe_hc', name: 'Kamembe Health Center', type: 'health_center' },
+            { id: 'gihundwe_clinic', name: 'Gihundwe Health Post', type: 'clinic' }
+          ],
+          sectors: [
+            { id: 'butare', name: 'Butare' },
+            { id: 'bugarama', name: 'Bugarama' },
+            { id: 'gashonga', name: 'Gashonga' },
+            { id: 'giheke', name: 'Giheke' },
+            { id: 'gihundwe', name: 'Gihundwe' },
+            { id: 'gitambi', name: 'Gitambi' },
+            { id: 'gikundamvura', name: 'Gikundamvura' },
+            { id: 'kamembe', name: 'Kamembe' },
+            { id: 'muganza', name: 'Muganza' },
+            { id: 'mururu', name: 'Mururu' },
+            { id: 'nkanka', name: 'Nkanka' },
+            { id: 'nkungu', name: 'Nkungu' },
+            { id: 'nyakabuye', name: 'Nyakabuye' },
+            { id: 'nyakarenzo', name: 'Nyakarenzo' },
+            { id: 'ruganda', name: 'Ruganda' },
+            { id: 'rwimbogo', name: 'Rwimbogo' }
+          ]
+        },
+        {
+          id: 'nyamasheke',
+          name: 'Nyamasheke',
+          coordinates: { lat: -2.2167, lng: 29.1500 },
+          healthFacilities: [
+            { id: 'nyamasheke_hospital', name: 'Nyamasheke District Hospital', type: 'hospital' },
+            { id: 'kagano_hc', name: 'Kagano Health Center', type: 'health_center' },
+            { id: 'bushekeri_clinic', name: 'Bushekeri Health Post', type: 'clinic' }
+          ],
+          sectors: [
+            { id: 'bushekeri', name: 'Bushekeri' },
+            { id: 'bushenge', name: 'Bushenge' },
+            { id: 'cyato', name: 'Cyato' },
+            { id: 'gihombo', name: 'Gihombo' },
+            { id: 'kagano', name: 'Kagano' },
+            { id: 'kanjongo', name: 'Kanjongo' },
+            { id: 'karambi', name: 'Karambi' },
+            { id: 'karengera', name: 'Karengera' },
+            { id: 'kirimbi', name: 'Kirimbi' },
+            { id: 'macuba', name: 'Macuba' },
+            { id: 'mahembe', name: 'Mahembe' },
+            { id: 'makoma', name: 'Makoma' },
+            { id: 'rangiro', name: 'Rangiro' },
+            { id: 'ruharambuga', name: 'Ruharambuga' }
           ]
         }
       ]

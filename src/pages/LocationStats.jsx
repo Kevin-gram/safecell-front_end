@@ -74,42 +74,28 @@ const getDistrictCoordinates = (districtName) => {
   return RWANDA_DISTRICT_COORDINATES[normalizedName] || RWANDA_CENTER;
 };
 
-// Enhanced intensity levels for healthcare context
+// Intensity levels for malaria risk (only three levels)
 const INTENSITY_LEVELS = [
   {
     level: 1,
-    name: "Low Risk",
+    name: "Low",
     color: "#10B981",
-    description: "Minimal cases (1-5 per district)",
-    priority: "routine",
+    description: "Fewer than 100 cases",
+    priority: "low",
   },
   {
     level: 2,
-    name: "Moderate Risk",
+    name: "Moderate",
     color: "#FBBF24",
-    description: "Some cases detected (6-15 per district)",
-    priority: "monitor",
+    description: "100–250 cases",
+    priority: "moderate",
   },
   {
     level: 3,
-    name: "High Risk",
-    color: "#F59E0B",
-    description: "Significant cases (16-30 per district)",
-    priority: "alert",
-  },
-  {
-    level: 4,
-    name: "Very High Risk",
+    name: "High",
     color: "#DC2626",
-    description: "Heavy case load (31-50 per district)",
-    priority: "urgent",
-  },
-  {
-    level: 5,
-    name: "Critical Risk",
-    color: "#991B1B",
-    description: "Outbreak level (>50 per district)",
-    priority: "emergency",
+    description: ">250 cases",
+    priority: "high",
   },
 ];
 
@@ -293,7 +279,7 @@ const fetchLocationData = async (showRefreshLoader = false) => {
             district.totalCases > 0
               ? ((district.positiveCases / district.totalCases) * 100).toFixed(1)
               : 0,
-          riskLevel: getRiskLevel(district.totalCases, district.positiveCases),
+          riskLevel: getRiskLevel(district.totalCases),
         };
       }
     );
@@ -427,20 +413,15 @@ const fetchLocationData = async (showRefreshLoader = false) => {
   }, [timeRange]);
 
   const calculateIntensity = (cases) => {
-    if (cases <= 5) return 1;
-    if (cases <= 15) return 2;
-    if (cases <= 30) return 3;
-    if (cases <= 50) return 4;
-    return 5;
+    if (cases < 100) return 1;
+    if (cases <= 250) return 2;
+    return 3;
   };
 
-  const getRiskLevel = (totalCases, positiveCases) => {
-    const positiveRate =
-      totalCases > 0 ? (positiveCases / totalCases) * 100 : 0;
-    if (positiveRate > 40) return "critical";
-    if (positiveRate > 30) return "high";
-    if (positiveRate > 20) return "moderate";
-    return "low";
+  const getRiskLevel = (totalCases) => {
+    if (totalCases < 100) return "low";
+    if (totalCases <= 250) return "moderate";
+    return "high";
   };
 
   const getCircleColor = (intensity) => {
@@ -615,21 +596,6 @@ const fetchLocationData = async (showRefreshLoader = false) => {
                     <p className="text-xs text-gray-600 dark:text-gray-400">
                       {t(`locationStats.${description.split(' ')[0].toLowerCase()}Cases`)}
                     </p>
-                    <span
-                      className={`inline-block mt-1 px-2 py-1 text-xs rounded-full ${
-                        priority === "emergency"
-                          ? "bg-error-100 text-error-800 dark:bg-error-900/50 dark:text-error-200"
-                          : priority === "urgent"
-                          ? "bg-warning-100 text-warning-800 dark:bg-warning-900/50 dark:text-warning-200"
-                          : priority === "alert"
-                          ? "bg-accent-100 text-accent-800 dark:bg-accent-900/50 dark:text-accent-200"
-                          : priority === "monitor"
-                          ? "bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-200"
-                          : "bg-success-100 text-success-800 dark:bg-success-900/50 dark:text-success-200"
-                      }`}
-                    >
-                      {t(`locationStats.${priority}`)}
-                    </span>
                   </div>
                 </div>
               )
@@ -808,9 +774,7 @@ const fetchLocationData = async (showRefreshLoader = false) => {
                   const offset = 0.02;
                   const randomLat = districtCoords[0] + (Math.random() - 0.5) * offset;
                   const randomLng = districtCoords[1] + (Math.random() - 0.5) * offset;
-                  
                   const result = detection.predictionResults?.result === "positive" ? "positive" : "negative";
-
                   return (
                     <Marker
                       key={`detection-${detection._id || index}`}

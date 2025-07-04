@@ -5,6 +5,7 @@ export const translationEN = {
     error: "An error occurred",
     success: "Success!",
     save: "Save",
+    tryAgain:"Try Again",
     cancel: "Cancel",
     submit: "Submit",
     delete: "Delete",

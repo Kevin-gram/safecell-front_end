@@ -45,7 +45,7 @@ export default function AdminDashboard() {
     recentCount: 0
   });
 
-  // Check if user is admin
+  
   if (user?.role !== 'admin') {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -58,12 +58,11 @@ export default function AdminDashboard() {
     );
   }
 
-  // Load feedback data
+  
   useEffect(() => {
     loadFeedbackData();
   }, []);
 
-  // Apply filters
   useEffect(() => {
     applyFilters();
   }, [feedbackData, filters]);
@@ -71,7 +70,6 @@ export default function AdminDashboard() {
   const loadFeedbackData = () => {
     setLoading(true);
     try {
-      // Get feedback from localStorage (simulating database)
       const storedFeedback = JSON.parse(localStorage.getItem('safecell_feedback') || '[]');
       
       // Add some mock data if none exists
