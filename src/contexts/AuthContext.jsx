@@ -11,6 +11,8 @@ const MOCK_USERS = [
     password: 'admin123',
     name: 'Admin User',
     role: 'admin',
+    profilePicture: '',
+    createdAt: '2024-01-01T00:00:00.000Z',
     location: {
       district: 'Kigali',
       province: 'Kigali City'
@@ -22,6 +24,8 @@ const MOCK_USERS = [
     password: 'clinician123',
     name: 'Dr. Jane Smith',
     role: 'clinician',
+    profilePicture: '',
+    createdAt: '2024-01-15T00:00:00.000Z',
     location: {
       district: 'Gasabo',
       province: 'Kigali City'
@@ -70,6 +74,8 @@ export const AuthProvider = ({ children }) => {
         email: foundUser.email,
         name: foundUser.name,
         role: foundUser.role,
+        profilePicture: foundUser.profilePicture,
+        createdAt: foundUser.createdAt,
         location: foundUser.location
       }
       
@@ -120,6 +126,8 @@ export const AuthProvider = ({ children }) => {
         password,
         name: name || email.split('@')[0],
         role: 'clinician', // Default role
+        profilePicture: '',
+        createdAt: new Date().toISOString(),
         location: {
           district: '',
           province: ''
@@ -165,6 +173,12 @@ export const AuthProvider = ({ children }) => {
       setUser(updatedUser)
       localStorage.setItem('user', JSON.stringify(updatedUser))
       
+      // Update in mock database
+      const userIndex = MOCK_USERS.findIndex(u => u.id === user.id)
+      if (userIndex !== -1) {
+        MOCK_USERS[userIndex] = { ...MOCK_USERS[userIndex], ...userData }
+      }
+      
       // Log profile update
       logger.logAuth('profile_updated', {
         userId: user.id,
@@ -180,6 +194,58 @@ export const AuthProvider = ({ children }) => {
       })
       
       throw new Error('Failed to update profile')
+    }
+  }
+
+  // Change password function
+  const changePassword = async (currentPassword, newPassword) => {
+    try {
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 1000))
+      
+      // In a real app, you would verify the current password
+      // For demo purposes, we'll just simulate success
+      
+      // Log password change
+      logger.logAuth('password_changed', {
+        userId: user?.id
+      })
+      
+      return { success: true }
+    } catch (error) {
+      logger.logAuth('password_change_failed', {
+        userId: user?.id,
+        error: error.message
+      })
+      
+      throw new Error('Failed to change password')
+    }
+  }
+
+  // Delete account function
+  const deleteAccount = async () => {
+    try {
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 1000))
+      
+      // Log account deletion
+      logger.logAuth('account_deleted', {
+        userId: user?.id
+      })
+      
+      // Clear user data
+      setUser(null)
+      setIsAuthenticated(false)
+      localStorage.removeItem('user')
+      
+      return { success: true }
+    } catch (error) {
+      logger.logAuth('account_deletion_failed', {
+        userId: user?.id,
+        error: error.message
+      })
+      
+      throw new Error('Failed to delete account')
     }
   }
   
@@ -203,7 +269,9 @@ export const AuthProvider = ({ children }) => {
     login,
     signup,
     logout,
-    updateUser
+    updateUser,
+    changePassword,
+    deleteAccount
   }
   
   return (

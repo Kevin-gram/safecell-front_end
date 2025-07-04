@@ -100,7 +100,18 @@ export default function Navbar({ toggleSidebar, isSidebarOpen }) {
                   className="flex items-center space-x-2 p-2 rounded-md text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none"
                 >
                   <span className="hidden md:block text-sm font-medium">{user.name}</span>
-                  <div className="h-8 w-8 rounded-full bg-primary-500 flex items-center justify-center text-white">
+                  {user.profilePicture ? (
+                    <img 
+                      src={user.profilePicture} 
+                      alt="Profile" 
+                      className="h-8 w-8 rounded-full object-cover border border-gray-300 dark:border-gray-600"
+                      onError={(e) => {
+                        e.target.style.display = 'none'
+                        e.target.nextSibling.style.display = 'flex'
+                      }}
+                    />
+                  ) : null}
+                  <div className={`h-8 w-8 rounded-full bg-primary-500 flex items-center justify-center text-white ${user.profilePicture ? 'hidden' : 'flex'}`}>
                     <FiUser size={16} />
                   </div>
                 </button>
@@ -111,6 +122,14 @@ export default function Navbar({ toggleSidebar, isSidebarOpen }) {
                     className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg py-1 z-50 border dark:border-gray-700"
                     onBlur={() => setShowUserMenu(false)}
                   >
+                    <Link
+                      to="/settings"
+                      onClick={() => setShowUserMenu(false)}
+                      className="flex items-center w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+                    >
+                      <FiUser className="mr-2" /> 
+                      {t('nav.settings')}
+                    </Link>
                     <button
                       onClick={() => {
                         logout()

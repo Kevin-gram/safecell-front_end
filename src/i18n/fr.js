@@ -150,10 +150,33 @@ export const translationFR = {
     profile: "Paramètres du Profil",
     displayName: "Nom d'Affichage",
     email: "Email",
+    profilePicture: "Photo de Profil",
+    profilePictureHelper: "Cliquez pour télécharger une nouvelle photo de profil (max 5MB)",
+    role: "Rôle",
+    joinedDate: "Inscrit le",
+    preferences: "Langue et Thème",
+    language: "Langue",
+    languageHelper: "Choisissez votre langue préférée",
+    theme: "Thème",
+    themeHelper: "Choisissez entre le mode clair et sombre",
+    changePassword: "Changer le Mot de Passe",
+    currentPassword: "Mot de Passe Actuel",
+    newPassword: "Nouveau Mot de Passe",
+    updatePassword: "Mettre à Jour le Mot de Passe",
+    dangerZone: "Zone de Danger",
+    deleteAccount: "Supprimer le Compte",
+    deleteAccountWarning: "Cette action est irréversible. Supprimer votre compte supprimera toutes vos données.",
+    confirmDelete: "Oui, supprimer mon compte",
     saveChanges: "Enregistrer les Modifications",
     profileUpdatedSuccess: "Profil mis à jour avec succès !",
+    languageUpdatedSuccess: "Langue mise à jour avec succès !",
+    themeUpdatedSuccess: "Thème mis à jour avec succès !",
+    passwordUpdatedSuccess: "Mot de passe mis à jour avec succès !",
     updateSuccess: "Paramètres mis à jour avec succès",
-    updateError: "Échec de la mise à jour des paramètres"
+    updateError: "Échec de la mise à jour des paramètres",
+    deleteError: "Échec de la suppression du compte",
+    invalidImageType: "Veuillez sélectionner un fichier image valide (JPEG, PNG, GIF)",
+    imageTooLarge: "Le fichier image est trop volumineux. Veuillez sélectionner un fichier de moins de 5MB"
   },
   auth: {
     login: "Connexion",
@@ -375,138 +398,5 @@ export const translationFR = {
     title: "Page Non Trouvée",
     message: "Désolé, la page que vous recherchez n'existe pas.",
     returnHome: "Retourner à l'Accueil"
-  },
-  settings: {
-    title: "Paramètres Utilisateur",
-    subtitle: "Gérez les paramètres et préférences de votre compte",
-    profile: "Paramètres du Profil",
-    displayName: "Nom Affiché",
-    email: "Email",
-    saveChanges: "Enregistrer les Modifications",
-    profileUpdatedSuccess: "Profil mis à jour avec succès !",
-    updateSuccess: "Paramètres mis à jour avec succès",
-    updateError: "Échec de la mise à jour des paramètres"
-},
-
-  locationStats: {
-    // En-tête
-    title: "Surveillance du Paludisme au Niveau des Districts",
-    subtitle: "Cartographie en temps réel de la répartition et de l'intensité du paludisme dans les districts du Rwanda, basée sur les diagnostics des établissements de santé",
-    refreshData: "Actualiser les données",
-    
-    // Plages de Temps
-    timeRangeToday: "Aujourd'hui",
-    timeRangeThisWeek: "Cette Semaine",
-    timeRangeThisMonth: "Ce Mois-ci",
-    timeRangeThisYear: "Cette Année",
-    
-    // Messages d'erreur
-    failedToLoadData: "Échec du chargement des données",
-    retry: "Réessayer",
-    
-    // Cartes de Statistiques
-    activeDistricts: "Districts Actifs",
-    totalDiagnoses: "Total des Diagnostics",
-    positiveCases: "Cas Positifs",
-    healthcareFacilities: "Établissements de Santé",
-    avgPositiveRate: "Taux Positif Moyen",
-    
-    // Niveaux de Risque
-    riskAssessmentTitle: "Niveaux d'Évaluation du Risque",
-    lowRisk: "Risque Faible",
-    moderateRisk: "Risque Modéré",
-    highRisk: "Risque Élevé",
-    veryHighRisk: "Risque Très Élevé",
-    criticalRisk: "Risque Critique",
-    
-    // Descriptions du Risque
-    minimalCases: "Cas minimaux (1-5 par district)",
-    someCases: "Quelques cas détectés (6-15 par district)",
-    significantCases: "Cas significatifs (16-30 par district)",
-    heavyCases: "Charge de cas élevée (31-50 par district)",
-    outbreakLevel: "Niveau d'épidémie (>50 par district)",
-    
-    // Niveaux de Priorité
-    routine: "ROUTINE",
-    monitor: "SURVEILLER",
-    alert: "ALERTE",
-    urgent: "URGENCE",
-    emergency: "URGENCE MAXIMALE",
-    
-    // Statut des Données en Direct
-    liveDataStatus: "Statut des Données en Direct :",
-    currentlyDisplaying: "Affichage actuel des",
-    diagnosesFrom: "diagnostics provenant de",
-    facilitiesAcross: "établissements de santé répartis dans",
-    districtsInRwanda: "les districts du Rwanda.",
-    avgRate: "taux moyen",
-    timeRange: "Plage de Temps :",
-    lastUpdated: "Dernière Mise à Jour :",
-    dataSource: "Source des Données :",
-    dataSourceValue: "Systèmes de diagnostic des établissements de santé",
-    
-    // Messages en cas d'absence de données
-    noDataTitle: "Aucune donnée disponible :",
-    noDataMessage: "Aucune donnée de détection du paludisme pour la période sélectionnée",
-    noDataSuggestion: "Essayez de sélectionner une autre période ou vérifiez que votre API retourne des données au bon format.",
-    retryButton: "Réessayer de Charger les Données",
-    
-    // Carte
-    mapTitle: "Carte de Répartition du Paludisme par District",
-    mapDescription: "La taille des cercles représente le nombre total de cas par district, la couleur indique le niveau d'intensité du risque. Les marqueurs montrent les résultats individuels.",
-    loadingData: "Chargement des données des districts...",
-    unableToLoad: "Impossible de charger les données de la carte",
-    
-    // Contenu Popup
-    district: "District",
-    totalTests: "Total des Tests :",
-    positiveRate: "Taux Positif :",
-    riskLevel: "Niveau de Risque :",
-    recentDiagnosis: "Diagnostic Récent",
-    result: "Résultat :",
-    positive: "POSITIF",
-    negative: "NÉGATIF",
-    confidence: "Confiance :",
-    province: "Province :",
-    sector: "Secteur :",
-    hospital: "Hôpital :",
-    processingTime: "Temps de Traitement :",
-    unknown: "Inconnu",
-    
-    // Table
-    tableTitle: "Résumé de la Surveillance Sanitaire par District",
-    districts: "Districts",
-    basedOn: "Basé sur",
-    totalDiagnosesText: "diagnostics totaux des établissements de santé",
-    districtHeader: "District",
-    totalCases: "Total des Cas",
-    intensityLevel: "Niveau d'Intensité",
-    
-    // Pied de page
-    totalDistricts: "Total des Districts :",
-    averagePositiveRate: "Taux Positif Moyen :",
-    
-    // État Vide
-    emptyStateTitle: "Aucune Donnée de Détection Disponible",
-    emptyStateMessage: "Aucune donnée de détection du paludisme pour la période sélectionnée. Essayez une autre période ou vérifiez l'API.",
-    emptyStateRefreshButton: "Actualiser les Données",
-    
-    // Indicateurs de Niveau
-    level: "Niveau",
-    more: "plus",
-    
-    // Valeurs du Risque
-    low: "FAIBLE",
-    moderate: "MODÉRÉ",
-    high: "ÉLEVÉ",
-    critical: "CRITIQUE",
-    
-    // États de Chargement
-    loadingDots: "...",
-    notAvailable: "N/D",
-    milliseconds: "ms",
-    unknownDistrict: "District Inconnu",
-    unknownProvince: "Province Inconnue",
-    unknownFacility: "Établissement Inconnu"
-}
+  }
 }
