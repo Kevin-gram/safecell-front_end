@@ -14,7 +14,7 @@ SafeCell is a modern web application designed to visualize, monitor, and analyze
 
 ---
 
-## 🚀 Live Demo
+## 🚀 Live Deployed app
 
 👉 [SafeCell Live App](https://safecell.netlify.app/)
 
