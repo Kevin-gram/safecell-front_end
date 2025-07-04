@@ -66,7 +66,7 @@ SafeCell is a modern web application designed to visualize, monitor, and analyze
 
 ## 🎬 5-Minute Demo Video
 
-[![Watch Demo])](https://www.loom.com/share/ba94bb2950c24cccb1ee6e20343b25a2?sid=1c1ba3cf-6a54-44f0-b03d-c0834648e4c9)
+[Watch Demo](https://www.loom.com/share/ba94bb2950c24cccb1ee6e20343b25a2?sid=1c1ba3cf-6a54-44f0-b03d-c0834648e4c9)
 
 > **Note:** The demo video focuses on the core functionalities: malaria detection, malaria statistics, interactive map, risk levels, and data visualization. Sign-up and sign-in are briefly shown but not the main focus.
 
