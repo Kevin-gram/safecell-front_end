@@ -73,6 +73,15 @@ export default function MalariaDetection() {
     setPreviewUrl(URL.createObjectURL(file));
   };
 
+  // Helper function to safely extract string values from location objects
+  const getLocationString = (locationValue) => {
+    if (typeof locationValue === "string") return locationValue;
+    if (locationValue && typeof locationValue === "object") {
+      return locationValue.name || locationValue.value || locationValue.label || "";
+    }
+    return "";
+  };
+
   // SIMPLIFIED: Just update the location state without complex validation
   const handleLocationChange = (location) => {
     // Simply update the location state - no validation or resets
@@ -97,10 +106,10 @@ export default function MalariaDetection() {
     // Log location selection only when analyze is clicked
     logInteraction("select", "complete-location", {
       userId: "1750600866432",
-      province: selectedLocation.province,
-      district: selectedLocation.district,
-      sector: selectedLocation.sector,
-      hospital: selectedLocation.hospital,
+      province: getLocationString(selectedLocation.province),
+      district: getLocationString(selectedLocation.district),
+      sector: getLocationString(selectedLocation.sector),
+      hospital: getLocationString(selectedLocation.hospital || selectedLocation.facility),
     });
 
     const startTime = Date.now();
@@ -187,16 +196,24 @@ export default function MalariaDetection() {
         currentDate.getTime() + currentDate.getTimezoneOffset() * 60000
       );
 
+      // Extract string values for backend API (which expects strings, not objects)
+      const locationStrings = {
+        province: getLocationString(selectedLocation.province),
+        district: getLocationString(selectedLocation.district),
+        sector: getLocationString(selectedLocation.sector),
+        hospital: getLocationString(selectedLocation.hospital || selectedLocation.facility),
+      };
+
       const combinedResult = {
         // Basic identification
         element: "complete-location",
         userId: "1750600866432",
 
-        // Location data
-        province: selectedLocation.province,
-        district: selectedLocation.district,
-        sector: selectedLocation.sector,
-        hospital: selectedLocation.hospital,
+        // Location data - FIXED: Send strings instead of objects
+        province: locationStrings.province,
+        district: locationStrings.district,
+        sector: locationStrings.sector,
+        hospital: locationStrings.hospital,
 
         // COMPREHENSIVE DATE/TIME FIELDS FOR BACKEND PROCESSING
 
@@ -345,10 +362,10 @@ export default function MalariaDetection() {
           platform: navigator.platform,
           language: navigator.language,
 
-          // Location metadata
-          locationString: `${selectedLocation.sector}, ${selectedLocation.district}, ${selectedLocation.province}`,
+          // Location metadata - FIXED: Use string values
+          locationString: `${locationStrings.sector}, ${locationStrings.district}, ${locationStrings.province}`,
           locationHash: btoa(
-            `${selectedLocation.province}-${selectedLocation.district}-${selectedLocation.sector}-${selectedLocation.hospital}`
+            `${locationStrings.province}-${locationStrings.district}-${locationStrings.sector}-${locationStrings.hospital}`
           ),
         },
       };
@@ -736,6 +753,14 @@ export default function MalariaDetection() {
                         </div>
                         <div className="flex justify-between">
                           <span className="text-gray-600 dark:text-gray-400">
+                            Hospital:
+                          </span>
+                          <span className="font-medium text-gray-900 dark:text-gray-100">
+                            {combinedData.hospital}
+                          </span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-gray-600 dark:text-gray-400">
                             User ID:
                           </span>
                           <span className="font-mono text-xs bg-gray-200 dark:bg-gray-700 px-2 py-1 rounded">
@@ -847,9 +872,7 @@ export default function MalariaDetection() {
                             {t("detection.analysisCompleted")}
                           </span>
                           <span className="font-medium text-gray-900 dark:text-gray-100">
-                            {formatTimestamp(
-                              combinedData.predictionResults.timestamp
-                            )}
+                            {formatTimestamp(combinedData.timestamp)}
                           </span>
                         </div>
                         <div className="flex justify-between">
