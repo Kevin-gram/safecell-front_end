@@ -73,101 +73,11 @@ export default function MalariaDetection() {
     setPreviewUrl(URL.createObjectURL(file));
   };
 
+  // SIMPLIFIED: Just update the location state without complex validation
   const handleLocationChange = (location) => {
-    // Only proceed if we have a valid location object with all required fields
-    if (!location || typeof location !== "object") {
-      return;
-    }
-
-    console.log("Location received in handleLocationChange:", location);
-
-    const getLocationValue = (value) => {
-      if (typeof value === "string") return value;
-      if (value && typeof value === "object" && value.name) return value.name;
-      if (value && typeof value === "object" && value.value) return value.value;
-      return null;
-    };
-
-    const newProvince = getLocationValue(location.province);
-    const newDistrict = getLocationValue(location.district);
-    const newSector = getLocationValue(location.sector);
-    // Handle both 'hospital' and 'facility' fields
-    const newHospital =
-      getLocationValue(location.hospital) ||
-      getLocationValue(location.facility);
-
-    // Debug what we extracted
-    console.log("Extracted values:", {
-      province: newProvince,
-      district: newDistrict,
-      sector: newSector,
-      hospital: newHospital,
-      originalFacility: location.facility,
-      originalHospital: location.hospital,
-    });
-
-    // All fields including hospital/facility are required
-    if (!newProvince || !newDistrict || !newSector || !newHospital) {
-      // Don't reset existing location if new data is incomplete
-      // Only log if we have some data but it's incomplete
-      if (newProvince || newDistrict || newSector || newHospital) {
-        console.warn(
-          "Incomplete location data received, keeping existing location:",
-          {
-            received: {
-              province: newProvince,
-              district: newDistrict,
-              sector: newSector,
-              hospital: newHospital,
-            },
-            current: selectedLocation,
-            missingFields: {
-              province: !newProvince,
-              district: !newDistrict,
-              sector: !newSector,
-              hospital: !newHospital,
-            },
-          }
-        );
-      }
-      return;
-    }
-
-    // Create normalized location object - all fields are required
-    const normalizedLocation = {
-      province: newProvince,
-      district: newDistrict,
-      sector: newSector,
-      hospital: newHospital, // Hospital is now required, no fallback to null
-    };
-
-    // Prevent unnecessary updates if the location hasn't actually changed
-    if (selectedLocation) {
-      const currentProvince = getLocationValue(selectedLocation.province);
-      const currentDistrict = getLocationValue(selectedLocation.district);
-      const currentSector = getLocationValue(selectedLocation.sector);
-      const currentHospital = getLocationValue(selectedLocation.hospital);
-
-      if (
-        currentProvince === newProvince &&
-        currentDistrict === newDistrict &&
-        currentSector === newSector &&
-        currentHospital === newHospital
-      ) {
-        return;
-      }
-    }
-
-    setSelectedLocation(normalizedLocation);
+    // Simply update the location state - no validation or resets
+    setSelectedLocation(location);
     setLocationError(false);
-
-    logInteraction("select", "complete-location", {
-      userId: "1750600866432",
-      province: newProvince,
-      district: newDistrict,
-      sector: newSector,
-      hospital: newHospital,
-    });
   };
 
   const handleAnalyze = async () => {
@@ -183,6 +93,15 @@ export default function MalariaDetection() {
       );
       return;
     }
+
+    // Log location selection only when analyze is clicked
+    logInteraction("select", "complete-location", {
+      userId: "1750600866432",
+      province: selectedLocation.province,
+      district: selectedLocation.district,
+      sector: selectedLocation.sector,
+      hospital: selectedLocation.hospital,
+    });
 
     const startTime = Date.now();
     setIsAnalyzing(true);
@@ -491,6 +410,10 @@ export default function MalariaDetection() {
         console.error("Error saving detection data to database:", saveError);
         // Don't throw error here - we still want to show results even if save fails
       }
+
+      // RESET LOCATION ONLY AFTER SUCCESSFUL ANALYSIS
+      setSelectedLocation(null);
+
     } catch (err) {
       console.error("Analysis error:", err);
       const errorMsg = err.message || "An error occurred during analysis";
@@ -741,8 +664,8 @@ export default function MalariaDetection() {
                     </p>
                     <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
                       <strong>{t("detection.locationLabel")}</strong>{" "}
-                      {selectedLocation.sector}, {selectedLocation.district},{" "}
-                      {selectedLocation.province}
+                      {combinedData?.sector}, {combinedData?.district},{" "}
+                      {combinedData?.province}
                     </p>
                     <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
                       <strong>{t("detection.imageLabel")}</strong>{" "}
