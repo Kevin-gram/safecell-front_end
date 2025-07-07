@@ -73,101 +73,20 @@ export default function MalariaDetection() {
     setPreviewUrl(URL.createObjectURL(file));
   };
 
+  // Helper function to safely extract string values from location objects
+  const getLocationString = (locationValue) => {
+    if (typeof locationValue === "string") return locationValue;
+    if (locationValue && typeof locationValue === "object") {
+      return locationValue.name || locationValue.value || locationValue.label || "";
+    }
+    return "";
+  };
+
+  // SIMPLIFIED: Just update the location state without complex validation
   const handleLocationChange = (location) => {
-    // Only proceed if we have a valid location object with all required fields
-    if (!location || typeof location !== "object") {
-      return;
-    }
-
-    console.log("Location received in handleLocationChange:", location);
-
-    const getLocationValue = (value) => {
-      if (typeof value === "string") return value;
-      if (value && typeof value === "object" && value.name) return value.name;
-      if (value && typeof value === "object" && value.value) return value.value;
-      return null;
-    };
-
-    const newProvince = getLocationValue(location.province);
-    const newDistrict = getLocationValue(location.district);
-    const newSector = getLocationValue(location.sector);
-    // Handle both 'hospital' and 'facility' fields
-    const newHospital =
-      getLocationValue(location.hospital) ||
-      getLocationValue(location.facility);
-
-    // Debug what we extracted
-    console.log("Extracted values:", {
-      province: newProvince,
-      district: newDistrict,
-      sector: newSector,
-      hospital: newHospital,
-      originalFacility: location.facility,
-      originalHospital: location.hospital,
-    });
-
-    // All fields including hospital/facility are required
-    if (!newProvince || !newDistrict || !newSector || !newHospital) {
-      // Don't reset existing location if new data is incomplete
-      // Only log if we have some data but it's incomplete
-      if (newProvince || newDistrict || newSector || newHospital) {
-        console.warn(
-          "Incomplete location data received, keeping existing location:",
-          {
-            received: {
-              province: newProvince,
-              district: newDistrict,
-              sector: newSector,
-              hospital: newHospital,
-            },
-            current: selectedLocation,
-            missingFields: {
-              province: !newProvince,
-              district: !newDistrict,
-              sector: !newSector,
-              hospital: !newHospital,
-            },
-          }
-        );
-      }
-      return;
-    }
-
-    // Create normalized location object - all fields are required
-    const normalizedLocation = {
-      province: newProvince,
-      district: newDistrict,
-      sector: newSector,
-      hospital: newHospital, // Hospital is now required, no fallback to null
-    };
-
-    // Prevent unnecessary updates if the location hasn't actually changed
-    if (selectedLocation) {
-      const currentProvince = getLocationValue(selectedLocation.province);
-      const currentDistrict = getLocationValue(selectedLocation.district);
-      const currentSector = getLocationValue(selectedLocation.sector);
-      const currentHospital = getLocationValue(selectedLocation.hospital);
-
-      if (
-        currentProvince === newProvince &&
-        currentDistrict === newDistrict &&
-        currentSector === newSector &&
-        currentHospital === newHospital
-      ) {
-        return;
-      }
-    }
-
-    setSelectedLocation(normalizedLocation);
+    // Simply update the location state - no validation or resets
+    setSelectedLocation(location);
     setLocationError(false);
-
-    logInteraction("select", "complete-location", {
-      userId: "1750600866432",
-      province: newProvince,
-      district: newDistrict,
-      sector: newSector,
-      hospital: newHospital,
-    });
   };
 
   const handleAnalyze = async () => {
@@ -183,6 +102,15 @@ export default function MalariaDetection() {
       );
       return;
     }
+
+    // Log location selection only when analyze is clicked
+    logInteraction("select", "complete-location", {
+      userId: "1750600866432",
+      province: getLocationString(selectedLocation.province),
+      district: getLocationString(selectedLocation.district),
+      sector: getLocationString(selectedLocation.sector),
+      hospital: getLocationString(selectedLocation.hospital || selectedLocation.facility),
+    });
 
     const startTime = Date.now();
     setIsAnalyzing(true);
@@ -268,16 +196,24 @@ export default function MalariaDetection() {
         currentDate.getTime() + currentDate.getTimezoneOffset() * 60000
       );
 
+      // Extract string values for backend API (which expects strings, not objects)
+      const locationStrings = {
+        province: getLocationString(selectedLocation.province),
+        district: getLocationString(selectedLocation.district),
+        sector: getLocationString(selectedLocation.sector),
+        hospital: getLocationString(selectedLocation.hospital || selectedLocation.facility),
+      };
+
       const combinedResult = {
         // Basic identification
         element: "complete-location",
         userId: "1750600866432",
 
-        // Location data
-        province: selectedLocation.province,
-        district: selectedLocation.district,
-        sector: selectedLocation.sector,
-        hospital: selectedLocation.hospital,
+        // Location data - FIXED: Send strings instead of objects
+        province: locationStrings.province,
+        district: locationStrings.district,
+        sector: locationStrings.sector,
+        hospital: locationStrings.hospital,
 
         // COMPREHENSIVE DATE/TIME FIELDS FOR BACKEND PROCESSING
 
@@ -426,10 +362,10 @@ export default function MalariaDetection() {
           platform: navigator.platform,
           language: navigator.language,
 
-          // Location metadata
-          locationString: `${selectedLocation.sector}, ${selectedLocation.district}, ${selectedLocation.province}`,
+          // Location metadata - FIXED: Use string values
+          locationString: `${locationStrings.sector}, ${locationStrings.district}, ${locationStrings.province}`,
           locationHash: btoa(
-            `${selectedLocation.province}-${selectedLocation.district}-${selectedLocation.sector}-${selectedLocation.hospital}`
+            `${locationStrings.province}-${locationStrings.district}-${locationStrings.sector}-${locationStrings.hospital}`
           ),
         },
       };
@@ -491,6 +427,10 @@ export default function MalariaDetection() {
         console.error("Error saving detection data to database:", saveError);
         // Don't throw error here - we still want to show results even if save fails
       }
+
+      // RESET LOCATION ONLY AFTER SUCCESSFUL ANALYSIS
+      setSelectedLocation(null);
+
     } catch (err) {
       console.error("Analysis error:", err);
       const errorMsg = err.message || "An error occurred during analysis";
@@ -741,8 +681,8 @@ export default function MalariaDetection() {
                     </p>
                     <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
                       <strong>{t("detection.locationLabel")}</strong>{" "}
-                      {selectedLocation.sector}, {selectedLocation.district},{" "}
-                      {selectedLocation.province}
+                      {combinedData?.sector}, {combinedData?.district},{" "}
+                      {combinedData?.province}
                     </p>
                     <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
                       <strong>{t("detection.imageLabel")}</strong>{" "}
@@ -809,6 +749,14 @@ export default function MalariaDetection() {
                           </span>
                           <span className="font-medium text-gray-900 dark:text-gray-100">
                             {combinedData.sector}
+                          </span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-gray-600 dark:text-gray-400">
+                            Hospital:
+                          </span>
+                          <span className="font-medium text-gray-900 dark:text-gray-100">
+                            {combinedData.hospital}
                           </span>
                         </div>
                         <div className="flex justify-between">
@@ -924,9 +872,7 @@ export default function MalariaDetection() {
                             {t("detection.analysisCompleted")}
                           </span>
                           <span className="font-medium text-gray-900 dark:text-gray-100">
-                            {formatTimestamp(
-                              combinedData.predictionResults.timestamp
-                            )}
+                            {formatTimestamp(combinedData.timestamp)}
                           </span>
                         </div>
                         <div className="flex justify-between">

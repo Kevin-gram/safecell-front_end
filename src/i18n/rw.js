@@ -262,7 +262,7 @@ export const translationRW = {
     title: "Aho Isuzuma Riri Kubera",
     description: "Nyamuneka shyiraho amakuru arambuye yerekeye aho uri n'ikigo cy'ubuvuzi kugirango amakuru yegeranyijwe abe yizewe kandi ajyanye n'akarere.",
     patientInfo: "Amakuru y'Umurwayi",
-    patientIdLabel: "Indangamuntu y'Umurwayi (Itegetswe)",
+    patientIdLabel: "Imibare ndangamuntu (Irategetswe)",
     patientIdPlaceholder: "Andika Indangamuntu y'Umurwayi (Nibura Imibare 5)",
     patientIdError: "Indangamuntu y'umurwayi igomba kuba nibura imibare 5",
     patientIdHelper: "Indangamuntu y'umurwayi irakenewe kandi igomba kuba nibura imibare 5.",
