@@ -33,6 +33,22 @@ export default function MalariaDetection() {
   const [locationError, setLocationError] = useState(false);
   const [combinedData, setCombinedData] = useState(null);
 
+  // Helper function to safely extract string values from location objects
+  const getLocationString = (locationValue) => {
+    if (typeof locationValue === "string") return locationValue;
+    if (locationValue && typeof locationValue === "object") {
+      return locationValue.name || locationValue.value || locationValue.label || "";
+    }
+    return "";
+  };
+
+  // SIMPLIFIED: Just update the location state without complex validation
+  const handleLocationChange = (location) => {
+    // Simply update the location state - no validation or resets
+    setSelectedLocation(location);
+    setLocationError(false);
+  };
+
   // Handle image selection - DON'T reset location or result here
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -73,6 +89,7 @@ export default function MalariaDetection() {
     setPreviewUrl(URL.createObjectURL(file));
   };
 
+<<<<<<< HEAD
   // Helper function to safely extract string values from location objects
   const getLocationString = (locationValue) => {
     if (typeof locationValue === "string") return locationValue;
@@ -89,6 +106,8 @@ export default function MalariaDetection() {
     setLocationError(false);
   };
 
+=======
+>>>>>>> e60a1ea5b63968b8487dca8620fcd304356cb035
   const handleAnalyze = async () => {
     if (!selectedImage) {
       setError("Please select an image first");
@@ -428,8 +447,22 @@ export default function MalariaDetection() {
         // Don't throw error here - we still want to show results even if save fails
       }
 
+<<<<<<< HEAD
       // RESET LOCATION ONLY AFTER SUCCESSFUL ANALYSIS
       setSelectedLocation(null);
+=======
+      // RESET ALL FIELDS AFTER SUCCESSFUL ANALYSIS
+      setSelectedImage(null);
+      setPreviewUrl(null);
+      setSelectedLocation(null);
+      setLocationError(false);
+
+      // Clear the file input
+      const fileInput = document.getElementById("image-upload");
+      if (fileInput) {
+        fileInput.value = "";
+      }
+>>>>>>> e60a1ea5b63968b8487dca8620fcd304356cb035
 
     } catch (err) {
       console.error("Analysis error:", err);
@@ -686,7 +719,7 @@ export default function MalariaDetection() {
                     </p>
                     <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
                       <strong>{t("detection.imageLabel")}</strong>{" "}
-                      {selectedImage.name}
+                      {combinedData?.predictionResults?.imageInfo?.fileName}
                     </p>
                     <p className="text-xs text-gray-500 dark:text-gray-500">
                       <strong>{t("detection.rawResultLabel")}</strong>{" "}
