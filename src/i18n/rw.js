@@ -207,6 +207,7 @@ export const translationRW = {
   },
   detection: {
     header: "Urubuga rwo Gupima",
+     analyzing: "Gusuzuma...",
     subheader: "Sisitemu ishingiye kubwenge buhimbano yo gupima malaria",
     selectedImage: "Ifoto Yahiswemo",
     uploadTitle: "Ohereza Ifoto ya Frottis y'Amaraso",

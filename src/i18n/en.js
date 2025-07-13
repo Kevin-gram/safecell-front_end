@@ -229,7 +229,7 @@ export const translationEN = {
     noDetections: "No recent detections"
   },
   detection: {
-    analyzing: "Analyzing",
+    analyzing: "Analyzing...",
     title: "Malaria Detection",
     subtitle: "Upload blood smear images for analysis",
     dropzone: "Drag and drop image here or click to upload",
