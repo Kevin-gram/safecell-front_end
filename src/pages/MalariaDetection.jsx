@@ -593,25 +593,23 @@ export default function MalariaDetection() {
                   </div>
                 </div>
                 <div className="mt-4 flex flex-wrap gap-2">
-                  <Button
-                    variant="primary"
-                    onClick={handleAnalyze}
-                    disabled={
-                      isAnalyzing || !selectedLocation || !selectedImage
-                    }
-                    icon={
-                      isAnalyzing ? (
-                        <FiRefreshCw className="animate-spin" />
-                      ) : (
-                        <FiMapPin />
-                      )
-                    }
-                    className="bg-medical-600 hover:bg-medical-700"
-                  >
-                    {isAnalyzing
-                      ? t("detection.analyzing") || "Analyzing..."
-                      : "Analyze Blood Smear"}
-                  </Button>
+               <Button
+  variant="primary"
+  onClick={handleAnalyze}
+  disabled={isAnalyzing || !selectedLocation || !selectedImage}
+  icon={
+    isAnalyzing ? (
+      <FiRefreshCw className="animate-spin" />
+    ) : (
+      <FiMapPin />
+    )
+  }
+  className="bg-medical-600 hover:bg-medical-700"
+>
+  {isAnalyzing
+    ? t("detection.analyzing")
+    : t("detection.analyzeButton")}
+</Button>
 
                   {result ? (
                     <Button

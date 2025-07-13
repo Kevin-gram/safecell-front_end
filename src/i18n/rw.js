@@ -207,7 +207,7 @@ export const translationRW = {
   },
   detection: {
     header: "Urubuga rwo Gupima",
-     analyzing: "Gusuzuma...",
+    subheader: "Système de détection du paludisme alimenté par l'IA pour les professionnels de santé",
     subheader: "Sisitemu ishingiye kubwenge buhimbano yo gupima malaria",
     selectedImage: "Ifoto Yahiswemo",
     uploadTitle: "Ohereza Ifoto ya Frottis y'Amaraso",

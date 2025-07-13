@@ -250,7 +250,9 @@ export const translationFR = {
   },
   detection: {
     header: "Page de Détection",
-     analyzing: "Analyser...",
+ analyzing: "Analyse en cours...",
+    analyzeButton: "Analyser le frottis sanguin",
+    
     subheader: "Système de détection du paludisme alimenté par l'IA pour les professionnels de santé",
     selectedImage: "Image Sélectionnée",
     uploadTitle: "Télécharger une Image de Frottis Sanguin",
