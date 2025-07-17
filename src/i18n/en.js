@@ -274,7 +274,13 @@ export const translationEN = {
       level3: "Level 3 - Moderate",
       level4: "Level 4 - High",
       level5: "Level 5 - Severe"
-    }
+    },
+  totalScans: "Total Scans",
+    positiveCases: "Positive Cases",
+    negativeCases: "Negative Cases",
+    positiveRate: "Positive Rate",
+    exportData: "Export Data",
+    distributionChart: "Detection Results Distribution"
   },
   feedback: {
     title: "Feedback",
@@ -395,6 +401,7 @@ export const translationEN = {
     emptyState: "Upload a blood smear image and select your location to begin malaria detection analysis.",
     dropzone: "Drag and drop image here or click to upload",
     uploadButton: "Upload Image",
+    analyzing:"Analysing..."
   },
   "time": {
     "morning": "morning",

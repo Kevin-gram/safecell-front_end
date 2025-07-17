@@ -59,7 +59,6 @@ const RWANDA_LOCATIONS = {
             { id: 'masaka', name: 'Masaka' },
             { id: 'niboye', name: 'Niboye' },
             { id: 'nyarugunga', name: 'Nyarugunga' },
-            { id: 'ruhango', name: 'Ruhango' }
           ]
         },
         {

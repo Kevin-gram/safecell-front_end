@@ -167,7 +167,7 @@ export default function Login() {
               onChange={(e) => setEmail(e.target.value)}
               error={errors.email}
               required
-              placeholder="email@example.com"
+              placeholder="Enter your email"
             />
             <div className="relative">
               <Input
@@ -178,7 +178,7 @@ export default function Login() {
                 onChange={(e) => setPassword(e.target.value)}
                 error={errors.password}
                 required
-                placeholder="••••••••"
+                placeholder="Password"
               />
               <button
                 type="button"
