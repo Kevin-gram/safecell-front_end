@@ -50,8 +50,13 @@ export default function Sidebar({ closeSidebar }) {
     })
   }
 
+  const NAVBAR_HEIGHT = 80
+
   return (
-    <div className="w-64 h-full bg-white dark:bg-gray-800 border-r dark:border-gray-700 shadow-sm flex flex-col">
+    <div
+      className="fixed left-0 w-64 h-full bg-white dark:bg-gray-800 border-r dark:border-gray-700 shadow-sm flex flex-col z-40"
+      style={{ top: `${NAVBAR_HEIGHT}px`, height: `calc(100vh - ${NAVBAR_HEIGHT}px)` }}
+    >
       <div className="p-4 border-b dark:border-gray-700">
         {user && (
           <div className="mt-2 text-sm text-gray-600 dark:text-gray-400">
