@@ -91,7 +91,7 @@ export default function Sidebar({ closeSidebar }) {
       <div className="p-4 border-t dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50">
         <div className="text-xs text-gray-500 dark:text-gray-400">
           <p>SafeCell v0.1</p>
-          <p className="mt-1">© 2025 HealthTech AI</p>
+          <p className="mt-1">© 2025 Copyright</p>
         </div>
       </div>
     </div>

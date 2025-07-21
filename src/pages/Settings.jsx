@@ -8,7 +8,7 @@ import Button from '../components/ui/Button'
 import Input from '../components/ui/Input'
 import Alert from '../components/ui/Alert'
 import Select from '../components/ui/Select'
-import { FiUser, FiSave, FiMail, FiLock, FiTrash2, FiGlobe, FiMoon, FiSun, FiUpload } from 'react-icons/fi'
+import { FiUser, FiSave, FiMail, FiLock, FiTrash2, FiGlobe, FiMoon, FiSun, FiUpload, FiShield } from 'react-icons/fi'
 
 const LANGUAGES = [
   { value: 'en', label: 'English' },
@@ -279,6 +279,34 @@ export default function Settings() {
         </form>
       </Card>
 
+      {/* Privacy Policy & Copyright */}
+      <Card className="p-6 space-y-4 border-l-4 border-l-green-500 ">
+        <h2 className="text-lg font-semibold flex items-center mb-2 text-accent-600 dark:text-accent-400">
+          <FiShield className="mr-2" />
+          {t('settings.privacyPolicy') || 'Privacy Policy & Copyright'}
+        </h2>
+        <div className="space-y-3 text-sm text-gray-700 dark:text-gray-300">
+          <p>
+            <strong>{t('settings.privacyDataCollectionTitle')}</strong> {t('settings.privacyDataCollection')}
+          </p>
+          <p>
+            <strong>{t('settings.privacyDataUsageTitle')}</strong> {t('settings.privacyDataUsage')}
+          </p>
+          <p>
+            <strong>{t('settings.privacyUserAccountsTitle')}</strong> {t('settings.privacyUserAccounts')}
+          </p>
+          <p>
+            <strong>{t('settings.privacyCookiesTitle')}</strong> {t('settings.privacyCookies')}
+          </p>
+          <p>
+            <strong>{t('settings.privacyCopyrightTitle')}</strong> {t('settings.privacyCopyright')}
+          </p>
+          <p>
+            <strong>{t('settings.privacyAgreementTitle')}</strong> {t('settings.privacyAgreement')}
+          </p>
+        </div>
+      </Card>
+
       {/* Danger Zone */}
       <Card className="p-6 space-y-4 border-l-4 border-l-error-500">
         <h2 className="text-lg font-semibold flex items-center mb-2 text-error-600 dark:text-error-400">
@@ -302,7 +330,7 @@ export default function Settings() {
             {t('settings.deleteAccount')}
           </Button>
         )}
-      </Card>
+         </Card>
     </motion.div>
   )
 }
