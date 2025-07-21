@@ -280,7 +280,7 @@ export default function Settings() {
       </Card>
 
       {/* Privacy Policy & Copyright */}
-      <Card className="p-6 space-y-4 border-l-4 border-l-green-500 ">
+      <Card className="p-6 space-y-4 border-l-4 border-l-primary-600">
         <h2 className="text-lg font-semibold flex items-center mb-2 text-accent-600 dark:text-accent-400">
           <FiShield className="mr-2" />
           {t('settings.privacyPolicy') || 'Privacy Policy & Copyright'}
