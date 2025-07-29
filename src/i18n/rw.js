@@ -236,7 +236,7 @@ detection: {
   step2: "Tegereza isesengura rya AI",
   step3: "Reba ibisubizo by’isuzuma",
 
-  header: "Urupapuro rw’isuzuma",
+  header: "Igice cy’isuzuma",
   subheader: "Sisitemu isuzuma malariya ishingiye kuri AI igenewe abaganga",
   selectedImage: "Ifoto yahiswemo",
   uploadTitle: "Ohereza ifoto y’amaraso",
