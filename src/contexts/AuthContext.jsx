@@ -9,7 +9,7 @@ const MOCK_USERS = [
     id: '1',
     email: 'admin@safecell.com',
     password: 'admin123',
-    name: 'Kevin-Admin',
+    name: 'Kevin',
     role: 'admin',
     profilePicture: '',
     createdAt: '2024-01-01T00:00:00.000Z',
