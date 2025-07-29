@@ -609,8 +609,8 @@ export default function MalariaDetection() {
                     className="bg-medical-600 hover:bg-medical-700"
                   >
                     {isAnalyzing
-                      ? t("detection.analyzing") || "Analyzing..."
-                      : "Analyze Blood Smear"}
+                        ? t("detection.analyzing")
+                  : t("detection.analyzeButton")}
                   </Button>
 
                   {result ? (
@@ -731,7 +731,7 @@ export default function MalariaDetection() {
                       <div className="space-y-2 text-sm">
                         <div className="flex justify-between">
                           <span className="text-gray-600 dark:text-gray-400">
-                            Province:
+                            {t("detection.Province")}
                           </span>
                           <span className="font-medium text-gray-900 dark:text-gray-100">
                             {combinedData.province}
@@ -739,7 +739,7 @@ export default function MalariaDetection() {
                         </div>
                         <div className="flex justify-between">
                           <span className="text-gray-600 dark:text-gray-400">
-                            District:
+                           {t("detection.District")}
                           </span>
                           <span className="font-medium text-gray-900 dark:text-gray-100">
                             {combinedData.district}
@@ -747,7 +747,7 @@ export default function MalariaDetection() {
                         </div>
                         <div className="flex justify-between">
                           <span className="text-gray-600 dark:text-gray-400">
-                            Sector:
+                           {t("detection.Sector")}
                           </span>
                           <span className="font-medium text-gray-900 dark:text-gray-100">
                             {combinedData.sector}
@@ -755,7 +755,7 @@ export default function MalariaDetection() {
                         </div>
                         <div className="flex justify-between">
                           <span className="text-gray-600 dark:text-gray-400">
-                            Hospital:
+                            {t("detection.Hospital")}
                           </span>
                           <span className="font-medium text-gray-900 dark:text-gray-100">
                             {combinedData.hospital}
@@ -763,7 +763,7 @@ export default function MalariaDetection() {
                         </div>
                         <div className="flex justify-between">
                           <span className="text-gray-600 dark:text-gray-400">
-                            User ID:
+                            {t("detection.ID")}
                           </span>
                           <span className="font-mono text-xs bg-gray-200 dark:bg-gray-700 px-2 py-1 rounded">
                             {combinedData.userId}
@@ -781,7 +781,7 @@ export default function MalariaDetection() {
                       <div className="space-y-2 text-sm">
                         <div className="flex justify-between items-center">
                           <span className="text-gray-600 dark:text-gray-400">
-                            Result:
+                           {t("detection.Result")}
                           </span>
                           <span
                             className={`px-2 py-1 rounded-full text-xs font-medium ${
@@ -796,7 +796,7 @@ export default function MalariaDetection() {
                         </div>
                         <div className="flex justify-between">
                           <span className="text-gray-600 dark:text-gray-400">
-                            Confidence:
+                            {t("detection.Confidence")}
                           </span>
                           <span className="font-medium text-gray-900 dark:text-gray-100">
                             {combinedData.predictionResults.confidenceLevel}%
@@ -804,7 +804,7 @@ export default function MalariaDetection() {
                         </div>
                         <div className="flex justify-between">
                           <span className="text-gray-600 dark:text-gray-400">
-                            Processing Time:
+                            {t("detection.Processtime")}
                           </span>
                           <span className="font-medium text-gray-900 dark:text-gray-100">
                             {combinedData.predictionResults.processingTime}ms
@@ -812,7 +812,7 @@ export default function MalariaDetection() {
                         </div>
                         <div className="flex justify-between">
                           <span className="text-gray-600 dark:text-gray-400">
-                            Raw Result:
+                            {t("detection.RawResult")}
                           </span>
                           <span className="font-medium text-gray-900 dark:text-gray-100">
                             {combinedData.predictionResults.rawResult}
@@ -825,7 +825,7 @@ export default function MalariaDetection() {
                     <div className="bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 rounded-lg p-4 border border-purple-200 dark:border-purple-800">
                       <h4 className="font-semibold text-purple-800 dark:text-purple-200 mb-3 flex items-center">
                         <FiImage className="mr-2" />
-                        Image Information
+                        {t("detection.imageinfo")}
                       </h4>
                       <div className="space-y-2 text-sm">
                         <div className="flex justify-between">
